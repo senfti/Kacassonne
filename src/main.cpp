@@ -1,0 +1,107 @@
+#include <GameDialog.h>
+#include <csignal>
+
+#include "main.h"
+#include "ConnectDialog.h"
+#include "Connection.h"
+#include <LobbyDialog.h>
+
+#ifdef __linux__
+#include <execinfo.h>
+#include <cxxabi.h>
+#endif
+
+MyApp* my_app;
+IMPLEMENT_APP(MyApp)
+
+void signal_handler(int signal)
+{
+  std::cout << "Signal " << (signal == SIGFPE ? "SIGFPE" : "SIGSEGV") << std::endl;
+#ifdef __linux__
+  void *array[50];
+  size_t size;
+
+  // get void*'s for all entries on the stack
+  size = backtrace(array, 50);
+  char **ptr = backtrace_symbols(array, size);
+  for(int i=0; i<size; i++){
+    bool found_bracket = false;
+    char* c = ptr[i];
+    while(*c != '\0'){
+      if(*c == '(')
+        found_bracket = true;
+      else if(*c == '_' && found_bracket)
+        break;
+      c++;
+    }
+    if(*c == '\0')
+      continue;
+    char* c2 = c;
+    while(*c2 != '\0'){
+      if(*c2 == '+'){
+        *c2 = '\0';
+      }
+      c2++;
+    }
+    if(*(c+1) == 'Z'){
+      int status = -1;
+      char *demangledName = abi::__cxa_demangle(c, NULL, NULL, &status);
+      if(status == 0)
+        std::cout << demangledName << std::endl;
+      free(demangledName);
+    }
+    else{
+      std::cout << c << std::endl;
+    }
+  }
+  free(ptr);
+#endif
+  exit(1);
+}
+
+
+bool MyApp::OnInit(){
+  std::signal(SIGSEGV, signal_handler);
+  std::signal(SIGFPE, signal_handler);
+  my_app = this;
+  ConnectDialog* cd = new ConnectDialog();
+  cd->ShowModal();
+  connection_ = new Connection(cd->ip_, cd->pub_port_, cd->sub_port_, cd->name_);
+  delete cd;
+  if(!connection_->ok_){
+    wxMessageBox("Connection Failed!");
+    return false;
+  }
+  LobbyDialog* ld = new LobbyDialog(connection_);
+  if(ld->ShowModal() != 0)
+    return false;
+  delete ld;
+
+  GameDialog* gd = new GameDialog(connection_);
+  if(gd->ShowModal() != 0)
+    return false;
+  delete gd;
+
+  try{
+    main_frame_ = new MainFrame();
+    game_ = new Game(connection_);
+  }
+  catch (std::bad_alloc& exception){
+    wxMessageBox("Not enough memory!", "Fatal Error", wxICON_ERROR);
+    return false;
+  }
+  catch(std::exception& e){
+    std::cout << e.what() << std::endl;
+    return false;
+  }
+
+  main_frame_->SetTitle(connection_->player_name_);
+  main_frame_->setGame(game_);
+  main_frame_->Show();
+
+  return true;
+}
+
+int MyApp::OnExit(){
+  return 0;
+}
