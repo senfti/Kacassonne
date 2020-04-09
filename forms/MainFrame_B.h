@@ -42,7 +42,7 @@ class MainFrame_B : public wxFrame
 		TablePanel* table_panel_;
 		wxButton* next_button_;
 		wxButton* back_button_;
-		wxButton* Shuffle;
+		wxButton* shuffle_button_;
 		wxBoxSizer* info_sizer_;
 
 		// Virtual event handlers, overide them in your derived class

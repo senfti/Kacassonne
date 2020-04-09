@@ -8,7 +8,7 @@
 
 #include "Message.h"
 
-long getID(){
+int64_t getID(){
   auto duration = std::chrono::system_clock::now().time_since_epoch();
   return std::chrono::duration_cast<std::chrono::nanoseconds>(duration).count();
 }

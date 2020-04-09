@@ -54,18 +54,18 @@ void GameDialog::OnTimer(wxTimerEvent& event){
     for(const auto& [t, m] : pending_messages_){
       if(connection_->iAmHost()){
         if(t == "game_join"){
-          connection_->players_.push_back(std::make_pair(m["player_id"].get<long>(), m["player_name"]));
+          connection_->players_.push_back(std::make_pair(m["player_id"].get<int64_t>(), m["player_name"]));
         }
         if(t == "game_quit"){
-          long player_id = m["player_id"].get<long>();
-          auto player = std::find_if(connection_->players_.begin(), connection_->players_.end(), [player_id](const std::pair<long, std::string>& p) { return p.first == player_id; });
+          int64_t player_id = m["player_id"].get<int64_t>();
+          auto player = std::find_if(connection_->players_.begin(), connection_->players_.end(), [player_id](const std::pair<int64_t, std::string>& p) { return p.first == player_id; });
           if(player != connection_->players_.end()){
             connection_->players_.erase(player);
           }
         }
         if(t == "game_start_ack"){
           for(int i=0; i<connection_->players_.size(); i++){
-            if(connection_->players_[i].first == m["player_id"].get<long>()){
+            if(connection_->players_[i].first == m["player_id"].get<int64_t>()){
               ack_[i] = true;
             }
           }

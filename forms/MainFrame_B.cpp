@@ -58,8 +58,8 @@ MainFrame_B::MainFrame_B( wxWindow* parent, wxWindowID id, const wxString& title
 	back_button_ = new wxButton( this, wxID_ANY, wxT("Back"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer4->Add( back_button_, 0, wxALL, 5 );
 
-	Shuffle = new wxButton( this, wxID_ANY, wxT("Shuffle"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer4->Add( Shuffle, 0, wxALL, 5 );
+	shuffle_button_ = new wxButton( this, wxID_ANY, wxT("Shuffle"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer4->Add( shuffle_button_, 0, wxALL, 5 );
 
 
 	bSizer3->Add( bSizer4, 0, wxEXPAND, 5 );
@@ -86,7 +86,7 @@ MainFrame_B::MainFrame_B( wxWindow* parent, wxWindowID id, const wxString& title
 	m_menu2->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame_B::undo ), this, undo_menu_item_->GetId());
 	next_button_->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame_B::next ), NULL, this );
 	back_button_->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame_B::back ), NULL, this );
-	Shuffle->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame_B::shuffle ), NULL, this );
+	shuffle_button_->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame_B::shuffle ), NULL, this );
 }
 
 MainFrame_B::~MainFrame_B()
@@ -94,6 +94,6 @@ MainFrame_B::~MainFrame_B()
 	// Disconnect Events
 	next_button_->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame_B::next ), NULL, this );
 	back_button_->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame_B::back ), NULL, this );
-	Shuffle->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame_B::shuffle ), NULL, this );
+	shuffle_button_->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame_B::shuffle ), NULL, this );
 
 }

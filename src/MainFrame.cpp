@@ -51,6 +51,9 @@ void MainFrame::undo(wxCommandEvent &event){
 
 void MainFrame::next(wxCommandEvent &event){
   if(game_->next()){
+    next_button_->Enable(game_->isActive());
+    back_button_->Enable(game_->isActive());
+    shuffle_button_->Enable(game_->isActive() && game_->current_card_);
     std::lock_guard<std::mutex> lock(game_->data_lock_);
     setCurrentPlayer(game_->current_player_);
   }
@@ -58,6 +61,9 @@ void MainFrame::next(wxCommandEvent &event){
 
 void MainFrame::back(wxCommandEvent &event){
   if(game_->revert()){
+    next_button_->Enable(game_->isActive());
+    back_button_->Enable(game_->isActive());
+    shuffle_button_->Enable(game_->isActive() && game_->current_card_);
     table_panel_->Refresh();
     table_panel_->Update();
   }
@@ -73,7 +79,7 @@ void MainFrame::shuffle( wxCommandEvent& event ){
 void MainFrame::OnTimer(wxTimerEvent &event){
   next_button_->Enable(game_->isActive());
   back_button_->Enable(game_->isActive());
-  Shuffle->Enable(game_->isActive() && game_->current_card_);
+  shuffle_button_->Enable(game_->isActive() && game_->current_card_ && !game_->played_cards_.empty());
   setCurrentPlayer(game_->current_player_);
   if(game_->update_table_){
     game_->update_table_ = false;
@@ -98,7 +104,7 @@ void MainFrame::OnTimer(wxTimerEvent &event){
     game_->msg_queue_.clear();
   }
   for(const auto&[t, m] : msgs){
-    if(t == "update" && m["type"] == "points"){
+    if(t == "update" && m["type"] == "points" && m["idx"] < game_->players_.size()){
       game_->players_[m["idx"]].points_ = m["points"];
       players_guis_[m["idx"]]->setPoints(m["points"]);
     }

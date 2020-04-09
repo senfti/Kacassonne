@@ -16,6 +16,8 @@ IMPLEMENT_APP(MyApp)
 
 void signal_handler(int signal)
 {
+  std::ofstream f("crash_log.txt");
+  f << "Signal " << (signal == SIGFPE ? "SIGFPE" : "SIGSEGV") << std::endl;
   std::cout << "Signal " << (signal == SIGFPE ? "SIGFPE" : "SIGSEGV") << std::endl;
 #ifdef __linux__
   void *array[50];
@@ -46,11 +48,14 @@ void signal_handler(int signal)
     if(*(c+1) == 'Z'){
       int status = -1;
       char *demangledName = abi::__cxa_demangle(c, NULL, NULL, &status);
-      if(status == 0)
+      if(status == 0){
+        f << demangledName << std::endl;
         std::cout << demangledName << std::endl;
+      }
       free(demangledName);
     }
     else{
+      f << c << std::endl;
       std::cout << c << std::endl;
     }
   }
@@ -81,6 +86,7 @@ bool MyApp::OnInit(){
   if(gd->ShowModal() != 0)
     return false;
   delete gd;
+  connection_->subscribeToGame();
 
   try{
     main_frame_ = new MainFrame();

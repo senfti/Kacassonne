@@ -11,7 +11,7 @@
 #include <chrono>
 
 
-long getID();
+int64_t getID();
 
 // nlohmann::json is not made for inheritance, so use with care
 class Message : public nlohmann::json{

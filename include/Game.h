@@ -18,7 +18,7 @@ class Game{
     std::list<Card> played_cards_;
     Card* current_card_ = nullptr;
     std::vector<Player> players_;
-    long current_player_ = 0;
+    int64_t current_player_ = 0;
     Connection* connection_ = nullptr;
     bool update_table_ = true;
     std::thread* receiver_ = nullptr;

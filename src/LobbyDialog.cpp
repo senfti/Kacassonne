@@ -61,7 +61,7 @@ void LobbyDialog::OnTimer(wxTimerEvent &event){
   std::lock_guard<std::mutex> lock(message_lock_);
   for(const auto& [t, m] : pending_messages_){
     if(m["game_status"].get<int>() == int(GameStatus::OPEN)){
-      long game_id = m["game_id"].get<long>();
+      int64_t game_id = m["game_id"].get<int64_t>();
       if(std::find_if(games_.begin(), games_.end(), [game_id] (const GameToJoin& game) { return game.id_ == game_id; }) == games_.end()){
         games_.emplace_back(m["game_name"], m["game_id"], m["host"], m["players"], this);
         games_.back().button_->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(LobbyDialog::join), NULL, this);
@@ -72,7 +72,7 @@ void LobbyDialog::OnTimer(wxTimerEvent &event){
       }
     }
     else{
-      long game_id = m["game_id"].get<long>();
+      int64_t game_id = m["game_id"].get<int64_t>();
       auto game = std::find_if(games_.begin(), games_.end(), [game_id] (const GameToJoin& game) { return game.id_ == game_id; });
       if(game != games_.end()){
         game->button_->Disable();
