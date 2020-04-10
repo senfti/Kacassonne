@@ -105,6 +105,10 @@ void TablePanel::mUp(wxMouseEvent &event){
 
 void TablePanel::wheel(wxMouseEvent &event){
   double s = (event.GetWheelRotation() > 0 ? 2.0 : 0.5);
+  if(scale_ < 0.3 && s < 1)
+    return;
+  if(scale_ >= 4 && s > 1)
+    return;
   scale_ *= s;
   offset_ = event.GetPosition() - (event.GetPosition() - offset_) * s;
   Refresh();

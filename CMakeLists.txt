@@ -12,7 +12,7 @@ IF (WIN32)
 
 	include_directories(include forms D:/Programmieren/cppzmq-master D:/Programmieren/zmq)
 ELSE()
-	set(CMAKE_CXX_FLAGS "-g -rdynamic")
+	set(CMAKE_CXX_FLAGS "-g -rdynamic -no-pie")
 	find_package(PkgConfig)
 	pkg_check_modules(PC_ZeroMQ QUIET zmq)
 	find_path(ZeroMQ_INCLUDE_DIR NAMES zmq.hpp PATHS ${PC_ZeroMQ_INCLUDE_DIRS})
