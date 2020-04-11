@@ -19,7 +19,7 @@ bool Card::initCardImages(){
     if(env)
       CARD_FOLDER = env;
     else
-      CARD_FOLDER = "data/";
+      CARD_FOLDER = "data/cards/";
     if(CARD_FOLDER.back() != '/')
       CARD_FOLDER += "/";
 

@@ -6,13 +6,15 @@
 
 Player::Player(int number, const wxString& name)
   : name_(name){
-  static std::vector<wxColor> colors = {wxColor(255, 0, 0), wxColor(0, 255, 0), wxColor(0, 0, 255),
-                                        wxColor(255, 255, 0), wxColor(255, 0, 255), wxColor(0, 255, 255),
-                                        wxColor(0, 0, 0), wxColor(255, 255, 255)};
+  static std::vector<wxColor> colors = {wxColor(255, 0, 0), wxColor(0, 255, 0), wxColor(0, 0, 255), wxColor(255, 255, 0),
+                                        wxColor(0, 0, 0), wxColor(255, 0, 255), wxColor(0, 255, 255), wxColor(255, 255, 255)};
   if(number >= 0){
-    color_ = colors[number];
+    if(number < colors.size())
+      color_ = colors[number];
+    else
+      color_ = wxColor(rand() % 256, rand() % 256, rand() % 256);
     for(int i = 0; i < 7; i++){
-      stones_.push_back(Stone(colors[number]));
+      stones_.push_back(Stone(color_, number));
     }
   }
 }
