@@ -5,13 +5,19 @@
 
 #include <wx/dcbuffer.h>
 #include "GameDialog.h"
+#include <wx/valnum.h>
 
 GameDialog::GameDialog(Connection *connection)
   : connection_(connection), GameDialog_B(nullptr), timer_(this)
 {
+  wxIntegerValidator<unsigned long> val(&card_number_);
+  val.SetMin(1);
+  val.SetMax(999);
+  numcard_textctrl_->SetValidator(val);
   SetTitle(connection->player_name_);
   if(!connection_->iAmHost()){
     start_button_->Disable();
+    numcard_textctrl_->Disable();
   }
   Connect(timer_.GetId(), wxEVT_TIMER, wxTimerEventHandler(GameDialog::OnTimer), NULL, this);
   timer_.Start(1000);
@@ -46,6 +52,7 @@ void GameDialog::start( wxCommandEvent& event ) {
   ack_.resize(connection_->players_.size(), false);
   ack_[0] = true;
   connection_->send("game_start", Message());
+  card_number_ = std::atoi((const char*)(numcard_textctrl_->GetValue()));
 }
 
 void GameDialog::OnTimer(wxTimerEvent& event){

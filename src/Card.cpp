@@ -9,7 +9,7 @@
 
 std::string Card::CARD_FOLDER = "./";
 std::vector<std::pair<wxImage, int>> Card::CARD_IMAGES;
-int Card::CARD_IMAGES_SIZE;
+int Card::CARD_IMAGES_SIZE = 48;
 
 
 bool Card::initCardImages(){
@@ -31,7 +31,6 @@ bool Card::initCardImages(){
       CARD_IMAGES.push_back({wxImage(CARD_FOLDER + fn), count});
     }
   }
-  CARD_IMAGES_SIZE = CARD_IMAGES.front().first.GetSize().x;
   return true;
 }
 

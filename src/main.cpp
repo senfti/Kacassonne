@@ -85,12 +85,13 @@ bool MyApp::OnInit(){
   GameDialog* gd = new GameDialog(connection_);
   if(gd->ShowModal() != 0)
     return false;
+  int card_number = gd->card_number_;
   delete gd;
   connection_->subscribeToGame();
 
   try{
     main_frame_ = new MainFrame();
-    game_ = new Game(connection_);
+    game_ = new Game(connection_, card_number);
   }
   catch (std::bad_alloc& exception){
     wxMessageBox("Not enough memory!", "Fatal Error", wxICON_ERROR);

@@ -17,11 +17,13 @@ class PointGroup : public wxBoxSizer{
     void setActive(bool active);
     int getPoints();
     void setPoints(int points);
+    virtual bool add(int id);
 
   protected:
     wxPanel* active_panel_ = nullptr;
     wxStaticText* name_field_ = nullptr;
     wxTextCtrl* point_field_ = nullptr;
+    wxTextCtrl* add_point_field_ = nullptr;
 
     int points_ = 0;
 };

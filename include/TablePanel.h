@@ -42,6 +42,8 @@ class TablePanel : public wxPanel{
     virtual void rDown( wxMouseEvent& event );
     virtual void rDDown( wxMouseEvent& event );
     virtual void rUp( wxMouseEvent& event );
+    virtual void keyDown( wxKeyEvent& event );
+    virtual void keyUp( wxKeyEvent& event );
 };
 
 #endif //CARCASONNE_TABLEPANEL_H

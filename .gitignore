@@ -2,3 +2,4 @@
 cmake-build-debug
 /.project
 data_orig/
+.vs/

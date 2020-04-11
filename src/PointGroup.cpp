@@ -16,8 +16,27 @@ PointGroup::PointGroup(const wxString& name, const wxColor& color, wxWindow* par
   name_field_->Wrap( -1 );
   Add( name_field_, 0, wxALL, 5 );
 
-  point_field_ = new wxTextCtrl( parent, wxID_ANY, "0", wxDefaultPosition, wxDefaultSize, 0);
-  Add( point_field_, 0, wxALL, 5 );
+  point_field_ = new wxTextCtrl( parent, wxID_ANY, "0", wxDefaultPosition, wxSize(50, -1), 0);
+  Add( point_field_, 0, wxALL, 0 );
+
+  add_point_field_ = new wxTextCtrl( parent, wxID_ANY, "0", wxDefaultPosition, wxSize(30, -1), wxEVT_TEXT_ENTER);
+  Add( add_point_field_, 0, wxALL, 0 );
+
+  add_point_field_->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MainFrame::add ), NULL, parent );
+}
+
+
+bool PointGroup::add(int id){
+  if(id != add_point_field_->GetId())
+    return false;
+  try{
+    points_ += std::atoi(add_point_field_->GetValue());
+    setPoints(points_);
+    return true;
+  }
+  catch(std::exception&){
+  }
+  return false;
 }
 
 

@@ -6,6 +6,7 @@
 #include <wx/wx.h>
 #include <wx/dcbuffer.h>
 #include <TablePanel.h>
+#include "MainFrame.h"
 
 
 TablePanel::TablePanel(wxWindow *parent, wxWindowID winid, const wxPoint &pos, const wxSize &size, long style, const wxString &name)
@@ -23,6 +24,8 @@ TablePanel::TablePanel(wxWindow *parent, wxWindowID winid, const wxPoint &pos, c
   Connect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( TablePanel::rDown ), NULL, this );
   Connect( wxEVT_RIGHT_DCLICK, wxMouseEventHandler( TablePanel::rDDown ), NULL, this );
   Connect( wxEVT_RIGHT_UP, wxMouseEventHandler( TablePanel::rUp ), NULL, this );
+  Connect( wxEVT_KEY_DOWN, wxKeyEventHandler( TablePanel::keyDown ), NULL, this );
+  Connect( wxEVT_KEY_UP, wxKeyEventHandler( TablePanel::keyUp ), NULL, this );
 }
 
 
@@ -39,6 +42,8 @@ TablePanel::~TablePanel(){
   Disconnect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( TablePanel::rDown ), NULL, this );
   Disconnect( wxEVT_RIGHT_DCLICK, wxMouseEventHandler( TablePanel::rDDown ), NULL, this );
   Disconnect( wxEVT_RIGHT_UP, wxMouseEventHandler( TablePanel::rUp ), NULL, this );
+  Disconnect( wxEVT_KEY_DOWN, wxKeyEventHandler( TablePanel::keyDown ), NULL, this );
+  Disconnect( wxEVT_KEY_UP, wxKeyEventHandler( TablePanel::keyUp ), NULL, this );
 }
 
 wxPoint2DDouble TablePanel::toGame(int x, int y) const {
@@ -54,23 +59,43 @@ wxPoint TablePanel::toTable(double x, double y) const {
 void TablePanel::paint(wxPaintEvent &event){
   wxAutoBufferedPaintDC dc(this);
   dc.Clear();
-  std::lock_guard<std::mutex> lock(game_->data_lock_);
-  for(const auto& card : game_->played_cards_){
-    card.paint(dc, toTable(card.x(), card.y()), scale_);
-  }
-  if(game_->current_card_ && game_->current_card_->x() != Card::OUTSIDE){
-    game_->current_card_->paint(dc, toTable(game_->current_card_->x(), game_->current_card_->y()), scale_,
-      game_->validPosition());
-  }
-  for(const auto& p : game_->players_){
-    for(const auto& s : p.stones_){
-      s.paint(dc, toTable(s.x_, s.y_), scale_);
+  {
+    std::lock_guard<std::mutex> lock(game_->data_lock_);
+    for(const auto &card : game_->played_cards_){
+      card.paint(dc, toTable(card.x(), card.y()), scale_);
+    }
+    if(game_->current_card_ && game_->current_card_->x() != Card::OUTSIDE){
+      game_->current_card_->paint(dc, toTable(game_->current_card_->x(), game_->current_card_->y()), scale_,
+                                  game_->validPosition());
+    }
+    for(const auto &p : game_->players_){
+      for(const auto &s : p.stones_){
+        s.paint(dc, toTable(s.x_, s.y_), scale_);
+      }
     }
   }
+  int cards_left = game_->getLeftCards();
+  int player_count = game_->getPlayerCount();
+  if(cards_left > 2 * player_count)
+    dc.SetTextForeground(wxColor(0, 255, 0));
+  else if(cards_left > player_count)
+    dc.SetTextForeground(wxColor(255, 165, 0));
+  else
+    dc.SetTextForeground(wxColor(255, 0, 0));
+  dc.SetTextBackground(wxColor(0, 0, 0, 0));
+  dc.SetFont(wxFont(16, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString));
+  wxSize text_size = dc.GetTextExtent(std::to_string(cards_left));
+  int width = text_size.GetWidth();
+  int x_start = GetClientSize().GetWidth() - width;
+  int height = text_size.GetHeight();
+  dc.SetBrush(*wxWHITE_BRUSH);
+  dc.SetPen(*wxWHITE_PEN);
+  dc.DrawRectangle(x_start - 2, 0, GetClientSize().GetWidth(), height);
+  dc.DrawText(std::to_string(cards_left), x_start, 0);
 }
 
 void TablePanel::move(wxMouseEvent &event){
-  if(event.m_middleDown){
+  if(event.m_middleDown || event.ControlDown()){
     if(last_position_.x != Card::OUTSIDE){
       offset_ += event.GetPosition() - last_position_;
       Refresh();
@@ -104,7 +129,7 @@ void TablePanel::mUp(wxMouseEvent &event){
 }
 
 void TablePanel::wheel(wxMouseEvent &event){
-  double s = (event.GetWheelRotation() > 0 ? 2.0 : 0.5);
+  double s = (event.GetWheelRotation() > 0 ? std::sqrt(2.0) : std::sqrt(0.5));
   if(scale_ < 0.3 && s < 1)
     return;
   if(scale_ >= 4 && s > 1)
@@ -126,3 +151,20 @@ void TablePanel::rDDown( wxMouseEvent& event ){
 void TablePanel::rUp(wxMouseEvent &event){
 
 }
+
+void TablePanel::keyDown( wxKeyEvent& event ){
+  if(event.GetKeyCode() == WXK_CONTROL)
+    last_position_ = event.GetPosition();
+  else if(event.GetKeyCode() == WXK_RETURN){
+    MainFrame* parent = dynamic_cast<MainFrame*>(GetParent());
+    if(parent)
+      parent->next();
+  }
+
+}
+
+void TablePanel::keyUp( wxKeyEvent& event ){
+  if(event.GetKeyCode() == WXK_CONTROL)
+    last_position_ = wxPoint(Card::OUTSIDE, Card::OUTSIDE);
+}
+

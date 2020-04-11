@@ -19,10 +19,7 @@ class MainFrame : public MainFrame_B{
     std::vector<PointGroup*> players_guis_;
     wxTimer timer_;
 
-    virtual void startServer( wxCommandEvent& event );
-    virtual void connect( wxCommandEvent& event );
     virtual void quit( wxCommandEvent& event );
-    virtual void undo( wxCommandEvent& event );
     virtual void next( wxCommandEvent& event );
     virtual void back( wxCommandEvent& event );
     virtual void shuffle( wxCommandEvent& event );
@@ -34,6 +31,9 @@ class MainFrame : public MainFrame_B{
 
     void setGame(Game* game);
     void setCurrentPlayer(int player);
+
+    virtual void next();
+    virtual void add( wxCommandEvent& event );
 };
 
 #endif //CARCASONNE_MAINFRAME_H

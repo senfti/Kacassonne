@@ -39,6 +39,7 @@ class MainFrame_B : public wxFrame
 		wxMenuBar* m_menubar1;
 		wxMenu* m_menu1;
 		wxMenu* m_menu2;
+		wxMenu* help_menu_;
 		TablePanel* table_panel_;
 		wxButton* next_button_;
 		wxButton* back_button_;
@@ -46,17 +47,13 @@ class MainFrame_B : public wxFrame
 		wxBoxSizer* info_sizer_;
 
 		// Virtual event handlers, overide them in your derived class
-		virtual void startServer( wxCommandEvent& event ) { event.Skip(); }
-		virtual void connect( wxCommandEvent& event ) { event.Skip(); }
 		virtual void quit( wxCommandEvent& event ) { event.Skip(); }
-		virtual void undo( wxCommandEvent& event ) { event.Skip(); }
 		virtual void next( wxCommandEvent& event ) { event.Skip(); }
 		virtual void back( wxCommandEvent& event ) { event.Skip(); }
 		virtual void shuffle( wxCommandEvent& event ) { event.Skip(); }
 
 
 	public:
-		wxMenuItem* start_server_menu_item_;
 
 		MainFrame_B( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Kacassonne"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 1257,833 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 

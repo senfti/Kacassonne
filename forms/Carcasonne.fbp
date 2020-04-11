@@ -89,34 +89,6 @@
                         <property name="help"></property>
                         <property name="id">wxID_ANY</property>
                         <property name="kind">wxITEM_NORMAL</property>
-                        <property name="label">Start Server</property>
-                        <property name="name">start_server_menu_item_</property>
-                        <property name="permission">public</property>
-                        <property name="shortcut"></property>
-                        <property name="unchecked_bitmap"></property>
-                        <event name="OnMenuSelection">startServer</event>
-                    </object>
-                    <object class="wxMenuItem" expanded="1">
-                        <property name="bitmap"></property>
-                        <property name="checked">0</property>
-                        <property name="enabled">1</property>
-                        <property name="help"></property>
-                        <property name="id">wxID_ANY</property>
-                        <property name="kind">wxITEM_NORMAL</property>
-                        <property name="label">Connect To Server</property>
-                        <property name="name">connect_menu_item_</property>
-                        <property name="permission">none</property>
-                        <property name="shortcut"></property>
-                        <property name="unchecked_bitmap"></property>
-                        <event name="OnMenuSelection">connect</event>
-                    </object>
-                    <object class="wxMenuItem" expanded="1">
-                        <property name="bitmap"></property>
-                        <property name="checked">0</property>
-                        <property name="enabled">1</property>
-                        <property name="help"></property>
-                        <property name="id">wxID_ANY</property>
-                        <property name="kind">wxITEM_NORMAL</property>
                         <property name="label">Quit</property>
                         <property name="name">quit_menu_item_</property>
                         <property name="permission">none</property>
@@ -129,20 +101,11 @@
                     <property name="label">Edit</property>
                     <property name="name">m_menu2</property>
                     <property name="permission">protected</property>
-                    <object class="wxMenuItem" expanded="1">
-                        <property name="bitmap"></property>
-                        <property name="checked">0</property>
-                        <property name="enabled">1</property>
-                        <property name="help"></property>
-                        <property name="id">wxID_ANY</property>
-                        <property name="kind">wxITEM_NORMAL</property>
-                        <property name="label">Undo</property>
-                        <property name="name">undo_menu_item_</property>
-                        <property name="permission">none</property>
-                        <property name="shortcut"></property>
-                        <property name="unchecked_bitmap"></property>
-                        <event name="OnMenuSelection">undo</event>
-                    </object>
+                </object>
+                <object class="wxMenu" expanded="1">
+                    <property name="label">?</property>
+                    <property name="name">help_menu_</property>
+                    <property name="permission">protected</property>
                 </object>
             </object>
             <object class="wxBoxSizer" expanded="1">

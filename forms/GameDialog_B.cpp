@@ -15,6 +15,19 @@ GameDialog_B::GameDialog_B( wxWindow* parent, wxWindowID id, const wxString& tit
 
 	sizer_ = new wxBoxSizer( wxVERTICAL );
 
+	wxBoxSizer* bSizer3;
+	bSizer3 = new wxBoxSizer( wxHORIZONTAL );
+
+	m_staticText2 = new wxStaticText( this, wxID_ANY, wxT("Number of Cards:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText2->Wrap( -1 );
+	bSizer3->Add( m_staticText2, 0, wxALL, 5 );
+
+	numcard_textctrl_ = new wxTextCtrl( this, wxID_ANY, wxT("72"), wxDefaultPosition, wxDefaultSize, wxTE_RIGHT );
+	bSizer3->Add( numcard_textctrl_, 0, wxALL, 0 );
+
+
+	sizer_->Add( bSizer3, 1, wxEXPAND, 5 );
+
 	players_textctrl_ = new wxStaticText( this, wxID_ANY, wxT("Players in Game: \n"), wxDefaultPosition, wxSize( 320,480 ), 0 );
 	players_textctrl_->Wrap( -1 );
 	players_textctrl_->SetFont( wxFont( 16, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );

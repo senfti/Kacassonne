@@ -7,8 +7,8 @@
 #include "Game.h"
 
 
-Game::Game(Connection* connection)
-  : connection_(connection)
+Game::Game(Connection* connection, int card_number)
+  : stack_(card_number), connection_(connection)
 {
   std::lock_guard<std::mutex> lock(data_lock_);
   for(int i=0; i<connection_->players_.size(); i++){
@@ -105,8 +105,6 @@ bool Game::next(){
       return true;
     }
   }
-  if(!current_card_)
-    wxMessageBox("Game Finished!");
   return false;
 }
 

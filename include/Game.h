@@ -23,12 +23,12 @@ class Game{
     bool update_table_ = true;
     std::thread* receiver_ = nullptr;
     bool running_ = true;
-    std::mutex data_lock_;
+    mutable std::mutex data_lock_;
 
     std::mutex msg_queue_mutex_;
     std::list<std::pair<std::string, Message>> msg_queue_;
 
-    Game(Connection* connection = nullptr);
+    Game(Connection* connection = nullptr, int card_number = 72);
     ~Game() {
       running_ = false;
       receiver_->join();
@@ -44,11 +44,19 @@ class Game{
     bool shuffle();
 
     bool validPosition();
-    bool isActive() {
+    bool isActive() const {
       std::lock_guard<std::mutex> lock(data_lock_);
       return current_player_ == connection_->player_number_;
     }
     bool sendUpdate(const std::string& type, double x=0.0, double y=0.0, int idx=-123);
+    int getLeftCards() const {
+      std::lock_guard<std::mutex> lock(data_lock_);
+      return stack_.getLeftCards();
+    }
+    int getPlayerCount() const {
+      std::lock_guard<std::mutex> lock(data_lock_);
+      return players_.size();
+    }
 
     Message getAsMessage() const;
     void updateFromMessage(const Message& msg);

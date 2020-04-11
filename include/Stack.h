@@ -15,12 +15,13 @@ class Stack{
     std::list<Card> cards_;
 
   public:
-    Stack();
+    Stack(int card_number);
     Card* next();
     void pop();
     Card get();
     void push(const Card& card);
     void shuffle();
+    int getLeftCards() const { return cards_.size(); }
 
     friend void to_json(nlohmann::json& j, const Stack& s) {
       j = nlohmann::json{{"cards", s.cards_}};

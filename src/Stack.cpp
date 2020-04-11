@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <random>
 
-Stack::Stack(){
+Stack::Stack(int card_number){
   if(Card::CARD_IMAGES.empty())
     Card::initCardImages();
 
@@ -15,10 +15,12 @@ Stack::Stack(){
     for(int i=0; i<Card::CARD_IMAGES[c].second; i++)
       tmp.push_back(Card(c));
   }
+  while(tmp.size() < card_number)
+    tmp.insert(tmp.end(), tmp.begin(), tmp.end());
 
   std::mt19937 eng(time(0));
   std::shuffle(std::next(tmp.begin(), 1), tmp.end(), eng);
-  cards_ = std::list<Card>(tmp.begin(), tmp.end());
+  cards_ = std::list<Card>(tmp.begin(), tmp.begin() + card_number);
 }
 
 void Stack::shuffle(){

@@ -33,23 +33,15 @@ void MainFrame::setCurrentPlayer(int player){
   }
 }
 
-void MainFrame::startServer(wxCommandEvent &event){
-
-}
-
-void MainFrame::connect(wxCommandEvent &event){
-
-}
-
 void MainFrame::quit(wxCommandEvent &event){
   Destroy();
 }
 
-void MainFrame::undo(wxCommandEvent &event){
-
+void MainFrame::next(wxCommandEvent &event){
+  next();
 }
 
-void MainFrame::next(wxCommandEvent &event){
+void MainFrame::next(){
   if(game_->next()){
     next_button_->Enable(game_->isActive());
     back_button_->Enable(game_->isActive());
@@ -73,6 +65,13 @@ void MainFrame::shuffle( wxCommandEvent& event ){
   if(game_->shuffle()){
     table_panel_->Refresh();
     table_panel_->Update();
+  }
+}
+
+void MainFrame::add(wxCommandEvent &event){
+  for(auto pg : players_guis_){
+    if(pg->add(event.GetId()))
+      break;
   }
 }
 

@@ -17,13 +17,6 @@ MainFrame_B::MainFrame_B( wxWindow* parent, wxWindowID id, const wxString& title
 
 	m_menubar1 = new wxMenuBar( 0 );
 	m_menu1 = new wxMenu();
-	start_server_menu_item_ = new wxMenuItem( m_menu1, wxID_ANY, wxString( wxT("Start Server") ) , wxEmptyString, wxITEM_NORMAL );
-	m_menu1->Append( start_server_menu_item_ );
-
-	wxMenuItem* connect_menu_item_;
-	connect_menu_item_ = new wxMenuItem( m_menu1, wxID_ANY, wxString( wxT("Connect To Server") ) , wxEmptyString, wxITEM_NORMAL );
-	m_menu1->Append( connect_menu_item_ );
-
 	wxMenuItem* quit_menu_item_;
 	quit_menu_item_ = new wxMenuItem( m_menu1, wxID_ANY, wxString( wxT("Quit") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu1->Append( quit_menu_item_ );
@@ -31,11 +24,10 @@ MainFrame_B::MainFrame_B( wxWindow* parent, wxWindowID id, const wxString& title
 	m_menubar1->Append( m_menu1, wxT("File") );
 
 	m_menu2 = new wxMenu();
-	wxMenuItem* undo_menu_item_;
-	undo_menu_item_ = new wxMenuItem( m_menu2, wxID_ANY, wxString( wxT("Undo") ) , wxEmptyString, wxITEM_NORMAL );
-	m_menu2->Append( undo_menu_item_ );
-
 	m_menubar1->Append( m_menu2, wxT("Edit") );
+
+	help_menu_ = new wxMenu();
+	m_menubar1->Append( help_menu_, wxT("?") );
 
 	this->SetMenuBar( m_menubar1 );
 
@@ -80,10 +72,7 @@ MainFrame_B::MainFrame_B( wxWindow* parent, wxWindowID id, const wxString& title
 	this->Centre( wxBOTH );
 
 	// Connect Events
-	m_menu1->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame_B::startServer ), this, start_server_menu_item_->GetId());
-	m_menu1->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame_B::connect ), this, connect_menu_item_->GetId());
 	m_menu1->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame_B::quit ), this, quit_menu_item_->GetId());
-	m_menu2->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame_B::undo ), this, undo_menu_item_->GetId());
 	next_button_->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame_B::next ), NULL, this );
 	back_button_->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame_B::back ), NULL, this );
 	shuffle_button_->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame_B::shuffle ), NULL, this );
