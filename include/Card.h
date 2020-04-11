@@ -21,6 +21,7 @@ class Card{
     static std::vector<std::pair<wxImage, int>> CARD_IMAGES;
     //static std::vector<std::array<SIDE, 4>> CARD_SIDES;
     static int CARD_IMAGES_SIZE;
+    static int cardSize(double scale) { return int(CARD_IMAGES_SIZE*scale/2)*2; }
 
     static bool initCardImages();
 
@@ -32,7 +33,7 @@ class Card{
   public:
     Card(int image_nr = 11) : image_nr_(image_nr) {}
 
-    void paint(wxAutoBufferedPaintDC& dc, const wxPoint& pos, double scale, bool valid=true) const;
+    void paint(wxAutoBufferedPaintDC& dc, const wxPoint& pos, double scale, bool current=false, bool valid=true) const;
 
     bool valid() const { return image_nr_ >= 0; }
     int x() const { return x_; }

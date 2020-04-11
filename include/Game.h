@@ -11,6 +11,7 @@
 #include "Player.h"
 #include "Connection.h"
 #include "nlohmann/json.hpp"
+#include "Flare.h"
 
 class Game{
   public:
@@ -24,6 +25,7 @@ class Game{
     std::thread* receiver_ = nullptr;
     bool running_ = true;
     mutable std::mutex data_lock_;
+    std::list<Flare> flares_;
 
     std::mutex msg_queue_mutex_;
     std::list<std::pair<std::string, Message>> msg_queue_;
@@ -42,6 +44,7 @@ class Game{
     bool next();
     bool revert();
     bool shuffle();
+    void flare(const wxPoint2DDouble& pos);
 
     bool validPosition();
     bool isActive() const {

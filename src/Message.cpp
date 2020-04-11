@@ -13,6 +13,10 @@ int64_t getID(){
   return std::chrono::duration_cast<std::chrono::nanoseconds>(duration).count();
 }
 
+double getTime(){
+  return getID() / double(1e9);
+}
+
 Message Message::fromJsonString(const std::string &msg){
   try{
     return Message(nlohmann::json::parse(msg.begin(), msg.begin() + msg.rfind("}") + 1));

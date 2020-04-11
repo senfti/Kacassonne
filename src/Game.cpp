@@ -10,8 +10,10 @@
 Game::Game(Connection* connection, int card_number)
   : stack_(card_number), connection_(connection)
 {
+  if(stack_.getLeftCards() < 1)
+    return;
   std::lock_guard<std::mutex> lock(data_lock_);
-  for(int i=0; i<connection_->players_.size(); i++){
+  for(unsigned i=0; i<connection_->players_.size(); i++){
     players_.push_back(Player(i, connection_->players_[i].second));
     if(connection_->player_id_ == connection_->players_[i].first)
       connection_->player_number_ = i;
@@ -90,8 +92,6 @@ bool Game::moveStone(double x, double y){
       no_stones = !doMoveStone(x, y, connection_->player_number_);
     }
   }
-  if(no_stones)
-    wxMessageBox("No Stones!");
   return !no_stones;
 }
 
@@ -136,6 +136,14 @@ bool Game::shuffle(){
   return false;
 }
 
+void Game::flare(const wxPoint2DDouble& pos){
+  std::lock_guard<std::mutex> lock(data_lock_);
+  if(current_player_ != connection_->player_number_ || !current_card_){
+    flares_.emplace_back(Flare(pos.m_x, pos.m_y, connection_->player_number_));
+    sendUpdate("flare", pos.m_x, pos.m_y, connection_->player_number_);
+  }
+}
+
 bool Game::validPosition(){
   bool has_neighbor = false;
   for(const auto &card : played_cards_){
@@ -155,6 +163,7 @@ bool Game::sendUpdate(const std::string& type, double x, double y, int idx){
   msg["y"] = y;
   msg["idx"] = idx;
   connection_->send("update", msg);
+  return true;
 }
 
 Message Game::getAsMessage() const{
@@ -190,15 +199,18 @@ void Game::recv(){
         if(current_card_){
           if(m["type"] == "moveCard")
             current_card_->setPosition(m["x"], m["y"]);
-          if(m["type"] == "rotateCard")
+          else if(m["type"] == "rotateCard")
             current_card_->rotate(m["x"].get<double>());
-          if(m["type"] == "layCard"){
+          else if(m["type"] == "layCard"){
             current_card_ = nullptr;
             played_cards_.push_back(stack_.get());
           }
         }
-        if(m["type"] == "moveStone" && m["idx"].get<int>() < players_.size())
+        if(m["type"] == "moveStone" && m["idx"].get<int>() < int(players_.size()))
           doMoveStone(m["x"], m["y"], m["idx"], false);
+        else if(m["type"] == "flare" && m["idx"].get<int>() < players_.size()){
+          flares_.push_back(Flare(m["x"], m["y"], m["idx"]));
+        }
         update_table_ = true;
       } else if(t == "next"){
         updateFromMessage(m);

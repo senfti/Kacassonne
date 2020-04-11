@@ -8,7 +8,7 @@
 #include <wx/valnum.h>
 
 GameDialog::GameDialog(Connection *connection)
-  : connection_(connection), GameDialog_B(nullptr), timer_(this)
+  : GameDialog_B(nullptr), connection_(connection), timer_(this)
 {
   wxIntegerValidator<unsigned long> val(&card_number_);
   val.SetMin(1);
@@ -71,7 +71,7 @@ void GameDialog::OnTimer(wxTimerEvent& event){
           }
         }
         if(t == "game_start_ack"){
-          for(int i=0; i<connection_->players_.size(); i++){
+          for(unsigned i=0; i<connection_->players_.size(); i++){
             if(connection_->players_[i].first == m["player_id"].get<int64_t>()){
               ack_[i] = true;
             }

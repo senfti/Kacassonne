@@ -12,6 +12,7 @@
 
 
 int64_t getID();
+double getTime();
 
 // nlohmann::json is not made for inheritance, so use with care
 class Message : public nlohmann::json{

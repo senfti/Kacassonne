@@ -27,8 +27,8 @@ void MainFrame::setGame(Game *game){
   timer_.Start(100);
 }
 
-void MainFrame::setCurrentPlayer(int player){
-  for(int i = 0; i < players_guis_.size(); i++){
+void MainFrame::setCurrentPlayer(int64_t player){
+  for(unsigned i = 0; i < players_guis_.size(); i++){
     players_guis_[i]->setActive(player == i);
   }
 }
@@ -73,10 +73,11 @@ void MainFrame::add(wxCommandEvent &event){
     if(pg->add(event.GetId()))
       break;
   }
+  next_button_->SetFocus();
 }
 
 void MainFrame::OnTimer(wxTimerEvent &event){
-  next_button_->Enable(game_->isActive());
+  next_button_->Enable(game_->isActive() && !game_->current_card_);
   back_button_->Enable(game_->isActive());
   shuffle_button_->Enable(game_->isActive() && game_->current_card_ && !game_->played_cards_.empty());
   setCurrentPlayer(game_->current_player_);
@@ -85,7 +86,8 @@ void MainFrame::OnTimer(wxTimerEvent &event){
     table_panel_->Refresh();
   }
 
-  for(int i = 0; i < players_guis_.size(); i++){
+  for(unsigned i = 0; i < players_guis_.size(); i++){
+    std::lock_guard<std::mutex> lock(game_->data_lock_);
     if(players_guis_[i]->getPoints() != game_->players_[i].points_){
       game_->players_[i].points_ = players_guis_[i]->getPoints();
       Message msg;
@@ -93,6 +95,21 @@ void MainFrame::OnTimer(wxTimerEvent &event){
       msg["idx"] = i;
       msg["points"] = players_guis_[i]->getPoints();
       game_->connection_->send("update", msg);
+    }
+  }
+
+  {
+    std::lock_guard<std::mutex> lock(game_->data_lock_);
+    auto flare = game_->flares_.begin();
+    bool refresh = !game_->flares_.empty();
+    while(flare != game_->flares_.end()){
+      if(flare->isTimeout())
+        flare = game_->flares_.erase(flare);
+      else
+        break;
+    }
+    if(refresh){
+      table_panel_->Refresh();
     }
   }
 
@@ -108,4 +125,10 @@ void MainFrame::OnTimer(wxTimerEvent &event){
       players_guis_[m["idx"]]->setPoints(m["points"]);
     }
   }
+
+  static unsigned long long last_curr_time = getTime();
+  if(game_->current_card_)
+    last_curr_time = getTime();
+  else if(getTime() - last_curr_time > 5)
+    next();
 }

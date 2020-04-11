@@ -12,6 +12,7 @@
 TablePanel::TablePanel(wxWindow *parent, wxWindowID winid, const wxPoint &pos, const wxSize &size, long style, const wxString &name)
     : wxPanel(parent, winid, pos, size, style, name) {
   SetBackgroundStyle(wxBG_STYLE_PAINT);
+  SetBackgroundColour(wxColor(255,255,255));
   Connect( wxEVT_PAINT, wxPaintEventHandler( TablePanel::paint ), NULL, this );
 
   Connect( wxEVT_LEAVE_WINDOW, wxMouseEventHandler( TablePanel::leave ), NULL, this );
@@ -52,7 +53,7 @@ wxPoint2DDouble TablePanel::toGame(int x, int y) const {
 }
 
 wxPoint TablePanel::toTable(double x, double y) const {
-  double edge_length = Card::CARD_IMAGES_SIZE*scale_;
+  double edge_length = Card::cardSize(scale_);
   return offset_ + wxPoint(x*edge_length, y*edge_length);
 }
 
@@ -66,11 +67,23 @@ void TablePanel::paint(wxPaintEvent &event){
     }
     if(game_->current_card_ && game_->current_card_->x() != Card::OUTSIDE){
       game_->current_card_->paint(dc, toTable(game_->current_card_->x(), game_->current_card_->y()), scale_,
-                                  game_->validPosition());
+                                  true, game_->validPosition());
+    }
+    else if(!game_->current_card_){
+      game_->played_cards_.back().paint(dc, toTable(game_->played_cards_.back().x(), game_->played_cards_.back().y()), scale_, true);
     }
     for(const auto &p : game_->players_){
       for(const auto &s : p.stones_){
         s.paint(dc, toTable(s.x_, s.y_), scale_);
+      }
+    }
+    for(const auto &f : game_->flares_){
+      if(f.isDraw() && !f.isTimeout()){
+        dc.SetPen(wxPen(game_->players_[f.player_].color_, std::max(1.0, 3 * scale_)));
+        int l = scale_ * 10;
+        wxPoint pos = toTable(f.x_, f.y_);
+        dc.DrawLine(pos.x - l, pos.y - l, pos.x + l, pos.y + l);
+        dc.DrawLine(pos.x - l, pos.y + l, pos.x + l, pos.y - l);
       }
     }
   }
@@ -142,6 +155,8 @@ void TablePanel::wheel(wxMouseEvent &event){
 void TablePanel::rDown(wxMouseEvent &event){
   if(game_->rotateCard())
     Refresh();
+  else
+    game_->flare(wxPoint2DDouble(toGame(event.GetPosition())));
 }
 
 void TablePanel::rDDown( wxMouseEvent& event ){

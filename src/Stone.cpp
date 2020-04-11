@@ -8,7 +8,7 @@
 void Stone::paint(wxAutoBufferedPaintDC& dc, const wxPoint& pos, double scale) const{
   dc.SetPen(*wxBLACK_PEN);
   dc.SetBrush(wxBrush(color_));
-  dc.DrawCircle(pos, SIZE*Card::CARD_IMAGES_SIZE*scale);
+  dc.DrawCircle(pos, SIZE*Card::cardSize(scale));
 }
 
 

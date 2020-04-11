@@ -26,7 +26,7 @@ void signal_handler(int signal)
   // get void*'s for all entries on the stack
   size = backtrace(array, 50);
   char **ptr = backtrace_symbols(array, size);
-  for(int i=0; i<size; i++){
+  for(unsigned i=0; i<size; i++){
     bool found_bracket = false;
     char* c = ptr[i];
     while(*c != '\0'){
@@ -90,8 +90,12 @@ bool MyApp::OnInit(){
   connection_->subscribeToGame();
 
   try{
-    main_frame_ = new MainFrame();
     game_ = new Game(connection_, card_number);
+    if(game_->stack_.getLeftCards() < 1){
+      wxMessageBox("Failed loading card images!");
+      return false;
+    }
+    main_frame_ = new MainFrame();
   }
   catch (std::bad_alloc& exception){
     wxMessageBox("Not enough memory!", "Fatal Error", wxICON_ERROR);

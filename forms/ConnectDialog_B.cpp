@@ -47,6 +47,8 @@ ConnectDialog_B::ConnectDialog_B( wxWindow* parent, wxWindowID id, const wxStrin
 	gSizer1->Add( name_textctrl_, 0, wxALL|wxEXPAND, 5 );
 
 	ok_button_ = new wxButton( this, wxID_ANY, wxT("Connect"), wxDefaultPosition, wxDefaultSize, 0 );
+
+	ok_button_->SetDefault();
 	gSizer1->Add( ok_button_, 0, wxALL, 5 );
 
 

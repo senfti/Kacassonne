@@ -6,12 +6,12 @@
 #include <algorithm>
 #include <random>
 
-Stack::Stack(int card_number){
-  if(Card::CARD_IMAGES.empty())
-    Card::initCardImages();
+Stack::Stack(unsigned card_number){
+  if(!Card::initCardImages())
+    return;
 
   std::vector<Card> tmp;
-  for(int c=0; c<Card::CARD_IMAGES.size(); c++){
+  for(unsigned c=0; c<Card::CARD_IMAGES.size(); c++){
     for(int i=0; i<Card::CARD_IMAGES[c].second; i++)
       tmp.push_back(Card(c));
   }

@@ -30,7 +30,7 @@ class MainFrame : public MainFrame_B{
     MainFrame();
 
     void setGame(Game* game);
-    void setCurrentPlayer(int player);
+    void setCurrentPlayer(int64_t player);
 
     virtual void next();
     virtual void add( wxCommandEvent& event );

@@ -15,7 +15,7 @@ class Stack{
     std::list<Card> cards_;
 
   public:
-    Stack(int card_number);
+    Stack(unsigned card_number);
     Card* next();
     void pop();
     Card get();
