@@ -22,6 +22,7 @@ class TablePanel;
 #include <wx/settings.h>
 #include <wx/panel.h>
 #include <wx/button.h>
+#include <wx/stattext.h>
 #include <wx/sizer.h>
 #include <wx/frame.h>
 
@@ -44,6 +45,7 @@ class MainFrame_B : public wxFrame
 		wxButton* next_button_;
 		wxButton* back_button_;
 		wxButton* shuffle_button_;
+		wxStaticText* m_staticText2;
 		wxBoxSizer* info_sizer_;
 
 		// Virtual event handlers, overide them in your derived class

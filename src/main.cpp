@@ -106,7 +106,7 @@ bool MyApp::OnInit(){
     return false;
   }
 
-  main_frame_->SetTitle(connection_->player_name_);
+//  main_frame_->SetTitle(connection_->player_name_);
   main_frame_->setGame(game_);
   main_frame_->Show();
 

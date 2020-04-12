@@ -98,7 +98,7 @@ bool Game::moveStone(double x, double y){
 bool Game::next(){
   {
     std::lock_guard<std::mutex> lock(data_lock_);
-    if(current_player_ == connection_->player_number_ && !current_card_){
+    if(current_player_ == connection_->player_number_ && !current_card_ && stack_.getLeftCards() > 0){
       current_player_ = (current_player_ + 1) % int(players_.size());
       connection_->send("next", getAsMessage());
       current_card_ = stack_.next();

@@ -68,14 +68,6 @@ void MainFrame::shuffle( wxCommandEvent& event ){
   }
 }
 
-void MainFrame::add(wxCommandEvent &event){
-  for(auto pg : players_guis_){
-    if(pg->add(event.GetId()))
-      break;
-  }
-  next_button_->SetFocus();
-}
-
 void MainFrame::OnTimer(wxTimerEvent &event){
   next_button_->Enable(game_->isActive() && !game_->current_card_);
   back_button_->Enable(game_->isActive());
@@ -96,6 +88,7 @@ void MainFrame::OnTimer(wxTimerEvent &event){
       msg["points"] = players_guis_[i]->getPoints();
       game_->connection_->send("update", msg);
     }
+    players_guis_[i]->setStones(game_->players_[i].getRemainingStones());
   }
 
   {

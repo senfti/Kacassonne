@@ -17,6 +17,8 @@ class Player{
 
     Player(int number = -1, const wxString& name = "");
 
+    int getRemainingStones() const;
+
     friend void to_json(nlohmann::json& j, const Player& p) {
       j = nlohmann::json{{"stones", p.stones_}, {"color", p.color_}};
     }

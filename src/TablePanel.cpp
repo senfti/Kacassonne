@@ -48,8 +48,8 @@ TablePanel::~TablePanel(){
 }
 
 wxPoint2DDouble TablePanel::toGame(int x, int y) const {
-  return wxPoint2DDouble((x - offset_.x) / double(Card::CARD_IMAGES_SIZE) / scale_,
-                         (y - offset_.y) / double(Card::CARD_IMAGES_SIZE) / scale_);
+  return wxPoint2DDouble((x - offset_.x) / double(Card::cardSize(scale_)),
+                         (y - offset_.y) / double(Card::cardSize(scale_)));
 }
 
 wxPoint TablePanel::toTable(double x, double y) const {
@@ -143,12 +143,14 @@ void TablePanel::mUp(wxMouseEvent &event){
 
 void TablePanel::wheel(wxMouseEvent &event){
   double s = (event.GetWheelRotation() > 0 ? std::sqrt(2.0) : std::sqrt(0.5));
-  if(scale_ < 0.3 && s < 1)
+  if(scale_ < 0.6 && s < 1)
     return;
   if(scale_ >= 4 && s > 1)
     return;
+  wxPoint2DDouble game_pos = toGame(event.GetPosition());
   scale_ *= s;
-  offset_ = event.GetPosition() - (event.GetPosition() - offset_) * s;
+  wxPoint2DDouble tmp = game_pos*Card::cardSize(scale_);
+  offset_ = event.GetPosition() - wxPoint(tmp.m_x, tmp.m_y);
   Refresh();
 }
 

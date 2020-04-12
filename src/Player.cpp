@@ -6,7 +6,7 @@
 
 Player::Player(int number, const wxString& name)
   : name_(name){
-  static std::vector<wxColor> colors = {wxColor(255, 0, 0), wxColor(0, 255, 0), wxColor(0, 0, 255), wxColor(255, 255, 0),
+  static std::vector<wxColor> colors = {wxColor(255, 0, 0), wxColor(46, 172, 77), wxColor(0, 0, 255), wxColor(255, 255, 0),
                                         wxColor(0, 0, 0), wxColor(255, 0, 255), wxColor(0, 255, 255), wxColor(255, 255, 255)};
   if(number >= 0){
     if(number < colors.size())
@@ -19,6 +19,14 @@ Player::Player(int number, const wxString& name)
   }
 }
 
+int Player::getRemainingStones() const{
+  int layed_stones = 0;
+  for(const auto& s : stones_){
+    if(s.isLayed())
+      layed_stones++;
+  }
+  return int(stones_.size()) - layed_stones;
+}
 
 void to_json(nlohmann::json& j, const wxColor& c) {
   j = nlohmann::json{{"r", c.Red()}, {"g", c.Green()}, {"b", c.Blue()}, {"a", c.Alpha()}};

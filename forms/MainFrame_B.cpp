@@ -53,6 +53,10 @@ MainFrame_B::MainFrame_B( wxWindow* parent, wxWindowID id, const wxString& title
 	shuffle_button_ = new wxButton( this, wxID_ANY, wxT("Shuffle"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer4->Add( shuffle_button_, 0, wxALL, 5 );
 
+	m_staticText2 = new wxStaticText( this, wxID_ANY, wxT("Name, Left Stones, Points"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText2->Wrap( -1 );
+	bSizer4->Add( m_staticText2, 0, wxALL, 5 );
+
 
 	bSizer3->Add( bSizer4, 0, wxEXPAND, 5 );
 

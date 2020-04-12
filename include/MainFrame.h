@@ -33,7 +33,6 @@ class MainFrame : public MainFrame_B{
     void setCurrentPlayer(int64_t player);
 
     virtual void next();
-    virtual void add( wxCommandEvent& event );
 };
 
 #endif //CARCASONNE_MAINFRAME_H
