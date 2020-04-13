@@ -3,3 +3,10 @@ cmake-build-debug
 /.project
 data_orig/
 .vs/
+CMakeFiles/
+CMakeCache.txt
+Makefile
+*.cbp
+*.cmake
+Kacassonne
+*.tar.gz

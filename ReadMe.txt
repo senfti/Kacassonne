@@ -1,3 +1,7 @@
+Ubuntu Dependencies Install:
+sudo apt-get update
+sudo apt-get install libwxgtk3.0-gtk3-0v5 wx-common libzmq5
+
 MIT License 
 
 Copyright (c) 2020 Thomas Senfter (except nlohmann::json)
