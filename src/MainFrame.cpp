@@ -4,27 +4,33 @@
 
 #include <MainFrame.h>
 
-#include "MainFrame.h"
+#include "main.h"
 
-MainFrame::MainFrame() : MainFrame_B(nullptr), timer_(this){
+
+MainFrame::MainFrame(MyApp* app) : MainFrame_B(nullptr), app_(app), timer_(this){
 }
 
-void MainFrame::setGame(Game *game){
-  game_ = game;
-  table_panel_->setGame(game);
-  info_sizer_->Clear(true);
-  for(auto p : players_guis_)
-    delete p;
-  players_guis_.clear();
-  std::lock_guard<std::mutex> lock(game_->data_lock_);
-  for(const auto &p : game_->players_){
-    players_guis_.push_back(new PointGroup(p.name_, p.color_, this));
-    info_sizer_->Add(players_guis_.back());
+void MainFrame::setGame(Game *game, bool restart){
+  {
+    std::lock_guard<std::mutex> lock(game->data_lock_);
+    game_ = game;
+    table_panel_->setGame(game);
   }
-  if(!players_guis_.empty())
-    players_guis_[0]->setActive(true);
-  Connect(timer_.GetId(), wxEVT_TIMER, wxTimerEventHandler(MainFrame::OnTimer), NULL, this);
-  timer_.Start(100);
+  std::lock_guard<std::mutex> lock(game_->data_lock_);
+  if(restart){
+    for(auto& pg : players_guis_)
+      pg->setPoints(0);
+  }
+  else{
+    for(const auto &p : game_->players_){
+      players_guis_.push_back(new PointGroup(p.name_, p.color_, this));
+      info_sizer_->Add(players_guis_.back());
+    }
+    if(!players_guis_.empty())
+      players_guis_[0]->setActive(true);
+    Connect(timer_.GetId(), wxEVT_TIMER, wxTimerEventHandler(MainFrame::OnTimer), NULL, this);
+    timer_.Start(100);
+  }
 }
 
 void MainFrame::setCurrentPlayer(int64_t player){
@@ -65,6 +71,12 @@ void MainFrame::shuffle( wxCommandEvent& event ){
   if(game_->shuffle()){
     table_panel_->Refresh();
     table_panel_->Update();
+  }
+}
+
+void MainFrame::restart( wxCommandEvent& event ){
+  if(game_->connection_->iAmHost()){
+    app_->reset();
   }
 }
 

@@ -7,10 +7,15 @@
 Connection::Connection(const wxString &ip, const wxString &pub_port, const wxString &sub_port, const wxString& player_name)
   :context_(1), sub_(context_, ZMQ_SUB), pub_(context_, ZMQ_PUB), player_name_(player_name)
 {
-  sub_.setsockopt(ZMQ_SUBSCRIBE, sub_topic_.c_str(), sub_topic_.size());
-  sub_.setsockopt(ZMQ_RCVTIMEO, 1000);
-  sub_.connect("tcp://" + ip + ":" + sub_port);
-  pub_.connect("tcp://" + ip + ":" + pub_port);
+  try{
+    sub_.setsockopt(ZMQ_SUBSCRIBE, sub_topic_.c_str(), sub_topic_.size());
+    sub_.setsockopt(ZMQ_RCVTIMEO, 1000);
+    sub_.connect("tcp://" + ip + ":" + sub_port);
+    pub_.connect("tcp://" + ip + ":" + pub_port);
+  }
+  catch(std::exception&){
+    return;
+  }
   wxMilliSleep(1000);
 
   Message msg;
@@ -22,7 +27,7 @@ Connection::Connection(const wxString &ip, const wxString &pub_port, const wxStr
         ok_ = true;
         return;
       }
-      if(getID() - id > 3e9){
+      if(getID() - id > 1e10){
         return;
       }
     }

@@ -95,7 +95,7 @@ bool MyApp::OnInit(){
       wxMessageBox("Failed loading card images!");
       return false;
     }
-    main_frame_ = new MainFrame();
+    main_frame_ = new MainFrame(this);
   }
   catch (std::bad_alloc& exception){
     wxMessageBox("Not enough memory!", "Fatal Error", wxICON_ERROR);
@@ -108,6 +108,17 @@ bool MyApp::OnInit(){
 
 //  main_frame_->SetTitle(connection_->player_name_);
   main_frame_->setGame(game_);
+  main_frame_->Show();
+
+  return true;
+}
+
+bool MyApp::reset(){
+  main_frame_->Hide();
+  int card_number = game_->getLeftCards() + game_->played_cards_.size();
+  delete game_;
+  game_ = new Game(connection_, card_number);
+  main_frame_->setGame(game_, true);
   main_frame_->Show();
 
   return true;

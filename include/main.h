@@ -21,6 +21,8 @@ class MyApp : public wxApp{
     ~MyApp(){ delete game_; delete connection_;}
     virtual bool OnInit();
     virtual int OnExit();
+
+    bool reset();
 };
 
 extern MyApp* my_app;

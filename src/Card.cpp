@@ -35,6 +35,7 @@ bool Card::initCardImages(){
         }
       }
     }
+    std::sort(card_files.begin() + 1, card_files.end(), [](const std::pair<std::string, int> & a, const std::pair<std::string, int> & b) { return a.first < b.first; });
 
     wxInitAllImageHandlers();
     for(auto cf : card_files){

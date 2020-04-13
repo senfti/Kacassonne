@@ -49,6 +49,8 @@ class MainFrame_B : public wxFrame
 		wxBoxSizer* info_sizer_;
 
 		// Virtual event handlers, overide them in your derived class
+		virtual void restart( wxCommandEvent& event ) { event.Skip(); }
+		virtual void newGame( wxCommandEvent& event ) { event.Skip(); }
 		virtual void quit( wxCommandEvent& event ) { event.Skip(); }
 		virtual void next( wxCommandEvent& event ) { event.Skip(); }
 		virtual void back( wxCommandEvent& event ) { event.Skip(); }

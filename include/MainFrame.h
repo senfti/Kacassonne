@@ -13,8 +13,11 @@
 #include <thread>
 #include <mutex>
 
+class MyApp;
+
 class MainFrame : public MainFrame_B{
   protected:
+    MyApp* app_;
     Game* game_;
     std::vector<PointGroup*> players_guis_;
     wxTimer timer_;
@@ -23,13 +26,14 @@ class MainFrame : public MainFrame_B{
     virtual void next( wxCommandEvent& event );
     virtual void back( wxCommandEvent& event );
     virtual void shuffle( wxCommandEvent& event );
+    virtual void restart( wxCommandEvent& event );
 
     void OnTimer(wxTimerEvent& event);
 
   public:
-    MainFrame();
+    MainFrame(MyApp* app);
 
-    void setGame(Game* game);
+    void setGame(Game* game, bool restart=false);
     void setCurrentPlayer(int64_t player);
 
     virtual void next();
