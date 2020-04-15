@@ -9,7 +9,7 @@ Player::Player(int number, const wxString& name)
   static std::vector<wxColor> colors = {wxColor(255, 0, 0), wxColor(46, 172, 77), wxColor(0, 0, 255), wxColor(255, 255, 0),
                                         wxColor(0, 0, 0), wxColor(255, 0, 255), wxColor(0, 255, 255), wxColor(255, 255, 255)};
   if(number >= 0){
-    if(number < colors.size())
+    if(number < int(colors.size()))
       color_ = colors[number];
     else
       color_ = wxColor(rand() % 256, rand() % 256, rand() % 256);

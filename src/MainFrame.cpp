@@ -27,15 +27,15 @@ void MainFrame::setGame(Game *game, bool restart){
       info_sizer_->Add(players_guis_.back());
     }
     if(!players_guis_.empty())
-      players_guis_[0]->setActive(true);
+      players_guis_[0]->setActive(true, false);
     Connect(timer_.GetId(), wxEVT_TIMER, wxTimerEventHandler(MainFrame::OnTimer), NULL, this);
     timer_.Start(100);
   }
 }
 
-void MainFrame::setCurrentPlayer(int64_t player){
+void MainFrame::setCurrentPlayer(int player){
   for(unsigned i = 0; i < players_guis_.size(); i++){
-    players_guis_[i]->setActive(player == i);
+    players_guis_[i]->setActive(player == int(i), game_->current_card_);
   }
 }
 
@@ -81,14 +81,20 @@ void MainFrame::restart( wxCommandEvent& event ){
 }
 
 void MainFrame::OnTimer(wxTimerEvent &event){
-  next_button_->Enable(game_->isActive() && !game_->current_card_);
+  next_button_->Enable(game_->isActive() && !game_->current_card_ && game_->stack_.getLeftCards());
   back_button_->Enable(game_->isActive());
-  shuffle_button_->Enable(game_->isActive() && game_->current_card_ && !game_->played_cards_.empty());
+  shuffle_button_->Enable(game_->isActive() && game_->current_card_ && !game_->played_cards_.empty() && game_->stack_.getLeftCards());
   setCurrentPlayer(game_->current_player_);
   if(game_->update_table_){
     game_->update_table_ = false;
     table_panel_->Refresh();
   }
+  int next_preview = game_->getPreviewCard();
+  if(next_preview != preview_image_ && next_preview >= 0){
+    wxSize size = preview_bitmap_->GetClientSize();
+    preview_bitmap_->SetBitmap(wxBitmap(Card::CARD_IMAGES[next_preview].first.Scale(size.x, size.y)));
+  }
+
 
   for(unsigned i = 0; i < players_guis_.size(); i++){
     std::lock_guard<std::mutex> lock(game_->data_lock_);

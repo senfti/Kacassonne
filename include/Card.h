@@ -33,12 +33,15 @@ class Card{
   public:
     Card(int image_nr = 11) : image_nr_(image_nr) {}
 
-    void paint(wxAutoBufferedPaintDC& dc, const wxPoint& pos, double scale, bool current=false, bool valid=true) const;
+    enum class State{CURRENT, PREVIOUS, OTHER, NEXT};
+
+    void paint(wxAutoBufferedPaintDC& dc, const wxPoint& pos, double scale, State state=State::OTHER, bool valid=true) const;
 
     bool valid() const { return image_nr_ >= 0; }
     int x() const { return x_; }
     int y() const { return y_; }
     int r() const { return r_; }
+    int imageNr() const { return image_nr_; }
 
     void setPosition(int x, int y) { x_ = x; y_ = y; }
     void rotate() { r_++; }

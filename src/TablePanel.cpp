@@ -6,13 +6,14 @@
 #include <wx/wx.h>
 #include <wx/dcbuffer.h>
 #include <TablePanel.h>
+#include <filesystem>
 #include "MainFrame.h"
 
 
 TablePanel::TablePanel(wxWindow *parent, wxWindowID winid, const wxPoint &pos, const wxSize &size, long style, const wxString &name)
     : wxPanel(parent, winid, pos, size, style, name) {
+  SetBackgroundColour(wxColor(209,188,138));
   SetBackgroundStyle(wxBG_STYLE_PAINT);
-  SetBackgroundColour(wxColor(255,255,255));
   Connect( wxEVT_PAINT, wxPaintEventHandler( TablePanel::paint ), NULL, this );
 
   Connect( wxEVT_LEAVE_WINDOW, wxMouseEventHandler( TablePanel::leave ), NULL, this );
@@ -63,14 +64,11 @@ void TablePanel::paint(wxPaintEvent &event){
   {
     std::lock_guard<std::mutex> lock(game_->data_lock_);
     for(const auto &card : game_->played_cards_){
-      card.paint(dc, toTable(card.x(), card.y()), scale_);
+      card.paint(dc, toTable(card.x(), card.y()), scale_, &card == &(game_->played_cards_.back()) ? Card::State::PREVIOUS : Card::State::OTHER);
     }
     if(game_->current_card_ && game_->current_card_->x() != Card::OUTSIDE){
       game_->current_card_->paint(dc, toTable(game_->current_card_->x(), game_->current_card_->y()), scale_,
-                                  true, game_->validPosition());
-    }
-    else if(!game_->current_card_){
-      game_->played_cards_.back().paint(dc, toTable(game_->played_cards_.back().x(), game_->played_cards_.back().y()), scale_, true);
+                                  Card::State::CURRENT, game_->validPosition());
     }
     for(const auto &p : game_->players_){
       for(const auto &s : p.stones_){

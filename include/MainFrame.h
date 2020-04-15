@@ -22,6 +22,8 @@ class MainFrame : public MainFrame_B{
     std::vector<PointGroup*> players_guis_;
     wxTimer timer_;
 
+    int preview_image_ = -1;
+
     virtual void quit( wxCommandEvent& event );
     virtual void next( wxCommandEvent& event );
     virtual void back( wxCommandEvent& event );
@@ -34,7 +36,7 @@ class MainFrame : public MainFrame_B{
     MainFrame(MyApp* app);
 
     void setGame(Game* game, bool restart=false);
-    void setCurrentPlayer(int64_t player);
+    void setCurrentPlayer(int player);
 
     virtual void next();
 };

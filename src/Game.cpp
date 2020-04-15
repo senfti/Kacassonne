@@ -27,6 +27,7 @@ Game::Game(Connection* connection, int card_number)
 
 bool Game::moveCard(double x, double y){
   std::lock_guard<std::mutex> lock(data_lock_);
+  last_mouse_pos_ = wxPoint2DDouble(x, y);
   if(current_player_ == connection_->player_number_ && current_card_){
     x = std::floor(x);
     y = std::floor(y);
@@ -144,6 +145,16 @@ void Game::flare(const wxPoint2DDouble& pos){
   }
 }
 
+int Game::getPreviewCard() {
+  std::lock_guard<std::mutex> lock(data_lock_);
+  int card_nr = (unsigned(connection_->player_number_) + players_.size() - unsigned(current_player_)) % players_.size();
+  card_nr -= (current_card_ ? 0 : 1);
+  if(card_nr < 0)
+    return -1;
+  else
+    return stack_.next(card_nr)->imageNr();
+}
+
 bool Game::validPosition(){
   bool has_neighbor = false;
   for(const auto &card : played_cards_){
@@ -184,6 +195,8 @@ void Game::updateFromMessage(const Message& msg){
     msg.at("current_player").get_to(current_player_);
     current_card_ = stack_.next();
   }
+  moveCard(last_mouse_pos_.m_x, last_mouse_pos_.m_y);
+  update_table_ = true;
 }
 
 void Game::recv(){
@@ -208,7 +221,7 @@ void Game::recv(){
         }
         if(m["type"] == "moveStone" && m["idx"].get<int>() < int(players_.size()))
           doMoveStone(m["x"], m["y"], m["idx"], false);
-        else if(m["type"] == "flare" && m["idx"].get<int>() < players_.size()){
+        else if(m["type"] == "flare" && m["idx"].get<int>() < int(players_.size())){
           flares_.push_back(Flare(m["x"], m["y"], m["idx"]));
         }
         update_table_ = true;

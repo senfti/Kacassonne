@@ -24,8 +24,8 @@ PointGroup::PointGroup(const wxString& name, const wxColor& color, wxWindow* par
   Add( point_field_, 0, wxALL, 0 );
 }
 
-void PointGroup::setActive(bool active){
-  active_panel_->SetBackgroundColour(active ? wxColor(0, 255, 0) : this->GetContainingWindow()->GetBackgroundColour() );
+void PointGroup::setActive(bool active, bool card_active){
+  active_panel_->SetBackgroundColour(active ? (card_active ? wxColor(0, 255, 0) : wxColor(255, 255, 0)) : this->GetContainingWindow()->GetBackgroundColour() );
   active_panel_->Refresh();
 }
 

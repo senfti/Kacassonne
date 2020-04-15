@@ -1,5 +1,6 @@
 #include <GameDialog.h>
 #include <csignal>
+#include <filesystem>
 
 #include "main.h"
 #include "ConnectDialog.h"
@@ -69,10 +70,29 @@ bool MyApp::OnInit(){
   std::signal(SIGSEGV, signal_handler);
   std::signal(SIGFPE, signal_handler);
   my_app = this;
-  ConnectDialog* cd = new ConnectDialog();
-  cd->ShowModal();
-  connection_ = new Connection(cd->ip_, cd->pub_port_, cd->sub_port_, cd->name_);
-  delete cd;
+  if(std::filesystem::exists("/media/ts/Data/Programmieren/Spiele/Kacassonne/cmake-build-debug/settings.txt")){
+    std::ifstream f("settings.txt");
+    std::string ip, pub_port, sub_port, name;
+    try{
+      std::getline(f, ip);
+      std::getline(f, pub_port);
+      std::getline(f, sub_port);
+      std::getline(f, name);
+      if(!name.empty())
+        connection_ = new Connection(ip, pub_port, sub_port, name);
+      else
+        wxMessageBox("Invalid settings file");
+    }
+    catch(std::exception&){
+      wxMessageBox("Invalid settings file");
+    }
+  }
+  if(connection_ == nullptr || !connection_->ok_){
+    ConnectDialog *cd = new ConnectDialog();
+    cd->ShowModal();
+    connection_ = new Connection(cd->ip_, cd->pub_port_, cd->sub_port_, cd->name_);
+    delete cd;
+  }
   if(!connection_->ok_){
     wxMessageBox("Connection Failed!");
     return false;

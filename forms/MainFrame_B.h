@@ -24,6 +24,7 @@ class TablePanel;
 #include <wx/button.h>
 #include <wx/stattext.h>
 #include <wx/sizer.h>
+#include <wx/statbmp.h>
 #include <wx/frame.h>
 
 ///////////////////////////////////////////////////////////////////////////
@@ -47,6 +48,7 @@ class MainFrame_B : public wxFrame
 		wxButton* shuffle_button_;
 		wxStaticText* m_staticText2;
 		wxBoxSizer* info_sizer_;
+		wxStaticBitmap* preview_bitmap_;
 
 		// Virtual event handlers, overide them in your derived class
 		virtual void restart( wxCommandEvent& event ) { event.Skip(); }

@@ -45,7 +45,7 @@ bool Card::initCardImages(){
   return CARD_IMAGES.size();
 }
 
-void Card::paint(wxAutoBufferedPaintDC& dc, const wxPoint& pos, double scale, bool current, bool valid) const {
+void Card::paint(wxAutoBufferedPaintDC& dc, const wxPoint& pos, double scale, State state, bool valid) const {
   int edge_length = cardSize(scale);
   int border = std::min(std::max(1, edge_length/48), 2);
   wxImage tmp = Card::CARD_IMAGES[image_nr_].first.Scale(edge_length - 2*border, edge_length - 2*border);
@@ -54,9 +54,9 @@ void Card::paint(wxAutoBufferedPaintDC& dc, const wxPoint& pos, double scale, bo
     case 2: tmp = tmp.Rotate180(); break;
     case 3: tmp = tmp.Rotate90(false); break;
   }
-  if(current && valid){
-    dc.SetBrush(*wxGREEN_BRUSH);
-    dc.SetPen(*wxGREEN_PEN);
+  if(state != State::OTHER && valid){
+    dc.SetBrush(state == State::CURRENT ? *wxGREEN_BRUSH : *wxYELLOW_BRUSH);
+    dc.SetPen(state == State::CURRENT ? *wxGREEN_PEN : *wxYELLOW_PEN);
     dc.DrawRectangle(pos - wxPoint(border, border), wxSize(edge_length + 2*border, edge_length + 2*border));
   }
   dc.DrawBitmap(wxBitmap(tmp), pos + wxPoint(border, border));

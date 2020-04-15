@@ -14,7 +14,7 @@ class PointGroup : public wxBoxSizer{
   public:
     PointGroup(const wxString& name, const wxColor& color, wxWindow* parent);
 
-    void setActive(bool active);
+    void setActive(bool active, bool card_active);
     int getPoints();
     void setPoints(int points);
     void setStones(int stones);

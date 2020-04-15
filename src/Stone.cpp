@@ -34,7 +34,7 @@ bool Stone::initStoneImages(){
 
 
 void Stone::paint(wxAutoBufferedPaintDC& dc, const wxPoint& pos, double scale) const{
-  if(player_ < STONE_IMAGES.size()){
+  if(player_ < int(STONE_IMAGES.size())){
     int size = SIZE*Card::cardSize(scale);
     wxImage tmp = STONE_IMAGES[player_].Scale(2*size, 2*size);
     dc.DrawBitmap(wxBitmap(tmp), pos - wxPoint(size, size));

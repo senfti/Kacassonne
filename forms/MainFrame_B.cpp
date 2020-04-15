@@ -74,6 +74,9 @@ MainFrame_B::MainFrame_B( wxWindow* parent, wxWindowID id, const wxString& title
 
 	bSizer3->Add( info_sizer_, 1, wxEXPAND, 5 );
 
+	preview_bitmap_ = new wxStaticBitmap( this, wxID_ANY, wxNullBitmap, wxDefaultPosition, wxSize( 160,160 ), 0 );
+	bSizer3->Add( preview_bitmap_, 0, wxALIGN_CENTER|wxALL, 5 );
+
 
 	bSizer1->Add( bSizer3, 0, wxEXPAND, 5 );
 

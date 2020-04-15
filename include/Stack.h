@@ -17,6 +17,7 @@ class Stack{
   public:
     Stack(unsigned card_number);
     Card* next();
+    Card* next(unsigned n);
     void pop();
     Card get();
     void push(const Card& card);

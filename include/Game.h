@@ -19,13 +19,14 @@ class Game{
     std::list<Card> played_cards_;
     Card* current_card_ = nullptr;
     std::vector<Player> players_;
-    int64_t current_player_ = 0;
+    int current_player_ = 0;
     Connection* connection_ = nullptr;
     bool update_table_ = true;
     std::thread* receiver_ = nullptr;
     bool running_ = true;
     mutable std::mutex data_lock_;
     std::list<Flare> flares_;
+    wxPoint2DDouble last_mouse_pos_ = wxPoint2DDouble(0, 0);
 
     std::mutex msg_queue_mutex_;
     std::list<std::pair<std::string, Message>> msg_queue_;
@@ -46,6 +47,7 @@ class Game{
     bool shuffle();
     void flare(const wxPoint2DDouble& pos);
 
+    int getPreviewCard();
     bool validPosition();
     bool isActive() const {
       std::lock_guard<std::mutex> lock(data_lock_);

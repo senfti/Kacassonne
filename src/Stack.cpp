@@ -10,17 +10,24 @@ Stack::Stack(unsigned card_number){
   if(!Card::initCardImages())
     return;
 
-  std::vector<Card> tmp;
+  std::vector<Card> deck, used_cards;
   for(unsigned c=0; c<Card::CARD_IMAGES.size(); c++){
     for(int i=0; i<Card::CARD_IMAGES[c].second; i++)
-      tmp.push_back(Card(c));
+      deck.push_back(Card(c));
   }
-  while(tmp.size() < card_number)
-    tmp.insert(tmp.end(), tmp.begin(), tmp.end());
 
   std::mt19937 eng(time(0));
-  std::shuffle(std::next(tmp.begin(), 1), tmp.end(), eng);
-  cards_ = std::list<Card>(tmp.begin(), tmp.begin() + card_number);
+  while(used_cards.size() < card_number) {
+    if(card_number - used_cards.size() >= deck.size())
+      used_cards.insert(used_cards.end(), deck.begin(), deck.end());
+    else{
+      std::shuffle(card_number > deck.size() ? deck.begin() : std::next(deck.begin(), 1), deck.end(), eng);
+      used_cards.insert(used_cards.end(), deck.begin(), std::next(deck.begin(), card_number - used_cards.size()));
+    }
+      
+  }
+  std::shuffle(std::next(used_cards.begin(), 1), used_cards.end(), eng);
+  cards_ = std::list<Card>(used_cards.begin(), used_cards.end());
 }
 
 void Stack::shuffle(){
@@ -32,10 +39,17 @@ void Stack::shuffle(){
   cards_ = std::list<Card>(tmp.begin(), tmp.end());
 }
 
-Card* Stack::next(){
+Card* Stack::next() {
   if(cards_.empty())
     return nullptr;
   return &*cards_.begin();
+}
+
+
+Card* Stack::next(unsigned n) {
+  if(cards_.size() < n)
+    return nullptr;
+  return &*std::next(cards_.begin(), n);
 }
 
 
