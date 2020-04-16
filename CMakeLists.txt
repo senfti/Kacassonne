@@ -29,7 +29,8 @@ add_executable(Kacassonne WIN32 src/main.cpp include/main.h forms/HostDialog_B.h
   forms/MainFrame_B.cpp include/MainFrame.h src/MainFrame.cpp include/TablePanel.h src/TablePanel.cpp
   include/PointGroup.h src/PointGroup.cpp include/Card.h src/Card.cpp include/Stack.h src/Stack.cpp
   include/Game.h src/Game.cpp include/Stone.h src/Stone.cpp include/Player.h src/Player.cpp include/HostDialog.h
-  src/HostDialog.cpp src/Message.cpp src/Connection.cpp forms/ConnectDialog_B.h forms/ConnectDialog_B.cpp src/LobbyDialog.cpp include/Flare.h include/PreviewPanel.h)
+  src/HostDialog.cpp src/Message.cpp src/Connection.cpp forms/ConnectDialog_B.h forms/ConnectDialog_B.cpp src/LobbyDialog.cpp include/Flare.h
+	)
 
 IF (WIN32)
 	target_link_libraries(Kacassonne D:/Programmieren/zmq/libzmq-v141-mt-4_3_2.lib ${wxWidgets_LIBRARIES} )

@@ -20,7 +20,7 @@ GameDialog::GameDialog(Connection *connection)
     numcard_textctrl_->Disable();
   }
   Connect(timer_.GetId(), wxEVT_TIMER, wxTimerEventHandler(GameDialog::OnTimer), NULL, this);
-  timer_.Start(1000);
+  timer_.Start(200);
   receiver_ = new std::thread(&GameDialog::recv, this);
 }
 

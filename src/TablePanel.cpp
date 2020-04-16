@@ -12,7 +12,7 @@
 
 TablePanel::TablePanel(wxWindow *parent, wxWindowID winid, const wxPoint &pos, const wxSize &size, long style, const wxString &name)
     : wxPanel(parent, winid, pos, size, style, name) {
-  SetBackgroundColour(wxColor(209,188,138));
+  SetBackgroundColour(wxColor(188,188,188));
   SetBackgroundStyle(wxBG_STYLE_PAINT);
   Connect( wxEVT_PAINT, wxPaintEventHandler( TablePanel::paint ), NULL, this );
 

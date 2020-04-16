@@ -14,12 +14,13 @@
 
 class Card{
   public:
+    enum class Side {CITY, ROAD, GRAS};
     static constexpr int OUTSIDE = -1000000;
     //enum class SIDE {CITY, ROAD, GRASSLAND};
 
     static std::string CARD_FOLDER;
     static std::vector<std::pair<wxImage, int>> CARD_IMAGES;
-    //static std::vector<std::array<SIDE, 4>> CARD_SIDES;
+    static std::vector<std::array<Card::Side, 4>> CARD_SIDES;
     static int CARD_IMAGES_SIZE;
     static int cardSize(double scale) { return int(CARD_IMAGES_SIZE*scale/2)*2; }
 
@@ -40,6 +41,7 @@ class Card{
     bool valid() const { return image_nr_ >= 0; }
     int x() const { return x_; }
     int y() const { return y_; }
+    wxPoint pt() const { return wxPoint(x_, y_); }
     int r() const { return r_; }
     int imageNr() const { return image_nr_; }
 

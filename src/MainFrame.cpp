@@ -90,9 +90,10 @@ void MainFrame::OnTimer(wxTimerEvent &event){
     table_panel_->Refresh();
   }
   int next_preview = game_->getPreviewCard();
-  if(next_preview != preview_image_ && next_preview >= 0){
+  if(next_preview != preview_image_ && next_preview >= 0 && next_preview < int(Card::CARD_IMAGES.size())){
     wxSize size = preview_bitmap_->GetClientSize();
     preview_bitmap_->SetBitmap(wxBitmap(Card::CARD_IMAGES[next_preview].first.Scale(size.x, size.y)));
+    preview_image_ = next_preview;
   }
 
 

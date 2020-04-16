@@ -10,7 +10,7 @@
 #include <mutex>
 #include "Message.h"
 
-enum class GameStatus { OPEN=0, STARTED=1, FINiSHED=2};
+enum class GameStatus { OPEN=0, STARTED=1, FINISHED=2};
 
 class Connection{
   public:

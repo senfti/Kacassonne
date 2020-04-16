@@ -149,22 +149,43 @@ int Game::getPreviewCard() {
   std::lock_guard<std::mutex> lock(data_lock_);
   int card_nr = (unsigned(connection_->player_number_) + players_.size() - unsigned(current_player_)) % players_.size();
   card_nr -= (current_card_ ? 0 : 1);
-  if(card_nr < 0)
+  if (card_nr < 0 || stack_.getLeftCards() <= 0)
     return -1;
-  else
+  else if (stack_.next(card_nr))
     return stack_.next(card_nr)->imageNr();
+  else
+    return -1;
+}
+
+Card::Side getSide(const std::array<Card::Side, 4>& sides, int r, int i){
+  int tmp = (r+i) % 4;
+  tmp = (tmp < 0 ? tmp+4 : tmp);
+  return sides[tmp];
 }
 
 bool Game::validPosition(){
+  if(played_cards_.empty())
+    return true;
+
+  std::array<Card::Side, 4> curr_sides;
+  for(int i=0; i<4; i++){
+    curr_sides[i] = getSide(Card::CARD_SIDES[current_card_->imageNr()],current_card_->r(), i);
+  }
+  static std::array<wxPoint, 4> offsets = {wxPoint(0, -1), wxPoint(-1, 0), wxPoint(0, 1), wxPoint(1, 0)};
   bool has_neighbor = false;
   for(const auto &card : played_cards_){
-    if(current_card_->x() == card.x() && current_card_->y() == card.y())
+    if(current_card_->pt() == card.pt())
       return false;
-    if((current_card_->x() == card.x() && std::abs(current_card_->y() - card.y()) == 1) ||
-       (current_card_->y() == card.y() && std::abs(current_card_->x() - card.x()) == 1))
-      has_neighbor = true;
+
+    for(int i=0; i<4; i++){
+      if(current_card_->pt() + offsets[i] == card.pt()){
+        if(curr_sides[i] != getSide(Card::CARD_SIDES[card.imageNr()], card.r(), i + 2))
+          return false;
+        has_neighbor = true;
+      }
+    }
   }
-  return has_neighbor || played_cards_.empty();
+  return has_neighbor;
 }
 
 bool Game::sendUpdate(const std::string& type, double x, double y, int idx){

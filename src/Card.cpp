@@ -10,7 +10,17 @@
 
 std::string Card::CARD_FOLDER = "./";
 std::vector<std::pair<wxImage, int>> Card::CARD_IMAGES;
+std::vector<std::array<Card::Side, 4>> Card::CARD_SIDES;
 int Card::CARD_IMAGES_SIZE = 48;
+
+
+std::array<Card::Side, 4> sidesFromString(const std::string& s){
+  std::array<Card::Side, 4> sides;
+  for(int i=1; i<5; i++){
+    sides[i-1] = (s[i] == 'F' ? Card::Side::GRAS : (s[i] == 'S' ? Card::Side::CITY : Card::Side::ROAD));
+  }
+  return sides;
+}
 
 
 bool Card::initCardImages(){
@@ -29,9 +39,10 @@ bool Card::initCardImages(){
         std::string fn = p.path().filename().string();
         if(fn.find("_") != std::string::npos){
           card_files.push_back(std::make_pair(fn, std::atoi((fn.substr(fn.find("_") + 1, fn.find("."))).c_str())));
-          if(fn.substr(0, fn.find("_")) == "WWFWS" || fn.substr(0, fn.find("_")) == "WFWSW" ||
-             fn.substr(0, fn.find("_")) == "WWSWF" || fn.substr(0, fn.find("_")) == "WSWFW")
+          std::string type_string = fn.substr(0, fn.find("_"));
+          if(type_string == "WWFWS" || type_string == "WFWSW" || type_string == "WWSWF" || type_string == "WSWFW"){
             std::swap(card_files.back(), card_files.front());
+          }
         }
       }
     }
@@ -40,6 +51,9 @@ bool Card::initCardImages(){
     wxInitAllImageHandlers();
     for(auto cf : card_files){
       CARD_IMAGES.push_back({wxImage(CARD_FOLDER + cf.first), cf.second});
+      int pos = cf.first.rfind("_");
+      std::string type_string = cf.first.substr(pos-5, pos);
+      CARD_SIDES.push_back(sidesFromString(type_string));
     }
   }
   return CARD_IMAGES.size();
