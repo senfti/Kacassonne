@@ -91,7 +91,7 @@
                         <property name="kind">wxITEM_NORMAL</property>
                         <property name="label">Restart</property>
                         <property name="name">restart_menu_item_</property>
-                        <property name="permission">none</property>
+                        <property name="permission">protected</property>
                         <property name="shortcut"></property>
                         <property name="unchecked_bitmap"></property>
                         <event name="OnMenuSelection">restart</event>
@@ -126,14 +126,23 @@
                     </object>
                 </object>
                 <object class="wxMenu" expanded="1">
-                    <property name="label">Edit</property>
-                    <property name="name">m_menu2</property>
-                    <property name="permission">protected</property>
-                </object>
-                <object class="wxMenu" expanded="1">
                     <property name="label">?</property>
                     <property name="name">help_menu_</property>
                     <property name="permission">protected</property>
+                    <object class="wxMenuItem" expanded="1">
+                        <property name="bitmap"></property>
+                        <property name="checked">0</property>
+                        <property name="enabled">1</property>
+                        <property name="help"></property>
+                        <property name="id">wxID_ANY</property>
+                        <property name="kind">wxITEM_NORMAL</property>
+                        <property name="label">Help</property>
+                        <property name="name">m_menuItem5</property>
+                        <property name="permission">none</property>
+                        <property name="shortcut"></property>
+                        <property name="unchecked_bitmap"></property>
+                        <event name="OnMenuSelection">help</event>
+                    </object>
                 </object>
             </object>
             <object class="wxBoxSizer" expanded="1">

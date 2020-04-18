@@ -22,7 +22,9 @@ class MyApp : public wxApp{
     virtual bool OnInit();
     virtual int OnExit();
 
-    bool reset();
+    int lobbyStuff();
+    bool initGame(int card_number);
+    bool reset(bool to_lobby);
 };
 
 extern MyApp* my_app;

@@ -70,7 +70,7 @@ bool MyApp::OnInit(){
   std::signal(SIGSEGV, signal_handler);
   std::signal(SIGFPE, signal_handler);
   my_app = this;
-  if(std::filesystem::exists("/media/ts/Data/Programmieren/Spiele/Kacassonne/cmake-build-debug/settings.txt")){
+  if(std::filesystem::exists("settings.txt")){
     std::ifstream f("settings.txt");
     std::string ip, pub_port, sub_port, name;
     try{
@@ -97,17 +97,36 @@ bool MyApp::OnInit(){
     wxMessageBox("Connection Failed!");
     return false;
   }
+
+  int card_number = lobbyStuff();
+  if(card_number < 0)
+    return false;
+
+  return initGame(card_number);
+}
+
+int MyApp::lobbyStuff(){
   LobbyDialog* ld = new LobbyDialog(connection_);
   if(ld->ShowModal() != 0)
-    return false;
+    return -1;
   delete ld;
 
   GameDialog* gd = new GameDialog(connection_);
   if(gd->ShowModal() != 0)
-    return false;
+    return -1;
+
   int card_number = gd->card_number_;
   delete gd;
   connection_->subscribeToGame();
+
+  return card_number;
+}
+
+bool MyApp::initGame(int card_number){
+  MainFrame* tmp = main_frame_;
+  delete game_;
+  game_ = nullptr;
+  wxMilliSleep(1500);
 
   try{
     game_ = new Game(connection_, card_number);
@@ -130,18 +149,28 @@ bool MyApp::OnInit(){
   main_frame_->setGame(game_);
   main_frame_->Show();
 
+  if(tmp)
+    tmp->Destroy();
+
   return true;
 }
 
-bool MyApp::reset(){
+bool MyApp::reset(bool to_lobby){
+  main_frame_->disable();
   main_frame_->Hide();
   int card_number = game_->getLeftCards() + game_->played_cards_.size();
-  delete game_;
-  game_ = new Game(connection_, card_number);
-  main_frame_->setGame(game_, true);
-  main_frame_->Show();
+  if(to_lobby){
+    delete game_;
+    game_ = nullptr;
+    Connection* tmp = connection_;
+    connection_ = new Connection(tmp->ip_, tmp->pub_port_, tmp->sub_port_, tmp->player_name_);
 
-  return true;
+    card_number = lobbyStuff();
+    if(card_number < 0)
+      return false;
+  }
+
+  return initGame(card_number);
 }
 
 int MyApp::OnExit(){

@@ -89,9 +89,7 @@ bool Game::moveStone(double x, double y){
   bool no_stones;
   {
     std::lock_guard<std::mutex> lock(data_lock_);
-    if(!(current_player_ == connection_->player_number_ && current_card_)){
-      no_stones = !doMoveStone(x, y, connection_->player_number_);
-    }
+    no_stones = !doMoveStone(x, y, connection_->player_number_);
   }
   return !no_stones;
 }
@@ -139,17 +137,15 @@ bool Game::shuffle(){
 
 void Game::flare(const wxPoint2DDouble& pos){
   std::lock_guard<std::mutex> lock(data_lock_);
-  if(current_player_ != connection_->player_number_ || !current_card_){
-    flares_.emplace_back(Flare(pos.m_x, pos.m_y, connection_->player_number_));
-    sendUpdate("flare", pos.m_x, pos.m_y, connection_->player_number_);
-  }
+  flares_.emplace_back(Flare(pos.m_x, pos.m_y, connection_->player_number_));
+  sendUpdate("flare", pos.m_x, pos.m_y, connection_->player_number_);
 }
 
 int Game::getPreviewCard() {
   std::lock_guard<std::mutex> lock(data_lock_);
   int card_nr = (unsigned(connection_->player_number_) + players_.size() - unsigned(current_player_)) % players_.size();
   card_nr -= (current_card_ ? 0 : 1);
-  if (card_nr < 0 || stack_.getLeftCards() <= 0)
+  if (card_nr < 0 || card_nr >= stack_.getLeftCards())
     return -1;
   else if (stack_.next(card_nr))
     return stack_.next(card_nr)->imageNr();

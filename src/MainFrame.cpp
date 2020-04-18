@@ -14,6 +14,8 @@ void MainFrame::setGame(Game *game, bool restart){
   {
     std::lock_guard<std::mutex> lock(game->data_lock_);
     game_ = game;
+    if(!game_->connection_->iAmHost())
+      restart_menu_item_->Enable(false);
     table_panel_->setGame(game);
   }
   std::lock_guard<std::mutex> lock(game_->data_lock_);
@@ -76,8 +78,17 @@ void MainFrame::shuffle( wxCommandEvent& event ){
 
 void MainFrame::restart( wxCommandEvent& event ){
   if(game_->connection_->iAmHost()){
-    app_->reset();
+    app_->reset(false);
   }
+}
+
+void MainFrame::newGame( wxCommandEvent& event ){
+  app_->reset(true);
+}
+
+void MainFrame::help( wxCommandEvent& event ){
+  HelpDialog_B help_dialog(this);
+  help_dialog.ShowModal();
 }
 
 void MainFrame::OnTimer(wxTimerEvent &event){
@@ -90,9 +101,15 @@ void MainFrame::OnTimer(wxTimerEvent &event){
     table_panel_->Refresh();
   }
   int next_preview = game_->getPreviewCard();
-  if(next_preview != preview_image_ && next_preview >= 0 && next_preview < int(Card::CARD_IMAGES.size())){
-    wxSize size = preview_bitmap_->GetClientSize();
-    preview_bitmap_->SetBitmap(wxBitmap(Card::CARD_IMAGES[next_preview].first.Scale(size.x, size.y)));
+  if(next_preview != preview_image_){
+    if(next_preview >= 0 && next_preview < int(Card::CARD_IMAGES.size())){
+      wxSize size = preview_bitmap_->GetClientSize();
+      preview_bitmap_->SetBitmap(wxBitmap(Card::CARD_IMAGES[next_preview].first.Scale(size.x, size.y)));
+    }
+    else{
+      wxSize size = preview_bitmap_->GetClientSize();
+      preview_bitmap_->SetBitmap(wxBitmap(wxImage(size)));
+    }
     preview_image_ = next_preview;
   }
 
@@ -143,4 +160,8 @@ void MainFrame::OnTimer(wxTimerEvent &event){
     last_curr_time = getTime();
   else if(getTime() - last_curr_time > 5)
     next();
+}
+
+void MainFrame::disable(){
+  timer_.Stop();
 }

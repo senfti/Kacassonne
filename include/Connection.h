@@ -20,6 +20,9 @@ class Connection{
     zmq::socket_t sub_;
     zmq::socket_t pub_;
     std::string sub_topic_ = "lobby";
+    wxString ip_;
+    wxString pub_port_;
+    wxString sub_port_;
 
     std::ofstream log_file = std::ofstream("message_log.txt", std::ios::app | std::ios::out);
 

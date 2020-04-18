@@ -12,6 +12,7 @@
 #include <vector>
 #include <thread>
 #include <mutex>
+#include "HelpDialog_B.h"
 
 class MyApp;
 
@@ -29,6 +30,8 @@ class MainFrame : public MainFrame_B{
     virtual void back( wxCommandEvent& event );
     virtual void shuffle( wxCommandEvent& event );
     virtual void restart( wxCommandEvent& event );
+    virtual void newGame( wxCommandEvent& event );
+    virtual void help( wxCommandEvent& event );
 
     void OnTimer(wxTimerEvent& event);
 
@@ -39,6 +42,8 @@ class MainFrame : public MainFrame_B{
     void setCurrentPlayer(int player);
 
     virtual void next();
+
+    void disable();
 };
 
 #endif //CARCASONNE_MAINFRAME_H

@@ -5,7 +5,7 @@
 #include "Connection.h"
 
 Connection::Connection(const wxString &ip, const wxString &pub_port, const wxString &sub_port, const wxString& player_name)
-  :context_(1), sub_(context_, ZMQ_SUB), pub_(context_, ZMQ_PUB), player_name_(player_name)
+  :context_(1), sub_(context_, ZMQ_SUB), pub_(context_, ZMQ_PUB), ip_(ip), pub_port_(pub_port), sub_port_(sub_port), player_name_(player_name)
 {
   try{
     sub_.setsockopt(ZMQ_SUBSCRIBE, sub_topic_.c_str(), sub_topic_.size());
