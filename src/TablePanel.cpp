@@ -127,7 +127,7 @@ void TablePanel::lDown(wxMouseEvent &event){
 
 void TablePanel::lUp(wxMouseEvent &event){
   wxPoint2DDouble pos = toGame(event.GetPosition());
-  if(game_->layCard() || (!game_->current_card_ && game_->moveStone(pos.m_x, pos.m_y)))
+  if(game_->layCard() || game_->moveStone(pos.m_x, pos.m_y))
     Refresh();
 }
 
@@ -176,10 +176,10 @@ void TablePanel::keyDown( wxKeyEvent& event ){
       parent->next();
   }
   else if(event.GetKeyCode() == 'F')
-    game_->flare(wxPoint2DDouble(toGame(event.GetPosition())));
+    game_->flare(wxPoint2DDouble(toGame(event.GetPosition())), true);
   else if(event.GetKeyCode() == 'P'){
     wxPoint2DDouble pos = toGame(event.GetPosition());
-    if(game_->moveStone(pos.m_x, pos.m_y))
+    if(game_->moveStone(pos.m_x, pos.m_y, true))
       Refresh();
   }
 

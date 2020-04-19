@@ -85,11 +85,13 @@ bool Game::doMoveStone(double x, double y, int player_number, bool send){
   return false;
 }
 
-bool Game::moveStone(double x, double y){
+bool Game::moveStone(double x, double y, bool any_player){
   bool no_stones;
   {
     std::lock_guard<std::mutex> lock(data_lock_);
-    no_stones = !doMoveStone(x, y, connection_->player_number_);
+    if (any_player || !(current_player_ == connection_->player_number_ && current_card_)) {
+      no_stones = !doMoveStone(x, y, connection_->player_number_);
+    }
   }
   return !no_stones;
 }
@@ -135,10 +137,12 @@ bool Game::shuffle(){
   return false;
 }
 
-void Game::flare(const wxPoint2DDouble& pos){
+void Game::flare(const wxPoint2DDouble& pos, bool any_player){
   std::lock_guard<std::mutex> lock(data_lock_);
-  flares_.emplace_back(Flare(pos.m_x, pos.m_y, connection_->player_number_));
-  sendUpdate("flare", pos.m_x, pos.m_y, connection_->player_number_);
+  if (any_player || (current_player_ != connection_->player_number_ || !current_card_)) {
+    flares_.emplace_back(Flare(pos.m_x, pos.m_y, connection_->player_number_));
+    sendUpdate("flare", pos.m_x, pos.m_y, connection_->player_number_);
+  }
 }
 
 int Game::getPreviewCard() {

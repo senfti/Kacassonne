@@ -41,11 +41,11 @@ class Game{
     bool rotateCard();
     bool layCard();
     bool doMoveStone(double x, double y, int player_number, bool send = true);
-    bool moveStone(double x, double y);
+    bool moveStone(double x, double y, bool any_player=false);
     bool next();
     bool revert();
     bool shuffle();
-    void flare(const wxPoint2DDouble& pos);
+    void flare(const wxPoint2DDouble& pos, bool any_player=false);
 
     int getPreviewCard();
     bool validPosition();
