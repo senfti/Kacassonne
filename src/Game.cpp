@@ -12,16 +12,27 @@ Game::Game(Connection* connection, int card_number)
 {
   if(stack_.getLeftCards() < 1)
     return;
-  std::lock_guard<std::mutex> lock(data_lock_);
-  for(unsigned i=0; i<connection_->players_.size(); i++){
-    players_.push_back(Player(i, connection_->players_[i].second));
-    if(connection_->player_id_ == connection_->players_[i].first)
-      connection_->player_number_ = i;
+  {
+    std::lock_guard<std::mutex> lock(data_lock_);
+    for(unsigned i = 0; i < connection_->players_.size(); i++){
+      players_.push_back(Player(i, connection_->players_[i].second));
+      if(connection_->player_id_ == connection_->players_[i].first)
+        connection_->player_number_ = i;
+    }
+    if(connection_->iAmHost()){
+      connection_->send("next", getAsMessage());
+      for(unsigned i = 0; i < connection_->players_.size(); i++){
+        Message msg;
+        msg["type"] = "points";
+        msg["idx"] = i;
+        msg["points"] = 0;
+        connection_->send("update", msg);
+      }
+    }
+    current_card_ = stack_.next();
   }
-  if(connection_->iAmHost()){
-    connection_->send("next", getAsMessage());
-  }
-  current_card_ = stack_.next();
+  moveCard(0, 0);
+  layCard();
   receiver_ = new std::thread(&Game::recv, this);
 }
 

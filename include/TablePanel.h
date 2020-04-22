@@ -24,6 +24,7 @@ class TablePanel : public wxPanel{
                const wxString &name = wxPanelNameStr);
     ~TablePanel();
 
+    void initOffset() { offset_ = wxPoint(GetClientSize().x / 2, GetClientSize().y / 2); }
     void setGame(Game* game) { game_ = game; }
     wxPoint2DDouble toGame(const wxPoint& pos) const { return toGame(pos.x, pos.y); }
     wxPoint2DDouble toGame(int x, int y) const;

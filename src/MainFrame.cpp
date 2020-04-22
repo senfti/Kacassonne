@@ -33,6 +33,7 @@ void MainFrame::setGame(Game *game, bool restart){
     Connect(timer_.GetId(), wxEVT_TIMER, wxTimerEventHandler(MainFrame::OnTimer), NULL, this);
     timer_.Start(100);
   }
+  table_panel_->initOffset();
 }
 
 void MainFrame::setCurrentPlayer(int player){
