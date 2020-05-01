@@ -17,10 +17,10 @@ class LobbyDialog : public LobbyDialog_B{
       std::string name_;
       int64_t id_;
       int64_t host_;
-      std::vector<std::pair<int64_t, std::string>> players_;
+      std::vector<PlayerCon> players_;
       wxButton* button_ = nullptr;
 
-      GameToJoin(const std::string& name, int64_t id, int64_t host, const std::vector<std::pair<int64_t, std::string>>& players, wxWindow* parent)
+      GameToJoin(const std::string& name, int64_t id, int64_t host, const std::vector<PlayerCon>& players, wxWindow* parent)
             : name_(name), id_(id), host_(host), players_(players), button_(new wxButton(parent, wxID_ANY, wxString("Join Game \"" + name_ + "\""))) {
           button_->SetMinSize(wxSize(-1,24));
       }

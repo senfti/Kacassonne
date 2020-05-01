@@ -159,7 +159,7 @@ void MainFrame::OnTimer(wxTimerEvent &event){
   static unsigned long long last_curr_time = getTime();
   if(game_->current_card_)
     last_curr_time = getTime();
-  else if(getTime() - last_curr_time > 5)
+  else if(getTime() - last_curr_time > 3)
     next();
 }
 

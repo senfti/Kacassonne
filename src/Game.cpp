@@ -15,20 +15,12 @@ Game::Game(Connection* connection, int card_number)
   {
     std::lock_guard<std::mutex> lock(data_lock_);
     for(unsigned i = 0; i < connection_->players_.size(); i++){
-      players_.push_back(Player(i, connection_->players_[i].second));
-      if(connection_->player_id_ == connection_->players_[i].first)
+      players_.push_back(Player(int(connection_->players_[i].color_), connection_->players_[i].name_));
+      if(connection_->player_id_ == connection_->players_[i].id_)
         connection_->player_number_ = i;
     }
-    if(connection_->iAmHost()){
-      connection_->send("next", getAsMessage());
-      for(unsigned i = 0; i < connection_->players_.size(); i++){
-        Message msg;
-        msg["type"] = "points";
-        msg["idx"] = i;
-        msg["points"] = 0;
-        connection_->send("update", msg);
-      }
-    }
+    if(connection_->iAmHost())
+      connection_->send("next", getAsMessage(true));
     current_card_ = stack_.next();
   }
   moveCard(0, 0);
@@ -209,12 +201,18 @@ bool Game::sendUpdate(const std::string& type, double x, double y, int idx){
   return true;
 }
 
-Message Game::getAsMessage() const{
+Message Game::getAsMessage(bool with_points) const{
   Message msg;
   msg["stack"] = stack_;
   msg["played_cards"] = played_cards_;
   msg["game_players"] = players_;
   msg["current_player"] = current_player_;
+  if(with_points){
+    std::vector<int> pts;
+    for(const auto& p : players_)
+      pts.push_back(p.points_);
+    msg["points"] = pts;
+  }
   return msg;
 }
 
@@ -225,6 +223,16 @@ void Game::updateFromMessage(const Message& msg){
     msg.at("played_cards").get_to(played_cards_);
     msg.at("game_players").get_to(players_);
     msg.at("current_player").get_to(current_player_);
+    if(msg.find("points") != msg.end()){
+      int i = 0;
+      for(const auto& node : msg.at("points")){
+        Message msg;
+        msg["type"] = "points";
+        msg["idx"] = i++;
+        msg["points"] = node.get<int>();
+        msg_queue_.push_back(std::make_pair(std::string("update"), msg));
+      }
+    }
     current_card_ = stack_.next();
   }
   moveCard(last_mouse_pos_.m_x, last_mouse_pos_.m_y);

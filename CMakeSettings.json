@@ -7,8 +7,8 @@
       "inheritEnvironments": [
         "msvc_x64_x64"
       ],
-      "buildRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\build\\${name}",
-      "installRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\install\\${name}",
+      "buildRoot": "${thisFileDir}\\.vs\\build",
+      "installRoot": "${thisFileDir}\\.vs\\install",
       "cmakeCommandArgs": "-DLINK_TYPE=Static",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": ""

@@ -63,7 +63,7 @@ class Game{
       return players_.size();
     }
 
-    Message getAsMessage() const;
+    Message getAsMessage(bool with_points=false) const;
     void updateFromMessage(const Message& msg);
 
     void recv();

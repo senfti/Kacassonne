@@ -17,6 +17,7 @@
 #include <wx/settings.h>
 #include <wx/textctrl.h>
 #include <wx/sizer.h>
+#include <wx/choice.h>
 #include <wx/button.h>
 #include <wx/bitmap.h>
 #include <wx/image.h>
@@ -36,11 +37,14 @@ class GameDialog_B : public wxDialog
 	protected:
 		wxBoxSizer* sizer_;
 		wxStaticText* m_staticText2;
+		wxStaticText* m_staticText3;
+		wxChoice* color_choice_;
 		wxStaticText* players_textctrl_;
 		wxButton* quit_button_;
 		wxButton* start_button_;
 
 		// Virtual event handlers, overide them in your derived class
+		virtual void changeColor( wxCommandEvent& event ) { event.Skip(); }
 		virtual void quit( wxCommandEvent& event ) { event.Skip(); }
 		virtual void start( wxCommandEvent& event ) { event.Skip(); }
 

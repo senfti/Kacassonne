@@ -9,6 +9,8 @@
 
 void to_json(nlohmann::json& j, const wxColor& c);
 void from_json(const nlohmann::json& j, wxColor& c);
+void to_json(nlohmann::json& j, const wxImage::HSVValue& c);
+void from_json(const nlohmann::json& j, wxImage::HSVValue& c);
 
 class Stone{
   public:
@@ -18,10 +20,14 @@ class Stone{
 
     double x_ = Card::OUTSIDE;
     double y_ = Card::OUTSIDE;
-    wxColor color_;
+    wxImage::HSVValue color_;
+
     int player_ = 0;
 
-    Stone(wxColor color=wxColor(0, 0, 0), int player=0) : color_(color), player_(player) { initStoneImages(); }
+    Stone(wxColor color=wxColor(0, 0, 0), int player=0) :
+        color_(wxImage::RGBtoHSV(wxImage::RGBValue(color.Red(), color.Green(), color.Blue()))), player_(player) {
+      initStoneImages();
+    }
 
     void paint(wxAutoBufferedPaintDC& dc, const wxPoint& pos, double scale) const;
     void setPosition(double x, double y) { x_ = x; y_ = y; }

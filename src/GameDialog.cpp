@@ -42,6 +42,18 @@ void GameDialog::recv(){
   }
 }
 
+void GameDialog::changeColor( wxCommandEvent& event ){
+  if(connection_->iAmHost()){
+    connection_->players_[0].color_ = size_t(color_choice_->GetSelection());
+  }
+  else{
+    size_t color = size_t(color_choice_->GetSelection());
+    Message msg;
+    msg["new_color"] = color;
+    connection_->send("change_color", msg);
+  }
+}
+
 void GameDialog::quit( wxCommandEvent& event ) {
   connection_->send("game_quit", Message());
   EndModal(1);
@@ -60,19 +72,26 @@ void GameDialog::OnTimer(wxTimerEvent& event){
     std::lock_guard<std::mutex> lock(message_lock_);
     for(const auto& [t, m] : pending_messages_){
       if(connection_->iAmHost()){
+        if(t == "change_color"){
+          int64_t player_id = m["player_id"].get<int64_t>();
+          auto player = std::find_if(connection_->players_.begin(), connection_->players_.end(), [player_id](const PlayerCon& p) { return p.id_ == player_id; });
+          if(player != connection_->players_.end()){
+            player->color_ = m["new_color"].get<size_t>();
+          }
+        }
         if(t == "game_join"){
-          connection_->players_.push_back(std::make_pair(m["player_id"].get<int64_t>(), m["player_name"]));
+          connection_->players_.push_back(PlayerCon(m["player_id"].get<int64_t>(), m["player_name"], connection_->players_.size()));
         }
         if(t == "game_quit"){
           int64_t player_id = m["player_id"].get<int64_t>();
-          auto player = std::find_if(connection_->players_.begin(), connection_->players_.end(), [player_id](const std::pair<int64_t, std::string>& p) { return p.first == player_id; });
+          auto player = std::find_if(connection_->players_.begin(), connection_->players_.end(), [player_id](const PlayerCon& p) { return p.id_ == player_id; });
           if(player != connection_->players_.end()){
             connection_->players_.erase(player);
           }
         }
         if(t == "game_start_ack"){
           for(unsigned i=0; i<connection_->players_.size(); i++){
-            if(connection_->players_[i].first == m["player_id"].get<int64_t>()){
+            if(connection_->players_[i].id_ == m["player_id"].get<int64_t>()){
               ack_[i] = true;
             }
           }
@@ -89,7 +108,9 @@ void GameDialog::OnTimer(wxTimerEvent& event){
             EndModal(0);
         }
         if(t == "game_quit" && connection_->fromHost(m)){
+          running_ = false;
           wxMessageBox("Host quit!");
+          receiver_->join();
           EndModal(1);
         }
       }
@@ -112,7 +133,7 @@ void GameDialog::OnTimer(wxTimerEvent& event){
 
   wxString player_text = "Players in Game " + connection_->game_name_ + ":\n";
   for(const auto& p : connection_->players_){
-    player_text += "    " + p.second + "\n";
+    player_text += "    " + p.name_ + ": " + color_choice_->GetString(p.color_) + "\n";
   }
   players_textctrl_->SetLabel(player_text);
 }

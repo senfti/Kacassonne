@@ -8,6 +8,7 @@
 
 LobbyDialog::LobbyDialog(Connection* connection)
     : LobbyDialog_B(nullptr), connection_(connection), timer_(this){
+  version_textctrl_->SetLabel(wxString("VERSION: ") + VERSION);
   Connect(timer_.GetId(), wxEVT_TIMER, wxTimerEventHandler(LobbyDialog::OnTimer), NULL, this);
   timer_.Start(1000);
   receiver_ = new std::thread(&LobbyDialog::recv, this);
@@ -34,7 +35,7 @@ void LobbyDialog::create( wxCommandEvent& event ){
   connection_->game_name_ = game_name_textctrl_->GetValue();
   connection_->game_id_ = getID();
   connection_->host_ = connection_->player_id_;
-  connection_->players_ = {std::make_pair(connection_->player_id_, connection_->player_name_)};
+  connection_->players_ = {PlayerCon(connection_->player_id_, connection_->player_name_, 0)};
   running_ = false;
   receiver_->join();
   EndModal(0);

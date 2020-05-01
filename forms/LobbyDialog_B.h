@@ -36,6 +36,7 @@ class LobbyDialog_B : public wxDialog
 
 	protected:
 		wxBoxSizer* window_sizer_;
+		wxStaticText* version_textctrl_;
 		wxStaticText* m_staticText1;
 		wxTextCtrl* game_name_textctrl_;
 		wxButton* create_button_;

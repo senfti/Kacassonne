@@ -16,17 +16,9 @@ bool Stone::initStoneImages(){
     if(stone_folder.back() != '/')
       stone_folder += "/";
 
-    std::vector<std::string> fns;
-    for (auto& p : std::filesystem::directory_iterator(stone_folder)) {
-      if(p.path().extension().string() == ".png") {
-        fns.push_back(p.path().filename().string());
-      }
-    }
-    std::sort(fns.begin(), fns.end());
-
     wxInitAllImageHandlers();
-    for(auto cf : fns){
-      STONE_IMAGES.push_back(wxImage(stone_folder + cf));
+    if(std::filesystem::exists(stone_folder + "stone.png")){
+      STONE_IMAGES.push_back(wxImage(stone_folder + "stone.png"));
     }
   }
   return STONE_IMAGES.size();
@@ -34,16 +26,19 @@ bool Stone::initStoneImages(){
 
 
 void Stone::paint(wxAutoBufferedPaintDC& dc, const wxPoint& pos, double scale) const{
-  if(player_ < int(STONE_IMAGES.size())){
-    int size = SIZE*Card::cardSize(scale);
-    wxImage tmp = STONE_IMAGES[player_].Scale(2*size, 2*size);
-    dc.DrawBitmap(wxBitmap(tmp), pos - wxPoint(size, size));
+  int size = SIZE*Card::cardSize(scale);
+  wxImage tmp = STONE_IMAGES[0].Scale(2*size, 2*size);
+  for(int x=0; x<tmp.GetWidth(); x++){
+    for(int y=0; y<tmp.GetHeight(); y++){
+      wxImage::HSVValue hsv = wxImage::RGBtoHSV(wxImage::RGBValue(tmp.GetRed(x,y), tmp.GetGreen(x,y), tmp.GetBlue(x,y)));
+      hsv.hue = color_.hue;
+      hsv.saturation *= color_.saturation;
+      hsv.value *= color_.value;
+      wxImage::RGBValue rgb = wxImage::HSVtoRGB(hsv);
+      tmp.SetRGB(x, y, rgb.red, rgb.green, rgb.blue);
+    }
   }
-  else{
-    dc.SetPen(*wxBLACK_PEN);
-    dc.SetBrush(wxBrush(color_));
-    dc.DrawCircle(pos, SIZE * Card::cardSize(scale));
-  }
+  dc.DrawBitmap(wxBitmap(tmp), pos - wxPoint(size, size));
 }
 
 

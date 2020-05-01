@@ -106,6 +106,7 @@ void TablePanel::paint(wxPaintEvent &event){
 }
 
 void TablePanel::move(wxMouseEvent &event){
+  SetFocus();
   if(event.m_middleDown || event.ControlDown()){
     if(last_position_.x != Card::OUTSIDE){
       offset_ += event.GetPosition() - last_position_;
@@ -123,6 +124,7 @@ void TablePanel::leave(wxMouseEvent &event){
 }
 
 void TablePanel::lDown(wxMouseEvent &event){
+  SetFocus();
 }
 
 void TablePanel::lUp(wxMouseEvent &event){

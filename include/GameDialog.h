@@ -29,6 +29,7 @@ class GameDialog : public GameDialog_B{
 
     void recv();
 
+    virtual void changeColor( wxCommandEvent& event );
     virtual void quit( wxCommandEvent& event );
     virtual void start( wxCommandEvent& event );
     void OnTimer(wxTimerEvent& event);

@@ -28,6 +28,22 @@ GameDialog_B::GameDialog_B( wxWindow* parent, wxWindowID id, const wxString& tit
 
 	sizer_->Add( bSizer3, 1, wxEXPAND, 5 );
 
+	wxBoxSizer* bSizer4;
+	bSizer4 = new wxBoxSizer( wxHORIZONTAL );
+
+	m_staticText3 = new wxStaticText( this, wxID_ANY, wxT("Color:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText3->Wrap( -1 );
+	bSizer4->Add( m_staticText3, 0, wxALL, 5 );
+
+	wxString color_choice_Choices[] = { wxT("Red"), wxT("Blue"), wxT("Yellow"), wxT("Black"), wxT("White"), wxT("Green"), wxT("Purple"), wxT("Teal"), wxT("Orange"), wxT("Pink"), wxT("Green2"), wxT("Gray"), wxT("Random") };
+	int color_choice_NChoices = sizeof( color_choice_Choices ) / sizeof( wxString );
+	color_choice_ = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, color_choice_NChoices, color_choice_Choices, 0 );
+	color_choice_->SetSelection( 0 );
+	bSizer4->Add( color_choice_, 0, wxALL, 0 );
+
+
+	sizer_->Add( bSizer4, 1, wxEXPAND, 5 );
+
 	players_textctrl_ = new wxStaticText( this, wxID_ANY, wxT("Players in Game: \n"), wxDefaultPosition, wxSize( 320,480 ), 0 );
 	players_textctrl_->Wrap( -1 );
 	players_textctrl_->SetFont( wxFont( 16, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
@@ -58,6 +74,7 @@ GameDialog_B::GameDialog_B( wxWindow* parent, wxWindowID id, const wxString& tit
 	this->Centre( wxBOTH );
 
 	// Connect Events
+	color_choice_->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( GameDialog_B::changeColor ), NULL, this );
 	quit_button_->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GameDialog_B::quit ), NULL, this );
 	start_button_->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GameDialog_B::start ), NULL, this );
 }
@@ -65,6 +82,7 @@ GameDialog_B::GameDialog_B( wxWindow* parent, wxWindowID id, const wxString& tit
 GameDialog_B::~GameDialog_B()
 {
 	// Disconnect Events
+	color_choice_->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( GameDialog_B::changeColor ), NULL, this );
 	quit_button_->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GameDialog_B::quit ), NULL, this );
 	start_button_->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GameDialog_B::start ), NULL, this );
 

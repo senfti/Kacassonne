@@ -15,6 +15,10 @@ LobbyDialog_B::LobbyDialog_B( wxWindow* parent, wxWindowID id, const wxString& t
 
 	window_sizer_ = new wxBoxSizer( wxVERTICAL );
 
+	version_textctrl_ = new wxStaticText( this, wxID_ANY, wxT("Version: "), wxDefaultPosition, wxDefaultSize, 0 );
+	version_textctrl_->Wrap( -1 );
+	window_sizer_->Add( version_textctrl_, 0, wxALL, 5 );
+
 	wxBoxSizer* bSizer4;
 	bSizer4 = new wxBoxSizer( wxHORIZONTAL );
 
