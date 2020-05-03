@@ -28,6 +28,19 @@ Game::Game(Connection* connection, int card_number)
   receiver_ = new std::thread(&Game::recv, this);
 }
 
+Game::Game(Connection* connection, const Message& reconnect_reply)
+  : stack_(1), connection_(connection)
+{
+  for(unsigned i = 0; i < connection_->players_.size(); i++){
+    players_.push_back(Player(int(connection_->players_[i].color_), connection_->players_[i].name_));
+    if(connection_->player_id_ == connection_->players_[i].id_)
+      connection_->player_number_ = i;
+  }
+  is_start_ = false;
+  updateFromMessage(reconnect_reply);
+  receiver_ = new std::thread(&Game::recv, this);
+}
+
 bool Game::moveCard(double x, double y){
   std::lock_guard<std::mutex> lock(data_lock_);
   last_mouse_pos_ = wxPoint2DDouble(x, y);
@@ -102,10 +115,13 @@ bool Game::moveStone(double x, double y, bool any_player){
 bool Game::next(){
   {
     std::lock_guard<std::mutex> lock(data_lock_);
+    is_start_ = false;
     if(current_player_ == connection_->player_number_ && !current_card_ && stack_.getLeftCards() > 0){
       current_player_ = (current_player_ + 1) % int(players_.size());
       connection_->send("next", getAsMessage());
       current_card_ = stack_.next();
+      if(current_player_ == 0)
+        update_old_pts_ = true;
       return true;
     }
   }
@@ -247,7 +263,8 @@ void Game::recv(){
       if(t == "update" && m["type"] == "points"){
         std::lock_guard<std::mutex> lock(msg_queue_mutex_);
         msg_queue_.push_back(std::make_pair(t, m));
-      } else if(t == "update"){
+      }
+      else if(t == "update"){
         std::lock_guard<std::mutex> lock(data_lock_);
         if(current_card_){
           if(m["type"] == "moveCard")
@@ -265,9 +282,17 @@ void Game::recv(){
           flares_.push_back(Flare(m["x"], m["y"], m["idx"]));
         }
         update_table_ = true;
-      } else if(t == "next"){
+      }
+      else if(t == "next"){
+        is_start_ = false;
         updateFromMessage(m);
+        if(current_player_ == 0)
+          update_old_pts_ = true;
         update_table_ = true;
+      }
+      else if(t == "reconnect_request"){
+        std::lock_guard<std::mutex> lock(data_lock_);
+        connection_->send("reconnect_reply", getAsMessage());
       }
     }
     catch(std::exception& e){

@@ -60,7 +60,7 @@ void GameDialog::quit( wxCommandEvent& event ) {
 }
 
 void GameDialog::start( wxCommandEvent& event ) {
-  connection_->game_status = int(GameStatus::STARTED);
+  connection_->game_status_ = int(GameStatus::STARTED);
   ack_.resize(connection_->players_.size(), false);
   ack_[0] = true;
   connection_->send("game_start", Message());
@@ -119,7 +119,7 @@ void GameDialog::OnTimer(wxTimerEvent& event){
   }
 
   if(connection_->iAmHost()){
-    if(connection_->game_status == int(GameStatus::OPEN))
+    if(connection_->game_status_ == int(GameStatus::OPEN))
       connection_->send("game_lobby", Message());
     else{
       bool all_ack = true;

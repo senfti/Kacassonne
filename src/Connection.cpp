@@ -41,6 +41,15 @@ void Connection::subscribeToGame(){
   sub_.setsockopt(ZMQ_UNSUBSCRIBE, sub_topic_.c_str(), sub_topic_.size());
   sub_topic_ = std::to_string(game_id_);
   sub_.setsockopt(ZMQ_SUBSCRIBE, sub_topic_.c_str(), sub_topic_.size());
+  std::ofstream f("last_game.txt");
+  f << game_id_ << " " << player_id_;
+}
+
+void Connection::subscribeToLobby(){
+  sub_.setsockopt(ZMQ_UNSUBSCRIBE, sub_topic_.c_str(), sub_topic_.size());
+  sub_topic_ = "lobby";
+  game_id_ = 0;
+  sub_.setsockopt(ZMQ_SUBSCRIBE, sub_topic_.c_str(), sub_topic_.size());
 }
 
 bool Connection::forMe(const Message& msg) const {
@@ -56,11 +65,11 @@ int64_t Connection::send(const std::string& topic, Message msg){
   msg["players"] = players_;
   int64_t id = getID();
   msg["id"] = id;
-  msg["game_status"] = game_status;
+  msg["game_status"] = game_status_;
   msg["host"] = host_;
   msg["topic"] = topic;
-  std::cout << "send: " << sub_topic_ << " " << msg << std::endl;
-  log_file << "send: " << sub_topic_ << " " << msg << std::endl;
+//  std::cout << "send: " << sub_topic_ << " " << msg << std::endl;
+//  log_file << "send: " << sub_topic_ << " " << msg << std::endl;
   std::lock_guard<std::mutex> lock(send_lock_);
   msg.toSocket(pub_, sub_topic_);
   return id;
@@ -85,7 +94,7 @@ std::pair<std::string, Message> Connection::recv(){
       return std::pair<std::string, Message>("", Message(std::string()));
     }
   }
-  log_file << "recv: " << sub_topic_ << " " << m << std::endl;
-  std::cout << "recv: " << sub_topic_ << " " << m << std::endl;
+//  std::cout << "recv: " << sub_topic_ << " " << m << std::endl;
+//  log_file << "recv: " << sub_topic_ << " " << m << std::endl;
   return std::make_pair(t, m);
 }

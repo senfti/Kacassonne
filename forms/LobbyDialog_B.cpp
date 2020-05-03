@@ -41,6 +41,9 @@ LobbyDialog_B::LobbyDialog_B( wxWindow* parent, wxWindowID id, const wxString& t
 
 	window_sizer_->Add( bSizer4, 0, wxEXPAND, 5 );
 
+	reconnect_button_ = new wxButton( this, wxID_ANY, wxT("Reconnect to last game"), wxDefaultPosition, wxDefaultSize, 0 );
+	window_sizer_->Add( reconnect_button_, 0, wxALL, 5 );
+
 	m_staticline1 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 	window_sizer_->Add( m_staticline1, 0, wxEXPAND | wxALL, 5 );
 
@@ -58,11 +61,13 @@ LobbyDialog_B::LobbyDialog_B( wxWindow* parent, wxWindowID id, const wxString& t
 
 	// Connect Events
 	create_button_->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LobbyDialog_B::create ), NULL, this );
+	reconnect_button_->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LobbyDialog_B::reconnect ), NULL, this );
 }
 
 LobbyDialog_B::~LobbyDialog_B()
 {
 	// Disconnect Events
 	create_button_->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LobbyDialog_B::create ), NULL, this );
+	reconnect_button_->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LobbyDialog_B::reconnect ), NULL, this );
 
 }

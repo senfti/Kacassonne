@@ -126,7 +126,11 @@ void MainFrame::OnTimer(wxTimerEvent &event){
       game_->connection_->send("update", msg);
     }
     players_guis_[i]->setStones(game_->players_[i].getRemainingStones());
+
+    if(game_->update_old_pts_)
+      players_guis_[i]->setOldPoints(game_->players_[i].points_);
   }
+  game_->update_old_pts_ = false;
 
   {
     std::lock_guard<std::mutex> lock(game_->data_lock_);
@@ -159,7 +163,7 @@ void MainFrame::OnTimer(wxTimerEvent &event){
   static unsigned long long last_curr_time = getTime();
   if(game_->current_card_)
     last_curr_time = getTime();
-  else if(getTime() - last_curr_time > 3)
+  else if(getTime() - last_curr_time > 3 && !game_->is_start_)
     next();
 }
 

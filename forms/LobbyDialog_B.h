@@ -40,11 +40,13 @@ class LobbyDialog_B : public wxDialog
 		wxStaticText* m_staticText1;
 		wxTextCtrl* game_name_textctrl_;
 		wxButton* create_button_;
+		wxButton* reconnect_button_;
 		wxStaticLine* m_staticline1;
 		wxBoxSizer* games_sizer_;
 
 		// Virtual event handlers, overide them in your derived class
 		virtual void create( wxCommandEvent& event ) { event.Skip(); }
+		virtual void reconnect( wxCommandEvent& event ) { event.Skip(); }
 
 
 	public:

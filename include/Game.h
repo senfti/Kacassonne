@@ -27,11 +27,14 @@ class Game{
     mutable std::mutex data_lock_;
     std::list<Flare> flares_;
     wxPoint2DDouble last_mouse_pos_ = wxPoint2DDouble(0, 0);
+    bool is_start_ = true;
+    bool update_old_pts_ = false;
 
     std::mutex msg_queue_mutex_;
     std::list<std::pair<std::string, Message>> msg_queue_;
 
     Game(Connection* connection = nullptr, int card_number = 72);
+    Game(Connection* connection, const Message& reconnect_reply);
     ~Game() {
       running_ = false;
       receiver_->join();

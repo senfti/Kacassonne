@@ -22,7 +22,7 @@ GameDialog_B::GameDialog_B( wxWindow* parent, wxWindowID id, const wxString& tit
 	m_staticText2->Wrap( -1 );
 	bSizer3->Add( m_staticText2, 0, wxALL, 5 );
 
-	numcard_textctrl_ = new wxTextCtrl( this, wxID_ANY, wxT("72"), wxDefaultPosition, wxDefaultSize, wxTE_RIGHT );
+	numcard_textctrl_ = new wxTextCtrl( this, wxID_ANY, wxT("93"), wxDefaultPosition, wxDefaultSize, wxTE_RIGHT );
 	bSizer3->Add( numcard_textctrl_, 0, wxALL, 0 );
 
 

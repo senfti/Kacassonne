@@ -48,7 +48,7 @@ MainFrame_B::MainFrame_B( wxWindow* parent, wxWindowID id, const wxString& title
 	wxBoxSizer* bSizer3;
 	bSizer3 = new wxBoxSizer( wxVERTICAL );
 
-	bSizer3->SetMinSize( wxSize( 200,-1 ) );
+	bSizer3->SetMinSize( wxSize( 220,-1 ) );
 	wxBoxSizer* bSizer4;
 	bSizer4 = new wxBoxSizer( wxVERTICAL );
 
@@ -61,9 +61,38 @@ MainFrame_B::MainFrame_B( wxWindow* parent, wxWindowID id, const wxString& title
 	shuffle_button_ = new wxButton( this, wxID_ANY, wxT("Shuffle"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer4->Add( shuffle_button_, 0, wxALL, 5 );
 
-	m_staticText2 = new wxStaticText( this, wxID_ANY, wxT("Name, Left Stones, Points"), wxDefaultPosition, wxDefaultSize, 0 );
+	wxBoxSizer* bSizer5;
+	bSizer5 = new wxBoxSizer( wxHORIZONTAL );
+
+
+	bSizer5->Add( 26, 0, 0, wxEXPAND, 5 );
+
+	m_staticText2 = new wxStaticText( this, wxID_ANY, wxT("Name"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText2->Wrap( -1 );
-	bSizer4->Add( m_staticText2, 0, wxALL, 5 );
+	m_staticText2->SetMinSize( wxSize( 65,-1 ) );
+
+	bSizer5->Add( m_staticText2, 0, wxBOTTOM|wxLEFT|wxTOP, 5 );
+
+	m_staticText21 = new wxStaticText( this, wxID_ANY, wxT("Stones"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText21->Wrap( -1 );
+	m_staticText21->SetMinSize( wxSize( 40,-1 ) );
+
+	bSizer5->Add( m_staticText21, 0, wxBOTTOM|wxTOP, 5 );
+
+	m_staticText3 = new wxStaticText( this, wxID_ANY, wxT("Points"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText3->Wrap( -1 );
+	m_staticText3->SetMinSize( wxSize( 50,-1 ) );
+
+	bSizer5->Add( m_staticText3, 0, wxBOTTOM|wxTOP, 5 );
+
+	m_staticText5 = new wxStaticText( this, wxID_ANY, wxT("Old"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText5->Wrap( -1 );
+	m_staticText5->SetMinSize( wxSize( 30,-1 ) );
+
+	bSizer5->Add( m_staticText5, 0, wxBOTTOM|wxTOP, 5 );
+
+
+	bSizer4->Add( bSizer5, 1, wxEXPAND, 5 );
 
 
 	bSizer3->Add( bSizer4, 0, wxEXPAND, 5 );

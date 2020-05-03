@@ -25,7 +25,7 @@ class GameDialog : public GameDialog_B{
     std::vector<bool> ack_;
     bool finished_ = false;
     wxTimer timer_;
-    unsigned long card_number_ = 72;
+    unsigned long card_number_ = 93;
 
     void recv();
 

@@ -43,13 +43,13 @@ class Connection{
     wxString pub_port_;
     wxString sub_port_;
 
-    std::ofstream log_file = std::ofstream("message_log.txt", std::ios::app | std::ios::out);
+//    std::ofstream log_file = std::ofstream("message_log.txt", std::ios::app | std::ios::out);
 
     std::string player_name_;
     int64_t player_id_ = getID();
     std::string game_name_;
     int64_t game_id_ = 0;
-    int game_status = 0;
+    int game_status_ = 0;
     std::vector<PlayerCon> players_;
     int player_number_ = -1;
     int64_t host_ = 0;
@@ -58,6 +58,7 @@ class Connection{
     Connection(const wxString& ip, const wxString& pub_port, const wxString& sub_port, const wxString& player_name);
 
     void subscribeToGame();
+    void subscribeToLobby();
 
     int64_t send(const std::string& topic, Message msg);
     bool fromMe(const Message& msg) const { return msg["player_id"].get<int64_t>() == player_id_; }

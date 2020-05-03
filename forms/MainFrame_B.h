@@ -47,6 +47,9 @@ class MainFrame_B : public wxFrame
 		wxButton* back_button_;
 		wxButton* shuffle_button_;
 		wxStaticText* m_staticText2;
+		wxStaticText* m_staticText21;
+		wxStaticText* m_staticText3;
+		wxStaticText* m_staticText5;
 		wxBoxSizer* info_sizer_;
 		wxStaticBitmap* preview_bitmap_;
 

@@ -15,14 +15,20 @@ LobbyDialog::LobbyDialog(Connection* connection)
 }
 
 LobbyDialog::~LobbyDialog(){
-	if (running_)
-		receiver_->join();
+	if (running_){
+    running_ = false;
+    receiver_->join();
+  }
 	delete receiver_;
 }
 
 
 void LobbyDialog::recv(){
   while(running_){
+    if(during_reconnect_){
+      wxMilliSleep(100);
+      continue;
+    }
     auto [t, m] = connection_->recv();
     if(t == "game_lobby" && connection_->forMe(m)){
       std::lock_guard<std::mutex> lock(message_lock_);
@@ -39,6 +45,51 @@ void LobbyDialog::create( wxCommandEvent& event ){
   running_ = false;
   receiver_->join();
   EndModal(0);
+}
+
+void LobbyDialog::reconnect( wxCommandEvent& event ){
+  during_reconnect_ = true;
+  int64_t old_pid = connection_->player_id_;
+  try{
+    std::ifstream f("last_game.txt");
+    if(f.good())
+      f >> connection_->game_id_ >> connection_->player_id_;
+  }
+  catch(std::exception& e){
+    std::cout << e.what() << std::endl;
+    wxMessageBox("Reconnect failed: Invalid last game");
+    connection_->subscribeToLobby();
+  }
+  if(old_pid == 0){
+    wxMessageBox("Reconnect failed: Invalid last game");
+    connection_->subscribeToLobby();
+  }
+
+  during_reconnect_ = true;
+  wxMilliSleep(1000);
+  connection_->subscribeToGame();
+  connection_->send("reconnect_request", Message());
+  double start = getTime();
+  while(getTime() - start < 5.0){
+    auto [t, m] = connection_->recv();
+    if(t == "reconnect_reply"){
+      GameToJoin game(m["game_name"], m["game_id"], m["host"], m["players"], this);
+      connection_->game_name_ = game.name_;
+      connection_->game_id_ = game.id_;
+      connection_->host_ = game.host_;
+      connection_->players_ = game.players_;
+      connection_->game_status_ = int(GameStatus::STARTED);
+      reconnect_reply_ = m;
+      EndModal(0);
+      running_ = false;
+      receiver_->join();
+      return;
+    }
+  }
+  wxMessageBox("Reconnect failed: Timeout");
+  connection_->player_id_ = old_pid;
+  connection_->subscribeToLobby();
+  during_reconnect_ = false;
 }
 
 void LobbyDialog::join( wxCommandEvent& event ){

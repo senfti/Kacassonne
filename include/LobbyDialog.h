@@ -33,6 +33,8 @@ class LobbyDialog : public LobbyDialog_B{
     std::thread* receiver_ = nullptr;
     bool running_ = true;
     std::list<GameToJoin> games_;
+    bool during_reconnect_ = false;
+    Message reconnect_reply_ = Message();
 
     std::mutex message_lock_;
     std::list<std::pair<std::string, Message>> pending_messages_;
@@ -42,6 +44,7 @@ class LobbyDialog : public LobbyDialog_B{
     ~LobbyDialog();
 
     virtual void create( wxCommandEvent& event );
+    virtual void reconnect( wxCommandEvent& event );
     virtual void join( wxCommandEvent& event );
     void OnTimer(wxTimerEvent& event);
 

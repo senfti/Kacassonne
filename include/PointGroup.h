@@ -18,12 +18,14 @@ class PointGroup : public wxBoxSizer{
     int getPoints();
     void setPoints(int points);
     void setStones(int stones);
+    void setOldPoints(int points);
 
   protected:
     wxPanel* active_panel_ = nullptr;
     wxStaticText* name_field_ = nullptr;
     wxStaticText* stones_field_ = nullptr;
     wxTextCtrl* point_field_ = nullptr;
+    wxStaticText* old_points_field_ = nullptr;
 
     int points_ = 0;
 };
