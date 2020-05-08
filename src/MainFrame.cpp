@@ -96,6 +96,9 @@ void MainFrame::OnTimer(wxTimerEvent &event){
   next_button_->Enable(game_->isActive() && !game_->current_card_ && game_->stack_.getLeftCards());
   back_button_->Enable(game_->isActive());
   shuffle_button_->Enable(game_->isActive() && game_->current_card_ && !game_->played_cards_.empty() && game_->stack_.getLeftCards());
+
+  table_panel_->checkFlip();
+
   setCurrentPlayer(game_->current_player_);
   if(game_->update_table_){
     game_->update_table_ = false;

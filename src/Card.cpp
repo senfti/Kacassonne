@@ -63,6 +63,8 @@ void Card::paint(wxAutoBufferedPaintDC& dc, const wxPoint& pos, double scale, St
   int edge_length = cardSize(scale);
   int border = std::min(std::max(1, edge_length/48), 2);
   wxImage tmp = Card::CARD_IMAGES[image_nr_].first.Scale(edge_length - 2*border, edge_length - 2*border);
+  if(flipped_)
+    tmp = tmp.Mirror();
   switch(r_ % 4){
     case 1: tmp = tmp.Rotate90(); break;
     case 2: tmp = tmp.Rotate180(); break;

@@ -12,9 +12,12 @@
 
 class TablePanel : public wxPanel{
   private:
+    const double FLIP_TIMEOUT = 0.5;
     double scale_ = 1.0;
     wxPoint offset_ = wxPoint(0, 0);
     wxPoint last_position_ = wxPoint(Card::OUTSIDE, Card::OUTSIDE);
+    double down_time_ = 9999999999;
+    bool flipped_ = false;
 
     Game* game_;
 
@@ -30,6 +33,7 @@ class TablePanel : public wxPanel{
     wxPoint2DDouble toGame(int x, int y) const;
     wxPoint toTable(const wxPoint2DDouble& pos) const { return toTable(pos.m_x, pos.m_y); }
     wxPoint toTable(double x, double y) const;
+    void checkFlip();
 
     void paint(wxPaintEvent &event);
 

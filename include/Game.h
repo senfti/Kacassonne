@@ -42,6 +42,7 @@ class Game{
     }
     bool moveCard(double x, double y);
     bool rotateCard();
+    bool flipCard();
     bool layCard();
     bool doMoveStone(double x, double y, int player_number, bool send = true);
     bool moveStone(double x, double y, bool any_player=false);
@@ -52,6 +53,10 @@ class Game{
 
     int getPreviewCard();
     bool validPosition();
+    bool cardInHand() const {
+      std::lock_guard<std::mutex> lock(data_lock_);
+      return current_player_ == connection_->player_number_ && current_card_;
+    }
     bool isActive() const {
       std::lock_guard<std::mutex> lock(data_lock_);
       return current_player_ == connection_->player_number_;

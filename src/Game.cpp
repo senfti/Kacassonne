@@ -60,7 +60,17 @@ bool Game::rotateCard(){
   std::lock_guard<std::mutex> lock(data_lock_);
   if(current_player_ == connection_->player_number_ && current_card_){
     current_card_->rotate();
-    sendUpdate("rotateCard", current_card_->r());
+    sendUpdate("rotateCard");
+    return true;
+  }
+  return false;
+}
+
+bool Game::flipCard(){
+  std::lock_guard<std::mutex> lock(data_lock_);
+  if(current_player_ == connection_->player_number_ && current_card_){
+    current_card_->flip();
+    sendUpdate("flipCard");
     return true;
   }
   return false;
@@ -176,8 +186,8 @@ int Game::getPreviewCard() {
     return -1;
 }
 
-Card::Side getSide(const std::array<Card::Side, 4>& sides, int r, int i){
-  int tmp = (r+i) % 4;
+Card::Side getSide(const std::array<Card::Side, 4>& sides, int r, bool flipped, int i){
+  int tmp = (flipped ? -r-i : r+i) % 4;
   tmp = (tmp < 0 ? tmp+4 : tmp);
   return sides[tmp];
 }
@@ -188,7 +198,7 @@ bool Game::validPosition(){
 
   std::array<Card::Side, 4> curr_sides;
   for(int i=0; i<4; i++){
-    curr_sides[i] = getSide(Card::CARD_SIDES[current_card_->imageNr()],current_card_->r(), i);
+    curr_sides[i] = getSide(Card::CARD_SIDES[current_card_->imageNr()], current_card_->r(), current_card_->flipped(), i);
   }
   static std::array<wxPoint, 4> offsets = {wxPoint(0, -1), wxPoint(-1, 0), wxPoint(0, 1), wxPoint(1, 0)};
   bool has_neighbor = false;
@@ -198,7 +208,7 @@ bool Game::validPosition(){
 
     for(int i=0; i<4; i++){
       if(current_card_->pt() + offsets[i] == card.pt()){
-        if(curr_sides[i] != getSide(Card::CARD_SIDES[card.imageNr()], card.r(), i + 2))
+        if(curr_sides[i] != getSide(Card::CARD_SIDES[card.imageNr()], card.r(), card.flipped(), i + 2))
           return false;
         has_neighbor = true;
       }
@@ -270,7 +280,9 @@ void Game::recv(){
           if(m["type"] == "moveCard")
             current_card_->setPosition(m["x"], m["y"]);
           else if(m["type"] == "rotateCard")
-            current_card_->rotate(m["x"].get<double>());
+            current_card_->rotate();
+          else if(m["type"] == "flipCard")
+            current_card_->flip();
           else if(m["type"] == "layCard"){
             current_card_ = nullptr;
             played_cards_.push_back(stack_.get());

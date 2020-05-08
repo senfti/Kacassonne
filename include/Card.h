@@ -30,6 +30,7 @@ class Card{
     int image_nr_ = 11;
     int x_ = OUTSIDE, y_ = OUTSIDE;
     int r_ = 0;
+    bool flipped_ = false;
 
   public:
     Card(int image_nr = 11) : image_nr_(image_nr) {}
@@ -42,21 +43,23 @@ class Card{
     int x() const { return x_; }
     int y() const { return y_; }
     wxPoint pt() const { return wxPoint(x_, y_); }
-    int r() const { return r_; }
+    int r() const { return r_ % 4; }
+    int flipped() const { return flipped_; }
     int imageNr() const { return image_nr_; }
 
     void setPosition(int x, int y) { x_ = x; y_ = y; }
-    void rotate() { r_++; }
-    void rotate(int r) { r_ = r; }
+    void rotate() { r_ += 1; }
+    void flip() { flipped_ = !flipped_; }
 
     friend void to_json(nlohmann::json& j, const Card& c) {
-        j = nlohmann::json{{"image_nr", c.image_nr_}, {"x", c.x_}, {"y", c.y_}, {"r", c.r_}};
+        j = nlohmann::json{{"image_nr", c.image_nr_}, {"x", c.x_}, {"y", c.y_}, {"r", c.r_}, {"flipped", c.flipped_}};
     }
     friend void from_json(const nlohmann::json& j, Card& c) {
         j.at("image_nr").get_to(c.image_nr_);
         j.at("x").get_to(c.x_);
         j.at("y").get_to(c.y_);
         j.at("r").get_to(c.r_);
+        j.at("flipped").get_to(c.flipped_);
     }
 };
 

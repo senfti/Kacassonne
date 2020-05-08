@@ -58,6 +58,16 @@ wxPoint TablePanel::toTable(double x, double y) const {
   return offset_ + wxPoint(x*edge_length, y*edge_length);
 }
 
+void TablePanel::checkFlip(){
+  if(getTime() >= down_time_ + FLIP_TIMEOUT){
+    if(game_->flipCard()){
+      flipped_ = true;
+      down_time_ = 9999999999;
+      Refresh();
+    }
+  }
+}
+
 void TablePanel::paint(wxPaintEvent &event){
   wxAutoBufferedPaintDC dc(this);
   dc.Clear();
@@ -155,9 +165,9 @@ void TablePanel::wheel(wxMouseEvent &event){
 }
 
 void TablePanel::rDown(wxMouseEvent &event){
-  if(game_->rotateCard())
-    Refresh();
-  else
+  down_time_ = getTime();
+  flipped_ = false;
+  if(!game_->cardInHand())
     game_->flare(wxPoint2DDouble(toGame(event.GetPosition())));
 }
 
@@ -166,7 +176,10 @@ void TablePanel::rDDown( wxMouseEvent& event ){
 }
 
 void TablePanel::rUp(wxMouseEvent &event){
-
+  down_time_ = 9999999999;
+  if(!flipped_)
+    if(game_->rotateCard())
+      Refresh();
 }
 
 void TablePanel::keyDown( wxKeyEvent& event ){

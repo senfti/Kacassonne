@@ -15,9 +15,24 @@ LobbyDialog_B::LobbyDialog_B( wxWindow* parent, wxWindowID id, const wxString& t
 
 	window_sizer_ = new wxBoxSizer( wxVERTICAL );
 
+	wxBoxSizer* bSizer41;
+	bSizer41 = new wxBoxSizer( wxHORIZONTAL );
+
 	version_textctrl_ = new wxStaticText( this, wxID_ANY, wxT("Version: "), wxDefaultPosition, wxDefaultSize, 0 );
 	version_textctrl_->Wrap( -1 );
-	window_sizer_->Add( version_textctrl_, 0, wxALL, 5 );
+	bSizer41->Add( version_textctrl_, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+
+
+	bSizer41->Add( 0, 0, 1, wxEXPAND, 5 );
+
+	reconnect_button_ = new wxButton( this, wxID_ANY, wxT("Reconnect"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer41->Add( reconnect_button_, 0, wxALL, 5 );
+
+
+	window_sizer_->Add( bSizer41, 1, wxEXPAND, 5 );
+
+	m_staticline2 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
+	window_sizer_->Add( m_staticline2, 0, wxEXPAND | wxALL, 5 );
 
 	wxBoxSizer* bSizer4;
 	bSizer4 = new wxBoxSizer( wxHORIZONTAL );
@@ -41,9 +56,6 @@ LobbyDialog_B::LobbyDialog_B( wxWindow* parent, wxWindowID id, const wxString& t
 
 	window_sizer_->Add( bSizer4, 0, wxEXPAND, 5 );
 
-	reconnect_button_ = new wxButton( this, wxID_ANY, wxT("Reconnect to last game"), wxDefaultPosition, wxDefaultSize, 0 );
-	window_sizer_->Add( reconnect_button_, 0, wxALL, 5 );
-
 	m_staticline1 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 	window_sizer_->Add( m_staticline1, 0, wxEXPAND | wxALL, 5 );
 
@@ -60,14 +72,14 @@ LobbyDialog_B::LobbyDialog_B( wxWindow* parent, wxWindowID id, const wxString& t
 	this->Centre( wxBOTH );
 
 	// Connect Events
-	create_button_->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LobbyDialog_B::create ), NULL, this );
 	reconnect_button_->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LobbyDialog_B::reconnect ), NULL, this );
+	create_button_->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LobbyDialog_B::create ), NULL, this );
 }
 
 LobbyDialog_B::~LobbyDialog_B()
 {
 	// Disconnect Events
-	create_button_->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LobbyDialog_B::create ), NULL, this );
 	reconnect_button_->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LobbyDialog_B::reconnect ), NULL, this );
+	create_button_->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LobbyDialog_B::create ), NULL, this );
 
 }
