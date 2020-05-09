@@ -58,6 +58,7 @@ class MainFrame_B : public wxFrame
 		virtual void newGame( wxCommandEvent& event ) { event.Skip(); }
 		virtual void quit( wxCommandEvent& event ) { event.Skip(); }
 		virtual void help( wxCommandEvent& event ) { event.Skip(); }
+		virtual void showIds( wxCommandEvent& event ) { event.Skip(); }
 		virtual void next( wxCommandEvent& event ) { event.Skip(); }
 		virtual void back( wxCommandEvent& event ) { event.Skip(); }
 		virtual void shuffle( wxCommandEvent& event ) { event.Skip(); }

@@ -304,7 +304,7 @@ void Game::recv(){
       }
       else if(t == "reconnect_request"){
         std::lock_guard<std::mutex> lock(data_lock_);
-        connection_->send("reconnect_reply", getAsMessage());
+        connection_->send("reconnect_reply", getAsMessage(true));
       }
     }
     catch(std::exception& e){

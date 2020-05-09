@@ -2,9 +2,8 @@
 // Created by ts on 03.04.20.
 //
 
-#include <LobbyDialog.h>
-
 #include "LobbyDialog.h"
+#include "ReconnectDialog.h"
 
 LobbyDialog::LobbyDialog(Connection* connection)
     : LobbyDialog_B(nullptr), connection_(connection), timer_(this){
@@ -50,23 +49,17 @@ void LobbyDialog::create( wxCommandEvent& event ){
 void LobbyDialog::reconnect( wxCommandEvent& event ){
   during_reconnect_ = true;
   int64_t old_pid = connection_->player_id_;
-  try{
-    std::ifstream f("last_game.txt");
-    if(f.good())
-      f >> connection_->game_id_ >> connection_->player_id_;
-  }
-  catch(std::exception& e){
-    std::cout << e.what() << std::endl;
-    wxMessageBox("Reconnect failed: Invalid last game");
+  ReconnectDialog* rd = new ReconnectDialog();
+  if(rd->ShowModal() != 0){
     connection_->subscribeToLobby();
-  }
-  if(old_pid == 0){
-    wxMessageBox("Reconnect failed: Invalid last game");
-    connection_->subscribeToLobby();
+    delete rd;
+    return;
   }
 
-  during_reconnect_ = true;
-  wxMilliSleep(1000);
+  connection_->game_id_ = rd->game_id_;
+  connection_->player_id_ = rd->player_id_;
+  delete rd;
+
   connection_->subscribeToGame();
   connection_->send("reconnect_request", Message());
   double start = getTime();
@@ -78,7 +71,6 @@ void LobbyDialog::reconnect( wxCommandEvent& event ){
       connection_->game_id_ = game.id_;
       connection_->host_ = game.host_;
       connection_->players_ = game.players_;
-      connection_->game_status_ = int(GameStatus::STARTED);
       reconnect_reply_ = m;
       EndModal(0);
       running_ = false;

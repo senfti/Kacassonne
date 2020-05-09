@@ -3,6 +3,7 @@
 //
 
 #include <MainFrame.h>
+#include <IdsDialog.h>
 
 #include "main.h"
 
@@ -90,6 +91,11 @@ void MainFrame::newGame( wxCommandEvent& event ){
 void MainFrame::help( wxCommandEvent& event ){
   HelpDialog_B help_dialog(this);
   help_dialog.ShowModal();
+}
+
+void MainFrame::showIds( wxCommandEvent& event ){
+  IdsDialog d(this, game_->connection_);
+  d.ShowModal();
 }
 
 void MainFrame::OnTimer(wxTimerEvent &event){

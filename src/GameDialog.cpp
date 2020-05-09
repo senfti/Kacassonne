@@ -103,6 +103,7 @@ void GameDialog::OnTimer(wxTimerEvent& event){
         }
         if(t == "game_start"){
           m["players"].get_to(connection_->players_);
+          connection_->game_status_ = int(GameStatus::STARTED);
           connection_->send("game_start_ack", Message());
           if(!connection_->iAmHost())
             EndModal(0);

@@ -43,7 +43,7 @@ class Connection{
     wxString pub_port_;
     wxString sub_port_;
 
-//    std::ofstream log_file = std::ofstream("message_log.txt", std::ios::app | std::ios::out);
+    std::ofstream log_file = std::ofstream("message_log.txt", std::ios::app | std::ios::out);
 
     std::string player_name_;
     int64_t player_id_ = getID();

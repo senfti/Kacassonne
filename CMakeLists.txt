@@ -32,7 +32,7 @@ add_executable(Kacassonne WIN32 src/main.cpp include/main.h forms/HostDialog_B.h
   include/PointGroup.h src/PointGroup.cpp include/Card.h src/Card.cpp include/Stack.h src/Stack.cpp
   include/Game.h src/Game.cpp include/Stone.h src/Stone.cpp include/Player.h src/Player.cpp include/HostDialog.h forms/HelpDialog_B.cpp
   src/HostDialog.cpp src/Message.cpp src/Connection.cpp forms/ConnectDialog_B.h forms/ConnectDialog_B.cpp src/LobbyDialog.cpp include/Flare.h
-	)
+  include/ReconnectDialog.h src/ReconnectDialog.cpp forms/ReconnectDialog_B.cpp include/IdsDialog.h forms/IdsDialog_B.cpp)
 
 IF (WIN32)
 	target_link_libraries(Kacassonne D:/Programmieren/zmq/libzmq-v141-mt-4_3_2.lib ${wxWidgets_LIBRARIES} )

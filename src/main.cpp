@@ -112,7 +112,7 @@ std::pair<int, Message> MyApp::lobbyStuff(){
   Message reconnect_reply = ld->reconnect_reply_;
   delete ld;
 
-  if(reconnect_reply.find("game_status") != reconnect_reply.end()){
+  if(reconnect_reply.find("game_status") != reconnect_reply.end() && reconnect_reply["game_status"].get<int>() == int(GameStatus::STARTED)){
     return std::make_pair(1000, reconnect_reply);
   }
 

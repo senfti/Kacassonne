@@ -32,6 +32,7 @@ class MainFrame : public MainFrame_B{
     virtual void restart( wxCommandEvent& event );
     virtual void newGame( wxCommandEvent& event );
     virtual void help( wxCommandEvent& event );
+    virtual void showIds( wxCommandEvent& event );
 
     void OnTimer(wxTimerEvent& event);
 

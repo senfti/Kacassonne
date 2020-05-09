@@ -35,6 +35,10 @@ MainFrame_B::MainFrame_B( wxWindow* parent, wxWindowID id, const wxString& title
 	m_menuItem5 = new wxMenuItem( help_menu_, wxID_ANY, wxString( wxT("Help") ) , wxEmptyString, wxITEM_NORMAL );
 	help_menu_->Append( m_menuItem5 );
 
+	wxMenuItem* m_menuItem51;
+	m_menuItem51 = new wxMenuItem( help_menu_, wxID_ANY, wxString( wxT("Ids") ) , wxEmptyString, wxITEM_NORMAL );
+	help_menu_->Append( m_menuItem51 );
+
 	m_menubar1->Append( help_menu_, wxT("?") );
 
 	this->SetMenuBar( m_menubar1 );
@@ -120,6 +124,7 @@ MainFrame_B::MainFrame_B( wxWindow* parent, wxWindowID id, const wxString& title
 	m_menu1->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame_B::newGame ), this, new_game_menu_item_->GetId());
 	m_menu1->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame_B::quit ), this, quit_menu_item_->GetId());
 	help_menu_->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame_B::help ), this, m_menuItem5->GetId());
+	help_menu_->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame_B::showIds ), this, m_menuItem51->GetId());
 	next_button_->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame_B::next ), NULL, this );
 	back_button_->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame_B::back ), NULL, this );
 	shuffle_button_->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame_B::shuffle ), NULL, this );
