@@ -54,6 +54,7 @@ class MainFrame_B : public wxFrame
 		wxStaticBitmap* preview_bitmap_;
 
 		// Virtual event handlers, overide them in your derived class
+		virtual void keyDown( wxKeyEvent& event ) { event.Skip(); }
 		virtual void restart( wxCommandEvent& event ) { event.Skip(); }
 		virtual void newGame( wxCommandEvent& event ) { event.Skip(); }
 		virtual void quit( wxCommandEvent& event ) { event.Skip(); }

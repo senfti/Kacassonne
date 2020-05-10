@@ -6,6 +6,7 @@
 #include <wx/dcbuffer.h>
 #include "GameDialog.h"
 #include <wx/valnum.h>
+#include <random>
 
 GameDialog::GameDialog(Connection *connection)
   : GameDialog_B(nullptr), connection_(connection), timer_(this)
@@ -60,9 +61,14 @@ void GameDialog::quit( wxCommandEvent& event ) {
 }
 
 void GameDialog::start( wxCommandEvent& event ) {
+  std::mt19937 eng(time(0));
+  std::shuffle(connection_->players_.begin(), connection_->players_.end(), eng);
   connection_->game_status_ = int(GameStatus::STARTED);
   ack_.resize(connection_->players_.size(), false);
-  ack_[0] = true;
+  for(unsigned i=0; i<connection_->players_.size(); i++){
+    if(connection_->players_[i].id_ == connection_->player_id_)
+      ack_[i] = true;
+  }
   connection_->send("game_start", Message());
   card_number_ = std::atoi((const char*)(numcard_textctrl_->GetValue()));
 }

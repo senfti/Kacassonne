@@ -7,6 +7,7 @@
 #include <wx/dcbuffer.h>
 #include <TablePanel.h>
 #include <filesystem>
+#include <PointEntryDialog.h>
 #include "MainFrame.h"
 
 
@@ -183,6 +184,14 @@ void TablePanel::rUp(wxMouseEvent &event){
 }
 
 void TablePanel::keyDown( wxKeyEvent& event ){
+  if((event.GetKeyCode() == '-') || (event.GetKeyCode() >= 48 && event.GetKeyCode() < 58) || (event.GetKeyCode() >= 96 && event.GetKeyCode() < 106)){
+    int digit = (event.GetKeyCode() == '-' ? -1 : (event.GetKeyCode() >= 48 && event.GetKeyCode() < 58 ? event.GetKeyCode() - 48 : event.GetKeyCode() - 96));
+    PointEntryDialog pd(this, digit, game_->getPlayers(), game_->connection_->player_number_);
+    if(pd.ShowModal() == 0){
+      game_->setPoints(pd.getPlayer(), pd.points_, pd.getAdd(), true);
+    }
+  }
+
   if(event.GetKeyCode() == WXK_CONTROL)
     last_position_ = event.GetPosition();
   else if(event.GetKeyCode() == WXK_RETURN){

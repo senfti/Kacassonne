@@ -20,11 +20,11 @@ Game::Game(Connection* connection, int card_number)
         connection_->player_number_ = i;
     }
     if(connection_->iAmHost())
-      connection_->send("next", getAsMessage(true));
+      connection_->send("next", getAsMessage());
     current_card_ = stack_.next();
   }
-  moveCard(0, 0);
-  layCard();
+  moveCard(0, 0, true);
+  layCard(true);
   receiver_ = new std::thread(&Game::recv, this);
 }
 
@@ -36,15 +36,14 @@ Game::Game(Connection* connection, const Message& reconnect_reply)
     if(connection_->player_id_ == connection_->players_[i].id_)
       connection_->player_number_ = i;
   }
-  is_start_ = false;
   updateFromMessage(reconnect_reply);
   receiver_ = new std::thread(&Game::recv, this);
 }
 
-bool Game::moveCard(double x, double y){
+bool Game::moveCard(double x, double y, bool force){
   std::lock_guard<std::mutex> lock(data_lock_);
   last_mouse_pos_ = wxPoint2DDouble(x, y);
-  if(current_player_ == connection_->player_number_ && current_card_){
+  if((current_player_ == connection_->player_number_ && current_card_) || force){
     x = std::floor(x);
     y = std::floor(y);
     if(x != current_card_->x() || y != current_card_->y()){
@@ -76,9 +75,9 @@ bool Game::flipCard(){
   return false;
 }
 
-bool Game::layCard(){
+bool Game::layCard(bool force){
   std::lock_guard<std::mutex> lock(data_lock_);
-  if(current_player_ == connection_->player_number_ && current_card_ && current_card_&& validPosition()){
+  if((current_player_ == connection_->player_number_ && current_card_&& validPosition()) || force){
     current_card_ = nullptr;
     played_cards_.push_back(stack_.get());
     sendUpdate("layCard", played_cards_.back().x(), played_cards_.back().y());
@@ -125,7 +124,6 @@ bool Game::moveStone(double x, double y, bool any_player){
 bool Game::next(){
   {
     std::lock_guard<std::mutex> lock(data_lock_);
-    is_start_ = false;
     if(current_player_ == connection_->player_number_ && !current_card_ && stack_.getLeftCards() > 0){
       current_player_ = (current_player_ + 1) % int(players_.size());
       connection_->send("next", getAsMessage());
@@ -171,6 +169,20 @@ void Game::flare(const wxPoint2DDouble& pos, bool any_player){
   if (any_player || (current_player_ != connection_->player_number_ || !current_card_)) {
     flares_.emplace_back(Flare(pos.m_x, pos.m_y, connection_->player_number_));
     sendUpdate("flare", pos.m_x, pos.m_y, connection_->player_number_);
+  }
+}
+
+void Game::setPoints(int player, int points, bool add, bool send){
+  std::lock_guard<std::mutex> lock(data_lock_);
+  if(player < int(players_.size())){
+    players_[player].points_ = (add ? players_[player].points_ + points : points);
+    if(send){
+      Message msg;
+      msg["type"] = "points";
+      msg["idx"] = player;
+      msg["points"] = players_[player].points_;
+      connection_->send("update", msg);
+    }
   }
 }
 
@@ -227,18 +239,12 @@ bool Game::sendUpdate(const std::string& type, double x, double y, int idx){
   return true;
 }
 
-Message Game::getAsMessage(bool with_points) const{
+Message Game::getAsMessage() const{
   Message msg;
   msg["stack"] = stack_;
   msg["played_cards"] = played_cards_;
   msg["game_players"] = players_;
   msg["current_player"] = current_player_;
-  if(with_points){
-    std::vector<int> pts;
-    for(const auto& p : players_)
-      pts.push_back(p.points_);
-    msg["points"] = pts;
-  }
   return msg;
 }
 
@@ -249,16 +255,6 @@ void Game::updateFromMessage(const Message& msg){
     msg.at("played_cards").get_to(played_cards_);
     msg.at("game_players").get_to(players_);
     msg.at("current_player").get_to(current_player_);
-    if(msg.find("points") != msg.end()){
-      int i = 0;
-      for(const auto& node : msg.at("points")){
-        Message msg;
-        msg["type"] = "points";
-        msg["idx"] = i++;
-        msg["points"] = node.get<int>();
-        msg_queue_.push_back(std::make_pair(std::string("update"), msg));
-      }
-    }
     current_card_ = stack_.next();
   }
   moveCard(last_mouse_pos_.m_x, last_mouse_pos_.m_y);
@@ -270,10 +266,8 @@ void Game::recv(){
   while(running_){
     try{
       auto[t, m] = connection_->recv();
-      if(t == "update" && m["type"] == "points"){
-        std::lock_guard<std::mutex> lock(msg_queue_mutex_);
-        msg_queue_.push_back(std::make_pair(t, m));
-      }
+      if(t == "update" && m["type"] == "points")
+        setPoints(m["idx"], m["points"], false, false);
       else if(t == "update"){
         std::lock_guard<std::mutex> lock(data_lock_);
         if(current_card_){
@@ -288,7 +282,7 @@ void Game::recv(){
             played_cards_.push_back(stack_.get());
           }
         }
-        if(m["type"] == "moveStone" && m["idx"].get<int>() < int(players_.size()))
+        else if(m["type"] == "moveStone" && m["idx"].get<int>() < int(players_.size()))
           doMoveStone(m["x"], m["y"], m["idx"], false);
         else if(m["type"] == "flare" && m["idx"].get<int>() < int(players_.size())){
           flares_.push_back(Flare(m["x"], m["y"], m["idx"]));
@@ -296,7 +290,6 @@ void Game::recv(){
         update_table_ = true;
       }
       else if(t == "next"){
-        is_start_ = false;
         updateFromMessage(m);
         if(current_player_ == 0)
           update_old_pts_ = true;
@@ -304,7 +297,7 @@ void Game::recv(){
       }
       else if(t == "reconnect_request"){
         std::lock_guard<std::mutex> lock(data_lock_);
-        connection_->send("reconnect_reply", getAsMessage(true));
+        connection_->send("reconnect_reply", getAsMessage());
       }
     }
     catch(std::exception& e){

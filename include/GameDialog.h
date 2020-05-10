@@ -23,9 +23,8 @@ class GameDialog : public GameDialog_B{
     std::list<std::pair<std::string, Message>> pending_messages_;
 
     std::vector<bool> ack_;
-    bool finished_ = false;
     wxTimer timer_;
-    unsigned long card_number_ = 93;
+    unsigned long card_number_ = 101;
 
     void recv();
 

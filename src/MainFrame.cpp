@@ -4,6 +4,7 @@
 
 #include <MainFrame.h>
 #include <IdsDialog.h>
+#include <PointEntryDialog.h>
 
 #include "main.h"
 
@@ -126,16 +127,8 @@ void MainFrame::OnTimer(wxTimerEvent &event){
 
   for(unsigned i = 0; i < players_guis_.size(); i++){
     std::lock_guard<std::mutex> lock(game_->data_lock_);
-    if(players_guis_[i]->getPoints() != game_->players_[i].points_){
-      game_->players_[i].points_ = players_guis_[i]->getPoints();
-      Message msg;
-      msg["type"] = "points";
-      msg["idx"] = i;
-      msg["points"] = players_guis_[i]->getPoints();
-      game_->connection_->send("update", msg);
-    }
+    players_guis_[i]->setPoints(game_->players_[i].points_);
     players_guis_[i]->setStones(game_->players_[i].getRemainingStones());
-
     if(game_->update_old_pts_)
       players_guis_[i]->setOldPoints(game_->players_[i].points_);
   }
@@ -156,23 +149,10 @@ void MainFrame::OnTimer(wxTimerEvent &event){
     }
   }
 
-  std::list<std::pair<std::string, Message>> msgs;
-  {
-    std::lock_guard<std::mutex> lock(game_->msg_queue_mutex_);
-    msgs = game_->msg_queue_;
-    game_->msg_queue_.clear();
-  }
-  for(const auto&[t, m] : msgs){
-    if(t == "update" && m["type"] == "points" && m["idx"] < game_->players_.size()){
-      game_->players_[m["idx"]].points_ = m["points"];
-      players_guis_[m["idx"]]->setPoints(m["points"]);
-    }
-  }
-
   static unsigned long long last_curr_time = getTime();
   if(game_->current_card_)
     last_curr_time = getTime();
-  else if(getTime() - last_curr_time > 3 && !game_->is_start_)
+  else if(getTime() - last_curr_time > 3 && !game_->isFirst())
     next();
 }
 

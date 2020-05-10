@@ -120,6 +120,7 @@ MainFrame_B::MainFrame_B( wxWindow* parent, wxWindowID id, const wxString& title
 	this->Centre( wxBOTH );
 
 	// Connect Events
+	this->Connect( wxEVT_KEY_DOWN, wxKeyEventHandler( MainFrame_B::keyDown ) );
 	m_menu1->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame_B::restart ), this, restart_menu_item_->GetId());
 	m_menu1->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame_B::newGame ), this, new_game_menu_item_->GetId());
 	m_menu1->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame_B::quit ), this, quit_menu_item_->GetId());
@@ -133,6 +134,7 @@ MainFrame_B::MainFrame_B( wxWindow* parent, wxWindowID id, const wxString& title
 MainFrame_B::~MainFrame_B()
 {
 	// Disconnect Events
+	this->Disconnect( wxEVT_KEY_DOWN, wxKeyEventHandler( MainFrame_B::keyDown ) );
 	next_button_->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame_B::next ), NULL, this );
 	back_button_->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame_B::back ), NULL, this );
 	shuffle_button_->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame_B::shuffle ), NULL, this );

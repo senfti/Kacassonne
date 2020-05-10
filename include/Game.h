@@ -27,11 +27,9 @@ class Game{
     mutable std::mutex data_lock_;
     std::list<Flare> flares_;
     wxPoint2DDouble last_mouse_pos_ = wxPoint2DDouble(0, 0);
-    bool is_start_ = true;
     bool update_old_pts_ = false;
 
     std::mutex msg_queue_mutex_;
-    std::list<std::pair<std::string, Message>> msg_queue_;
 
     Game(Connection* connection = nullptr, int card_number = 72);
     Game(Connection* connection, const Message& reconnect_reply);
@@ -40,16 +38,17 @@ class Game{
       receiver_->join();
 	  delete receiver_;
     }
-    bool moveCard(double x, double y);
+    bool moveCard(double x, double y, bool force = false);
     bool rotateCard();
     bool flipCard();
-    bool layCard();
+    bool layCard(bool force = false);
     bool doMoveStone(double x, double y, int player_number, bool send = true);
     bool moveStone(double x, double y, bool any_player=false);
     bool next();
     bool revert();
     bool shuffle();
     void flare(const wxPoint2DDouble& pos, bool any_player=false);
+    void setPoints(int player, int points, bool add, bool send);
 
     int getPreviewCard();
     bool validPosition();
@@ -70,8 +69,16 @@ class Game{
       std::lock_guard<std::mutex> lock(data_lock_);
       return players_.size();
     }
+    bool isFirst() const {
+      std::lock_guard<std::mutex> lock(data_lock_);
+      return played_cards_.size() < 2;
+    }
+    std::vector<Player> getPlayers() const {
+      std::lock_guard<std::mutex> lock(data_lock_);
+      return players_;
+    }
 
-    Message getAsMessage(bool with_points=false) const;
+    Message getAsMessage() const;
     void updateFromMessage(const Message& msg);
 
     void recv();

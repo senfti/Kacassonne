@@ -20,12 +20,13 @@ class Player{
     int getRemainingStones() const;
 
     friend void to_json(nlohmann::json& j, const Player& p) {
-      j = nlohmann::json{{"stones", p.stones_}, {"color", p.color_}, {"name", p.name_}};
+      j = nlohmann::json{{"stones", p.stones_}, {"color", p.color_}, {"name", p.name_}, {"points", p.points_}};
     }
     friend void from_json(const nlohmann::json& j, Player& p) {
       j.at("stones").get_to(p.stones_);
       j.at("color").get_to(p.color_);
       p.name_ = j.at("name").get<std::string>();
+      j.at("points").get_to(p.points_);
     }
 };
 

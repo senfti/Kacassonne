@@ -20,8 +20,8 @@ PointGroup::PointGroup(const wxString& name, const wxColor& color, wxWindow* par
   stones_field_->Wrap( -1 );
   Add( stones_field_, 0, wxALL, 5 );
 
-  point_field_ = new wxTextCtrl( parent, wxID_ANY, "0", wxDefaultPosition, wxSize(50, -1), wxTE_RIGHT);
-  Add( point_field_, 0, wxALL, 0 );
+  point_field_ = new wxStaticText( parent, wxID_ANY, "0", wxDefaultPosition, wxSize(50, -1));
+  Add( point_field_, 0, wxALL, 5 );
 
   old_points_field_ = new wxStaticText( parent, wxID_ANY, "0", wxDefaultPosition, wxSize(30, -1), 0 );
   Add( old_points_field_, 0, wxALL, 5 );
@@ -33,7 +33,7 @@ void PointGroup::setActive(bool active, bool card_active){
 }
 
 void PointGroup::setPoints(int points){
-  point_field_->SetValue(std::to_string(points));
+  point_field_->SetLabel(std::to_string(points));
 }
 
 void PointGroup::setStones(int stones){
@@ -42,14 +42,5 @@ void PointGroup::setStones(int stones){
 
 void PointGroup::setOldPoints(int points){
   old_points_field_->SetLabel(std::to_string(points));
-}
-
-int PointGroup::getPoints(){
-  try{
-    points_ = std::atoi(point_field_->GetValue());
-  }
-  catch(std::exception&){
-  }
-  return points_;
 }
 
