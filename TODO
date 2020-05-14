@@ -1,6 +1,9 @@
-basegame mode (standard cards + no flip)
 card info in json
+basegame mode (standard cards + no flip)
+generell jsons für verschiedene balances
 Punkte-Log in file
+Licenses alle dazutun
+nlohmann json als git submodule
 
  - Zufällige Spielerreihenfolge
  - punktebox überarbeiten
