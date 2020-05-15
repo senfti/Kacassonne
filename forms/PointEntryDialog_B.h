@@ -19,6 +19,10 @@
 #include <wx/checkbox.h>
 #include <wx/sizer.h>
 #include <wx/choice.h>
+#include <wx/button.h>
+#include <wx/bitmap.h>
+#include <wx/image.h>
+#include <wx/icon.h>
 #include <wx/dialog.h>
 
 ///////////////////////////////////////////////////////////////////////////
@@ -36,9 +40,13 @@ class PointEntryDialog_B : public wxDialog
 		wxTextCtrl* points_textctrl_;
 		wxCheckBox* add_checkbox_;
 		wxChoice* player_choice_;
+		wxButton* m_button2;
+		wxButton* m_button3;
 
 		// Virtual event handlers, overide them in your derived class
 		virtual void keyDown( wxKeyEvent& event ) { event.Skip(); }
+		virtual void cancel( wxCommandEvent& event ) { event.Skip(); }
+		virtual void ok( wxCommandEvent& event ) { event.Skip(); }
 
 
 	public:

@@ -38,6 +38,23 @@ PointEntryDialog_B::PointEntryDialog_B( wxWindow* parent, wxWindowID id, const w
 	player_choice_->SetSelection( 0 );
 	bSizer7->Add( player_choice_, 0, wxALL|wxEXPAND, 5 );
 
+	wxBoxSizer* bSizer3;
+	bSizer3 = new wxBoxSizer( wxHORIZONTAL );
+
+	m_button2 = new wxButton( this, wxID_CANCEL, wxT("Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer3->Add( m_button2, 0, wxALL, 5 );
+
+
+	bSizer3->Add( 0, 0, 1, wxEXPAND, 5 );
+
+	m_button3 = new wxButton( this, wxID_OK, wxT("Ok"), wxDefaultPosition, wxDefaultSize, 0 );
+
+	m_button3->SetDefault();
+	bSizer3->Add( m_button3, 0, wxALL, 5 );
+
+
+	bSizer7->Add( bSizer3, 1, wxEXPAND, 5 );
+
 
 	this->SetSizer( bSizer7 );
 	this->Layout();
@@ -47,17 +64,27 @@ PointEntryDialog_B::PointEntryDialog_B( wxWindow* parent, wxWindowID id, const w
 
 	// Connect Events
 	this->Connect( wxEVT_KEY_DOWN, wxKeyEventHandler( PointEntryDialog_B::keyDown ) );
+	m_staticText7->Connect( wxEVT_KEY_DOWN, wxKeyEventHandler( PointEntryDialog_B::keyDown ), NULL, this );
 	points_textctrl_->Connect( wxEVT_KEY_DOWN, wxKeyEventHandler( PointEntryDialog_B::keyDown ), NULL, this );
 	add_checkbox_->Connect( wxEVT_KEY_DOWN, wxKeyEventHandler( PointEntryDialog_B::keyDown ), NULL, this );
 	player_choice_->Connect( wxEVT_KEY_DOWN, wxKeyEventHandler( PointEntryDialog_B::keyDown ), NULL, this );
+	m_button2->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( PointEntryDialog_B::cancel ), NULL, this );
+	m_button2->Connect( wxEVT_KEY_DOWN, wxKeyEventHandler( PointEntryDialog_B::keyDown ), NULL, this );
+	m_button3->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( PointEntryDialog_B::ok ), NULL, this );
+	m_button3->Connect( wxEVT_KEY_DOWN, wxKeyEventHandler( PointEntryDialog_B::keyDown ), NULL, this );
 }
 
 PointEntryDialog_B::~PointEntryDialog_B()
 {
 	// Disconnect Events
 	this->Disconnect( wxEVT_KEY_DOWN, wxKeyEventHandler( PointEntryDialog_B::keyDown ) );
+	m_staticText7->Disconnect( wxEVT_KEY_DOWN, wxKeyEventHandler( PointEntryDialog_B::keyDown ), NULL, this );
 	points_textctrl_->Disconnect( wxEVT_KEY_DOWN, wxKeyEventHandler( PointEntryDialog_B::keyDown ), NULL, this );
 	add_checkbox_->Disconnect( wxEVT_KEY_DOWN, wxKeyEventHandler( PointEntryDialog_B::keyDown ), NULL, this );
 	player_choice_->Disconnect( wxEVT_KEY_DOWN, wxKeyEventHandler( PointEntryDialog_B::keyDown ), NULL, this );
+	m_button2->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( PointEntryDialog_B::cancel ), NULL, this );
+	m_button2->Disconnect( wxEVT_KEY_DOWN, wxKeyEventHandler( PointEntryDialog_B::keyDown ), NULL, this );
+	m_button3->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( PointEntryDialog_B::ok ), NULL, this );
+	m_button3->Disconnect( wxEVT_KEY_DOWN, wxKeyEventHandler( PointEntryDialog_B::keyDown ), NULL, this );
 
 }

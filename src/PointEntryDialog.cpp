@@ -18,20 +18,31 @@ PointEntryDialog::PointEntryDialog(wxWindow* parent, int digit, const std::vecto
 }
 
 
-void PointEntryDialog::keyDown( wxKeyEvent& event ){
-  if(event.GetKeyCode() == WXK_RETURN){
-    try{
-      points_ = std::atoi(points_textctrl_->GetValue());
-      EndModal(0);
-    }
-    catch(std::exception&){
-      points_textctrl_->SetValue("");
-      points_textctrl_->SetFocus();
-    }
+void PointEntryDialog::cancel( wxCommandEvent& event ){
+  EndModal(-1);
+}
+
+
+void PointEntryDialog::ok( wxCommandEvent& event ){
+  try{
+    points_ = std::atoi(points_textctrl_->GetValue());
+    EndModal(0);
   }
-  else if(event.GetKeyCode() == WXK_ESCAPE)
-    EndModal(-1);
-  else if(event.GetKeyCode() == WXK_UP || event.GetKeyCode() == WXK_LEFT){
+  catch(std::exception&){
+    points_textctrl_->SetValue("");
+    points_textctrl_->SetFocus();
+  }
+}
+
+
+void PointEntryDialog::keyDown( wxKeyEvent& event ){
+//  if(event.GetKeyCode() == WXK_RETURN){
+//    wxCommandEvent evt;
+//    cancel(evt);
+//  }
+//  else if(event.GetKeyCode() == WXK_ESCAPE)
+//    EndModal(-1);
+  if(event.GetKeyCode() == WXK_UP || event.GetKeyCode() == WXK_LEFT){
     if(player_choice_->GetSelection() > 0)
       player_choice_->SetSelection(player_choice_->GetSelection() - 1);
   }

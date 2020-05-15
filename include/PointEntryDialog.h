@@ -13,10 +13,13 @@ class PointEntryDialog : public PointEntryDialog_B{
     int points_;
 
     PointEntryDialog(wxWindow* parent, int digit, const std::vector<Player>& players, int myself);
-    virtual void keyDown( wxKeyEvent& event );
 
     int getPlayer() const { return player_choice_->GetSelection(); }
     bool getAdd() const { return add_checkbox_->GetValue(); }
+
+    virtual void keyDown( wxKeyEvent& event );
+    virtual void cancel( wxCommandEvent& event );
+    virtual void ok( wxCommandEvent& event );
 };
 
 #endif //KACASSONNE_POINTENTRYDIALOG_H
