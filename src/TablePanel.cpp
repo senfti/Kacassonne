@@ -184,8 +184,10 @@ void TablePanel::rUp(wxMouseEvent &event){
 }
 
 void TablePanel::keyDown( wxKeyEvent& event ){
-  if((event.GetKeyCode() == '-') || (event.GetKeyCode() >= 48 && event.GetKeyCode() < 58) || (event.GetKeyCode() >= WXK_NUMPAD0 && event.GetKeyCode() < WXK_NUMPAD9)){
-    int digit = (event.GetKeyCode() == '-' ? -1 : (event.GetKeyCode() >= 48 && event.GetKeyCode() < 58 ? event.GetKeyCode() - 48 : event.GetKeyCode() - WXK_NUMPAD0));
+  if((event.GetKeyCode() == '-') || event.GetKeyCode() == WXK_NUMPAD_SUBTRACT ||
+        (event.GetKeyCode() >= 48 && event.GetKeyCode() < 58) || (event.GetKeyCode() >= WXK_NUMPAD0 && event.GetKeyCode() <= WXK_NUMPAD9)){
+    int digit = (event.GetKeyCode() == '-' || event.GetKeyCode() == WXK_NUMPAD_SUBTRACT? -1 :
+        (event.GetKeyCode() >= 48 && event.GetKeyCode() < 58 ? event.GetKeyCode() - 48 : event.GetKeyCode() - WXK_NUMPAD0));
     PointEntryDialog pd(this, digit, game_->getPlayers(), game_->connection_->player_number_);
     if(pd.ShowModal() == 0){
       game_->setPoints(pd.getPlayer(), pd.points_, pd.getAdd(), true);

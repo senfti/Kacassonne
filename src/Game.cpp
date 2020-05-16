@@ -282,7 +282,7 @@ void Game::recv(){
             played_cards_.push_back(stack_.get());
           }
         }
-        else if(m["type"] == "moveStone" && m["idx"].get<int>() < int(players_.size()))
+        if(m["type"] == "moveStone" && m["idx"].get<int>() < int(players_.size()))
           doMoveStone(m["x"], m["y"], m["idx"], false);
         else if(m["type"] == "flare" && m["idx"].get<int>() < int(players_.size())){
           flares_.push_back(Flare(m["x"], m["y"], m["idx"]));

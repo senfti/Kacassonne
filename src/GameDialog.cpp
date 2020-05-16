@@ -26,8 +26,10 @@ GameDialog::GameDialog(Connection *connection)
 }
 
 GameDialog::~GameDialog(){
-  running_ = false;
-  receiver_->join();
+  if(running_){
+    running_ = false;
+    receiver_->join();
+  }
   delete receiver_;
 }
 
@@ -44,14 +46,16 @@ void GameDialog::recv(){
 }
 
 void GameDialog::changeColor( wxCommandEvent& event ){
-  if(connection_->iAmHost()){
-    connection_->players_[0].color_ = size_t(color_choice_->GetSelection());
-  }
-  else{
-    size_t color = size_t(color_choice_->GetSelection());
-    Message msg;
-    msg["new_color"] = color;
-    connection_->send("change_color", msg);
+  if(running_){
+    if(connection_->iAmHost()){
+      connection_->players_[0].color_ = size_t(color_choice_->GetSelection());
+    }
+    else{
+      size_t color = size_t(color_choice_->GetSelection());
+      Message msg;
+      msg["new_color"] = color;
+      connection_->send("change_color", msg);
+    }
   }
 }
 
@@ -111,8 +115,11 @@ void GameDialog::OnTimer(wxTimerEvent& event){
           m["players"].get_to(connection_->players_);
           connection_->game_status_ = int(GameStatus::STARTED);
           connection_->send("game_start_ack", Message());
-          if(!connection_->iAmHost())
+          if(!connection_->iAmHost()){
+            running_ = false;
+            receiver_->join();
             EndModal(0);
+          }
         }
         if(t == "game_quit" && connection_->fromHost(m)){
           running_ = false;
