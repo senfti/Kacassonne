@@ -47,6 +47,7 @@ void GameDialog::recv(){
 
 void GameDialog::changeColor( wxCommandEvent& event ){
   if(running_){
+    color_changed_ = true;
     if(connection_->iAmHost()){
       connection_->players_[0].color_ = size_t(color_choice_->GetSelection());
     }
@@ -79,7 +80,7 @@ void GameDialog::start( wxCommandEvent& event ) {
 
 void GameDialog::OnTimer(wxTimerEvent& event){
   {
-    std::lock_guard<std::mutex> lock(message_lock_);
+    std::unique_lock<std::mutex> lock(message_lock_);
     for(const auto& [t, m] : pending_messages_){
       if(connection_->iAmHost()){
         if(t == "change_color"){
@@ -110,6 +111,13 @@ void GameDialog::OnTimer(wxTimerEvent& event){
       else{
         if(t == "game_lobby"){
           m["players"].get_to(connection_->players_);
+          if(!color_changed_){
+            int64_t player_id = connection_->player_id_;
+            auto player = std::find_if(connection_->players_.begin(), connection_->players_.end(), [player_id](const PlayerCon& p) { return p.id_ == player_id; });
+            if(player != connection_->players_.end()){
+              color_choice_->SetSelection(player->color_);
+            }
+          }
         }
         if(t == "game_start"){
           m["players"].get_to(connection_->players_);
@@ -117,12 +125,14 @@ void GameDialog::OnTimer(wxTimerEvent& event){
           connection_->send("game_start_ack", Message());
           if(!connection_->iAmHost()){
             running_ = false;
+            lock.unlock();
             receiver_->join();
             EndModal(0);
           }
         }
         if(t == "game_quit" && connection_->fromHost(m)){
           running_ = false;
+          lock.unlock();
           wxMessageBox("Host quit!");
           receiver_->join();
           EndModal(1);

@@ -3,7 +3,7 @@ project(Kacassonne)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_compile_definitions(VERSION="1.6.1")
+add_compile_definitions(VERSION="1.6.2")
 
 IF (WIN32)
 	add_definitions(-DWIN32_LEAN_AND_MEAN)
