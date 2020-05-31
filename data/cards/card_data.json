@@ -28,7 +28,7 @@
  "WFWWW_4.jpg": {"special": "none", "sides": {"top": "meadow", "left": "road", "bottom": "road", "right": "road"}, "connections": {"top": [], "left": [], "bottom": [], "right": []}},
  "WSFWF_2.jpg": {"special": "none", "sides": {"top": "city", "left": "meadow", "bottom": "road", "right": "meadow"}, "connections": {"top": [], "left": [], "bottom": [], "right": []}},
  "WSFWW_1.jpg": {"special": "none", "sides": {"top": "city", "left": "meadow", "bottom": "road", "right": "road"}, "connections": {"top": [], "left": [], "bottom": ["right"], "right": ["bottom"]}},
- "WSWFW_3.jpg": {"special": "none", "sides": {"top": "city", "left": "road", "bottom": "meadow", "right": "road"}, "connections": {"top": [], "left": ["right"], "bottom": [], "right": ["left"]}},
+ "WSWFW_3.jpg": {"special": "start", "sides": {"top": "city", "left": "road", "bottom": "meadow", "right": "road"}, "connections": {"top": [], "left": ["right"], "bottom": [], "right": ["left"]}},
  "WSWWF_3.jpg": {"special": "none", "sides": {"top": "city", "left": "road", "bottom": "road", "right": "meadow"}, "connections": {"top": [], "left": ["bottom"], "bottom": ["left"], "right": []}},
  "WSWWW_2.jpg": {"special": "none", "sides": {"top": "city", "left": "road", "bottom": "road", "right": "road"}, "connections": {"top": [], "left": [], "bottom": [], "right": []}},
  "WWFWF_8.jpg": {"special": "none", "sides": {"top": "road", "left": "meadow", "bottom": "road", "right": "meadow"}, "connections": {"top": ["bottom"], "left": [], "bottom": ["top"], "right": []}},

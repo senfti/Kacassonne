@@ -12,7 +12,7 @@ Stack::Stack(unsigned card_number){
 
   std::vector<Card> deck, used_cards;
   for(unsigned c=0; c<Card::CARD_IMAGES.size(); c++){
-    for(int i=0; i<Card::CARD_IMAGES[c].second; i++)
+    for(int i=0; i<3; i++)
       deck.push_back(Card(c));
   }
 

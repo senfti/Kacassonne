@@ -9,7 +9,7 @@
 
 
 std::string Card::CARD_FOLDER = "./";
-std::vector<std::pair<wxImage, int>> Card::CARD_IMAGES;
+std::vector<wxImage> Card::CARD_IMAGES;
 std::vector<std::array<Card::Side, 4>> Card::CARD_SIDES;
 int Card::CARD_IMAGES_SIZE = 48;
 
@@ -17,7 +17,7 @@ int Card::CARD_IMAGES_SIZE = 48;
 std::array<Card::Side, 4> sidesFromString(const std::string& s){
   std::array<Card::Side, 4> sides;
   for(int i=1; i<5; i++){
-    sides[i-1] = (s[i] == 'F' ? Card::Side::GRAS : (s[i] == 'S' ? Card::Side::CITY : Card::Side::ROAD));
+    sides[i-1] = (s[i] == 'F' ? Card::Side::MEADOW : (s[i] == 'S' ? Card::Side::CITY : Card::Side::ROAD));
   }
   return sides;
 }
@@ -25,7 +25,7 @@ std::array<Card::Side, 4> sidesFromString(const std::string& s){
 
 bool Card::initCardImages(){
   if(CARD_IMAGES.empty()){
-    const char* env = std::getenv("CARD_FOLDER");
+    const char *env = std::getenv("CARD_FOLDER");
     if(env)
       CARD_FOLDER = env;
     else
@@ -33,27 +33,27 @@ bool Card::initCardImages(){
     if(CARD_FOLDER.back() != '/')
       CARD_FOLDER += "/";
 
-    std::vector<std::pair<std::string, int>> card_files;
-    for (auto& p : std::filesystem::directory_iterator(CARD_FOLDER)) {
-      if (p.path().extension().string() == ".jpg" || p.path().extension().string() == ".png") {
-        std::string fn = p.path().filename().string();
-        if(fn.find("_") != std::string::npos){
-          card_files.push_back(std::make_pair(fn, std::atoi((fn.substr(fn.find("_") + 1, fn.find("."))).c_str())));
-          std::string type_string = fn.substr(0, fn.find("_"));
-          if(type_string == "WWFWS" || type_string == "WFWSW" || type_string == "WWSWF" || type_string == "WSWFW"){
-            std::swap(card_files.back(), card_files.front());
-          }
+    try{
+      wxInitAllImageHandlers();
+      std::ifstream ifs(CARD_FOLDER + "card_data.json");
+      nlohmann::json card_data = nlohmann::json::parse(ifs);
+      for(auto it : card_data.items()){
+        CARD_IMAGES.push_back(wxImage(CARD_FOLDER + it.key()));
+        std::array<Card::Side, 4> sides;
+        sides[0] = it.value()["sides"]["top"].get<Card::Side>();
+        sides[1] = it.value()["sides"]["left"].get<Card::Side>();
+        sides[2] = it.value()["sides"]["bottom"].get<Card::Side>();
+        sides[3] = it.value()["sides"]["right"].get<Card::Side>();
+        CARD_SIDES.push_back(sides);
+        if(it.value()["special"].get<std::string>() == "start"){
+          std::swap(CARD_IMAGES.back(), CARD_IMAGES.front());
+          std::swap(CARD_SIDES.back(), CARD_SIDES.front());
         }
       }
     }
-    std::sort(card_files.begin() + 1, card_files.end(), [](const std::pair<std::string, int> & a, const std::pair<std::string, int> & b) { return a.first < b.first; });
-
-    wxInitAllImageHandlers();
-    for(auto cf : card_files){
-      CARD_IMAGES.push_back({wxImage(CARD_FOLDER + cf.first), cf.second});
-      int pos = cf.first.rfind("_");
-      std::string type_string = cf.first.substr(pos-5, pos);
-      CARD_SIDES.push_back(sidesFromString(type_string));
+    catch(std::exception &e){
+      std::cout << "Failed to load card images and data!" << std::endl;
+      return 0;
     }
   }
   return CARD_IMAGES.size();
@@ -62,7 +62,7 @@ bool Card::initCardImages(){
 void Card::paint(wxAutoBufferedPaintDC& dc, const wxPoint& pos, double scale, State state, bool valid) const {
   int edge_length = cardSize(scale);
   int border = std::min(std::max(1, edge_length/48), 2);
-  wxImage tmp = Card::CARD_IMAGES[image_nr_].first.Scale(edge_length - 2*border, edge_length - 2*border);
+  wxImage tmp = Card::CARD_IMAGES[image_nr_].Scale(edge_length - 2*border, edge_length - 2*border);
   if(flipped_)
     tmp = tmp.Mirror();
   switch(r_ % 4){

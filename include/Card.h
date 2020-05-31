@@ -14,12 +14,13 @@
 
 class Card{
   public:
-    enum class Side {CITY, ROAD, GRAS};
+    enum class Side {CITY, ROAD, MEADOW};
+    friend void from_json(const nlohmann::json& j, Side& s) { s = (j.get<std::string>() == "city" ? Side::CITY : (j.get<std::string>() == "road" ? Side::ROAD : Side::MEADOW)); }
     static constexpr int OUTSIDE = -1000000;
     //enum class SIDE {CITY, ROAD, GRASSLAND};
 
     static std::string CARD_FOLDER;
-    static std::vector<std::pair<wxImage, int>> CARD_IMAGES;
+    static std::vector<wxImage> CARD_IMAGES;
     static std::vector<std::array<Card::Side, 4>> CARD_SIDES;
     static int CARD_IMAGES_SIZE;
     static int cardSize(double scale) { return int(CARD_IMAGES_SIZE*scale/2)*2; }
