@@ -10,3 +10,4 @@ Makefile
 *.cmake
 Kacassonne
 *.tar.gz
+venv/

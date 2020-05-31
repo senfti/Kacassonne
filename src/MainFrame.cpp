@@ -5,6 +5,7 @@
 #include <MainFrame.h>
 #include <IdsDialog.h>
 #include <PointEntryDialog.h>
+#include <PointHistoryWindow.h>
 
 #include "main.h"
 
@@ -19,6 +20,8 @@ void MainFrame::setGame(Game *game, bool restart){
     if(!game_->connection_->iAmHost())
       restart_menu_item_->Enable(false);
     table_panel_->setGame(game);
+    pt_history_wnd_ = new PointHistoryWindow(this, game->players_);
+    pt_history_wnd_->Show();
   }
   std::lock_guard<std::mutex> lock(game_->data_lock_);
   if(restart){
@@ -131,6 +134,7 @@ void MainFrame::OnTimer(wxTimerEvent &event){
     players_guis_[i]->setStones(game_->players_[i].getRemainingStones());
     if(game_->update_old_pts_)
       players_guis_[i]->setOldPoints(game_->players_[i].points_);
+    pt_history_wnd_->setPoints(i, game_->players_[i].points_);
   }
   game_->update_old_pts_ = false;
 

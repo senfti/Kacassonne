@@ -13,7 +13,7 @@ GameDialog::GameDialog(Connection *connection)
 {
   wxIntegerValidator<unsigned long> val(&card_number_);
   val.SetMin(1);
-  val.SetMax(999);
+  val.SetMax(9999);
   numcard_textctrl_->SetValidator(val);
   SetTitle(connection->player_name_);
   if(!connection_->iAmHost()){
@@ -118,6 +118,8 @@ void GameDialog::OnTimer(wxTimerEvent& event){
               color_choice_->SetSelection(player->color_);
             }
           }
+          if(m.find("card_number") != m.end())
+            numcard_textctrl_->SetValue(std::to_string(m["card_number"].get<int>()));
         }
         if(t == "game_start"){
           m["players"].get_to(connection_->players_);
@@ -143,8 +145,16 @@ void GameDialog::OnTimer(wxTimerEvent& event){
   }
 
   if(connection_->iAmHost()){
-    if(connection_->game_status_ == int(GameStatus::OPEN))
-      connection_->send("game_lobby", Message());
+    if(connection_->game_status_ == int(GameStatus::OPEN)){
+      Message msg;
+      try{
+        msg["card_number"] =  std::atoi((const char *)(numcard_textctrl_->GetValue()));
+      }
+      catch(std::exception& e){
+        msg["card_number"] = card_number_;
+      }
+      connection_->send("game_lobby", msg);
+    }
     else{
       bool all_ack = true;
       for(auto ack : ack_)

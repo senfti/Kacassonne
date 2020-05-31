@@ -13,6 +13,7 @@
 #include <thread>
 #include <mutex>
 #include "HelpDialog_B.h"
+#include "PointHistoryWindow.h"
 
 class MyApp;
 
@@ -24,6 +25,7 @@ class MainFrame : public MainFrame_B{
     wxTimer timer_;
 
     int preview_image_ = -1;
+    PointHistoryWindow* pt_history_wnd_;
 
     virtual void quit( wxCommandEvent& event );
     virtual void next( wxCommandEvent& event );

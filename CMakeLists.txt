@@ -23,7 +23,7 @@ ELSE()
 	include_directories(include forms ${ZeroMQ_INCLUDE_DIR})
 EndIF()
 
-find_package(wxWidgets COMPONENTS core base REQUIRED)
+find_package(wxWidgets COMPONENTS core base adv REQUIRED)
 include( "${wxWidgets_USE_FILE}")
 
 add_executable(Kacassonne WIN32 src/main.cpp include/main.h forms/HostDialog_B.h forms/HostDialog_B.cpp forms/MainFrame_B.h
@@ -33,7 +33,7 @@ add_executable(Kacassonne WIN32 src/main.cpp include/main.h forms/HostDialog_B.h
   include/Game.h src/Game.cpp include/Stone.h src/Stone.cpp include/Player.h src/Player.cpp include/HostDialog.h forms/HelpDialog_B.cpp
   src/HostDialog.cpp src/Message.cpp src/Connection.cpp forms/ConnectDialog_B.h forms/ConnectDialog_B.cpp src/LobbyDialog.cpp include/Flare.h
   include/ReconnectDialog.h src/ReconnectDialog.cpp forms/ReconnectDialog_B.cpp include/IdsDialog.h forms/IdsDialog_B.cpp
-	forms/PointEntryDialog_B.cpp include/PointEntryDialog.h src/PointEntryDialog.cpp)
+	forms/PointEntryDialog_B.cpp include/PointEntryDialog.h src/PointEntryDialog.cpp include/PointHistoryWindow.h src/PointHistoryWindow.cpp)
 
 IF (WIN32)
     target_sources(Kacassonne PRIVATE dpiaware.manifest)
