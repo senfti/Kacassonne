@@ -29,7 +29,7 @@ Game::Game(Connection* connection, int card_number, const std::map<std::string, 
 }
 
 Game::Game(Connection* connection, const Message& reconnect_reply)
-  : stack_(1, {{std::string(Card::CARD_IMAGES[0].first), 1}}), connection_(connection)
+  : stack_(-1, {{}}), connection_(connection)
 {
   for(unsigned i = 0; i < connection_->players_.size(); i++){
     players_.push_back(Player(int(connection_->players_[i].color_), connection_->players_[i].name_));

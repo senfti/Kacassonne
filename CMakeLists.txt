@@ -33,7 +33,8 @@ add_executable(Kacassonne WIN32 src/main.cpp include/main.h forms/HostDialog_B.h
   include/Game.h src/Game.cpp include/Stone.h src/Stone.cpp include/Player.h src/Player.cpp include/HostDialog.h forms/HelpDialog_B.cpp
   src/HostDialog.cpp src/Message.cpp src/Connection.cpp forms/ConnectDialog_B.h forms/ConnectDialog_B.cpp src/LobbyDialog.cpp include/Flare.h
   include/ReconnectDialog.h src/ReconnectDialog.cpp forms/ReconnectDialog_B.cpp include/IdsDialog.h forms/IdsDialog_B.cpp
-	forms/PointEntryDialog_B.cpp include/PointEntryDialog.h src/PointEntryDialog.cpp include/PointHistoryWindow.h src/PointHistoryWindow.cpp)
+	forms/PointEntryDialog_B.cpp include/PointEntryDialog.h src/PointEntryDialog.cpp include/PointHistoryWindow.h src/PointHistoryWindow.cpp
+	include/SettingsWindow.h src/SettingsWindow.cpp forms/SettingsWindow_B.cpp)
 
 IF (WIN32)
     target_sources(Kacassonne PRIVATE dpiaware.manifest)

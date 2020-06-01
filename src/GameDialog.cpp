@@ -8,6 +8,7 @@
 #include <wx/valnum.h>
 #include <random>
 #include <Card.h>
+#include <SettingsWindow.h>
 
 GameDialog::GameDialog(Connection *connection)
   : GameDialog_B(nullptr), connection_(connection), timer_(this)
@@ -65,6 +66,13 @@ void GameDialog::changeColor( wxCommandEvent& event ){
       connection_->send("change_color", msg);
     }
   }
+}
+
+void GameDialog::changeSettings( wxCommandEvent& event ){
+  SettingsWindow sw(this);
+  sw.ShowModal();
+  balance_name_ = sw.balance_name_;
+  card_count_ = sw.current_count_;
 }
 
 void GameDialog::quit( wxCommandEvent& event ) {

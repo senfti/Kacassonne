@@ -25,7 +25,7 @@ class GameDialog : public GameDialog_B{
 
     std::vector<bool> ack_;
     wxTimer timer_;
-    unsigned long card_number_ = 101;
+    unsigned long card_number_ = 120;
     bool allow_mirror_ = true;
 
     std::map<std::string, int> card_count_;
@@ -34,6 +34,7 @@ class GameDialog : public GameDialog_B{
     void recv();
 
     virtual void changeColor( wxCommandEvent& event );
+    virtual void changeSettings( wxCommandEvent& event );
     virtual void quit( wxCommandEvent& event );
     virtual void start( wxCommandEvent& event );
     void OnTimer(wxTimerEvent& event);
