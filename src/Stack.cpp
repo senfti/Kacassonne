@@ -6,13 +6,14 @@
 #include <algorithm>
 #include <random>
 
-Stack::Stack(unsigned card_number){
+Stack::Stack(unsigned card_number, const std::map<std::string, int>& card_count){
   if(!Card::initCardImages())
     return;
 
   std::vector<Card> deck, used_cards;
   for(unsigned c=0; c<Card::CARD_IMAGES.size(); c++){
-    for(int i=0; i<3; i++)
+    int cnt = (card_count.find(Card::CARD_IMAGES[c].first) != card_count.end() ? card_count.at(Card::CARD_IMAGES[c].first) : 0);
+    for(int i=0; i<cnt; i++)
       deck.push_back(Card(c));
   }
 
@@ -27,6 +28,8 @@ Stack::Stack(unsigned card_number){
       
   }
   std::shuffle(std::next(used_cards.begin(), 1), used_cards.end(), eng);
+  std::random_device eng2;
+  std::shuffle(std::next(used_cards.begin(), 1), used_cards.end(), eng2);
   cards_ = std::list<Card>(used_cards.begin(), used_cards.end());
 }
 

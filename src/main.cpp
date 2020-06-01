@@ -98,36 +98,38 @@ bool MyApp::OnInit(){
     return false;
   }
 
-  auto [card_number, reconnect_reply] = lobbyStuff();
+  auto [card_number, card_count, allow_mirror, reconnect_reply] = lobbyStuff();
   if(card_number < 0)
     return false;
 
-  return initGame(card_number, reconnect_reply);
+  return initGame(card_number, card_count, allow_mirror, reconnect_reply);
 }
 
-std::pair<int, Message> MyApp::lobbyStuff(){
+std::tuple<int, std::map<std::string, int>, bool, Message> MyApp::lobbyStuff(){
   LobbyDialog* ld = new LobbyDialog(connection_);
   if(ld->ShowModal() != 0)
-    return std::make_pair(-1, Message());
+    return std::make_tuple(-1, std::map<std::string, int>(), true, Message());
   Message reconnect_reply = ld->reconnect_reply_;
   delete ld;
 
   if(reconnect_reply.find("game_status") != reconnect_reply.end() && reconnect_reply["game_status"].get<int>() == int(GameStatus::STARTED)){
-    return std::make_pair(1000, reconnect_reply);
+    return std::make_tuple(1000, std::map<std::string, int>(), true, reconnect_reply);
   }
 
   GameDialog* gd = new GameDialog(connection_);
   if(gd->ShowModal() != 0)
-    return std::make_pair(-1, Message());
+    return std::make_tuple(-1, std::map<std::string, int>(), true, Message());
 
   int card_number = gd->card_number_;
+  std::map<std::string, int> card_count = gd->card_count_;
+  bool allow_mirror = gd->allow_mirror_;
   delete gd;
   connection_->subscribeToGame();
 
-  return std::make_pair(card_number, reconnect_reply);
+  return std::make_tuple(card_number, card_count, allow_mirror, reconnect_reply);
 }
 
-bool MyApp::initGame(int card_number, const Message& reconnect_reply){
+bool MyApp::initGame(int card_number, const std::map<std::string, int>& card_count, bool allow_mirror, const Message& reconnect_reply){
   MainFrame* tmp = main_frame_;
   delete game_;
   game_ = nullptr;
@@ -137,7 +139,7 @@ bool MyApp::initGame(int card_number, const Message& reconnect_reply){
     if(reconnect_reply.find("game_status") != reconnect_reply.end())
       game_ = new Game(connection_, reconnect_reply);
     else
-      game_ = new Game(connection_, card_number);
+      game_ = new Game(connection_, card_number, card_count, allow_mirror);
     if(game_->stack_.getLeftCards() < 1){
       wxMessageBox("Failed loading card images!");
       return false;
@@ -167,6 +169,8 @@ bool MyApp::reset(bool to_lobby){
   main_frame_->disable();
   main_frame_->Hide();
   int card_number = game_->getLeftCards() + game_->played_cards_.size();
+  std::map<std::string, int> card_count = game_->card_count_;
+  bool allow_mirror = game_->allow_mirror_;
   Message reconnect_reply;
   if(to_lobby){
     delete game_;
@@ -175,13 +179,15 @@ bool MyApp::reset(bool to_lobby){
     connection_ = new Connection(tmp->ip_, tmp->pub_port_, tmp->sub_port_, tmp->player_name_);
 
     auto res = lobbyStuff();
-    card_number = res.first;
-    reconnect_reply = res.second;
+    card_number = std::get<0>(res);
+    card_count = std::get<1>(res);
+    allow_mirror = std::get<2>(res);
+    reconnect_reply = std::get<3>(res);
     if(card_number < 0)
       return false;
   }
 
-  return initGame(card_number, reconnect_reply);
+  return initGame(card_number, card_count, allow_mirror, reconnect_reply);
 }
 
 int MyApp::OnExit(){

@@ -29,9 +29,14 @@ class Game{
     wxPoint2DDouble last_mouse_pos_ = wxPoint2DDouble(0, 0);
     bool update_old_pts_ = false;
 
+    std::map<std::string, int> card_count_;
+    bool allow_mirror_;
+
+    std::tuple<double, double, double, int, bool> last_move_stone_ = {0.0, 0.0, 0.0, 0, false};
+
     std::mutex msg_queue_mutex_;
 
-    Game(Connection* connection = nullptr, int card_number = 72);
+    Game(Connection* connection = nullptr, int card_number = 101, const std::map<std::string, int>& card_count = {}, bool allow_mirror_ = true);
     Game(Connection* connection, const Message& reconnect_reply);
     ~Game() {
       running_ = false;
@@ -42,7 +47,7 @@ class Game{
     bool rotateCard();
     bool flipCard();
     bool layCard(bool force = false);
-    bool doMoveStone(double x, double y, int player_number, bool send = true);
+    bool doMoveStone(double x, double y, int player_number, bool send = true, int restrictions = 0);
     bool moveStone(double x, double y, bool any_player=false);
     bool next();
     bool revert();
@@ -60,7 +65,7 @@ class Game{
       std::lock_guard<std::mutex> lock(data_lock_);
       return current_player_ == connection_->player_number_;
     }
-    bool sendUpdate(const std::string& type, double x=0.0, double y=0.0, int idx=-123);
+    bool sendUpdate(const std::string& type, double x=0.0, double y=0.0, int idx=-123, bool flag1 = false);
     int getLeftCards() const {
       std::lock_guard<std::mutex> lock(data_lock_);
       return stack_.getLeftCards();

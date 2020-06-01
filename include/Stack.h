@@ -15,7 +15,7 @@ class Stack{
     std::list<Card> cards_;
 
   public:
-    Stack(unsigned card_number);
+    Stack(unsigned card_number, const std::map<std::string, int>& card_count);
     Card* next();
     Card* next(unsigned n);
     void pop();

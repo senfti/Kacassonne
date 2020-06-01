@@ -22,8 +22,15 @@ GameDialog_B::GameDialog_B( wxWindow* parent, wxWindowID id, const wxString& tit
 	m_staticText2->Wrap( -1 );
 	bSizer3->Add( m_staticText2, 0, wxALL, 5 );
 
-	numcard_textctrl_ = new wxTextCtrl( this, wxID_ANY, wxT("93"), wxDefaultPosition, wxDefaultSize, wxTE_RIGHT );
+	numcard_textctrl_ = new wxTextCtrl( this, wxID_ANY, wxT("101"), wxDefaultPosition, wxSize( 50,-1 ), wxTE_RIGHT );
 	bSizer3->Add( numcard_textctrl_, 0, wxALL, 0 );
+
+	mirror_checkbox_ = new wxCheckBox( this, wxID_ANY, wxT("Allow Mirror"), wxDefaultPosition, wxDefaultSize, 0 );
+	mirror_checkbox_->SetValue(true);
+	bSizer3->Add( mirror_checkbox_, 0, wxALL, 2 );
+
+	settings_button_ = new wxButton( this, wxID_ANY, wxT("Settings"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer3->Add( settings_button_, 0, wxALL, 0 );
 
 
 	sizer_->Add( bSizer3, 1, wxEXPAND, 5 );
@@ -74,6 +81,7 @@ GameDialog_B::GameDialog_B( wxWindow* parent, wxWindowID id, const wxString& tit
 	this->Centre( wxBOTH );
 
 	// Connect Events
+	settings_button_->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GameDialog_B::changeSettings ), NULL, this );
 	color_choice_->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( GameDialog_B::changeColor ), NULL, this );
 	quit_button_->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GameDialog_B::quit ), NULL, this );
 	start_button_->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GameDialog_B::start ), NULL, this );
@@ -82,6 +90,7 @@ GameDialog_B::GameDialog_B( wxWindow* parent, wxWindowID id, const wxString& tit
 GameDialog_B::~GameDialog_B()
 {
 	// Disconnect Events
+	settings_button_->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GameDialog_B::changeSettings ), NULL, this );
 	color_choice_->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( GameDialog_B::changeColor ), NULL, this );
 	quit_button_->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GameDialog_B::quit ), NULL, this );
 	start_button_->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GameDialog_B::start ), NULL, this );

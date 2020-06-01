@@ -9,7 +9,7 @@
 
 
 std::string Card::CARD_FOLDER = "./";
-std::vector<wxImage> Card::CARD_IMAGES;
+std::vector<std::pair<std::string, wxImage>> Card::CARD_IMAGES;
 std::vector<std::array<Card::Side, 4>> Card::CARD_SIDES;
 int Card::CARD_IMAGES_SIZE = 48;
 
@@ -38,7 +38,7 @@ bool Card::initCardImages(){
       std::ifstream ifs(CARD_FOLDER + "card_data.json");
       nlohmann::json card_data = nlohmann::json::parse(ifs);
       for(auto it : card_data.items()){
-        CARD_IMAGES.push_back(wxImage(CARD_FOLDER + it.key()));
+        CARD_IMAGES.push_back(std::make_pair(it.key(), wxImage(CARD_FOLDER + it.key())));
         std::array<Card::Side, 4> sides;
         sides[0] = it.value()["sides"]["top"].get<Card::Side>();
         sides[1] = it.value()["sides"]["left"].get<Card::Side>();
@@ -59,10 +59,35 @@ bool Card::initCardImages(){
   return CARD_IMAGES.size();
 }
 
+std::map<std::string, std::map<std::string, int>> Card::loadCardCounts(){
+  const char *env = std::getenv("CARD_FOLDER");
+  if(env)
+    CARD_FOLDER = env;
+  else
+    CARD_FOLDER = "data/cards/";
+  if(CARD_FOLDER.back() != '/')
+    CARD_FOLDER += "/";
+
+  std::map<std::string, std::map<std::string, int>> card_counts;
+  for (auto& p : std::filesystem::directory_iterator(CARD_FOLDER)) {
+    if (p.path().extension().string() == ".txt") {
+      std::string name = p.path().filename().string();
+      name = name.substr(0, name.size() - 4);
+      card_counts.insert({name, std::map<std::string, int>()});
+      std::ifstream f(p.path().string());
+      std::string cn;
+      int cnt;
+      while(f >> cn >> cnt)
+        card_counts[name].insert({cn, cnt});
+    }
+  }
+  return card_counts;
+}
+
 void Card::paint(wxAutoBufferedPaintDC& dc, const wxPoint& pos, double scale, State state, bool valid) const {
   int edge_length = cardSize(scale);
   int border = std::min(std::max(1, edge_length/48), 2);
-  wxImage tmp = Card::CARD_IMAGES[image_nr_].Scale(edge_length - 2*border, edge_length - 2*border);
+  wxImage tmp = Card::CARD_IMAGES[image_nr_].second.Scale(edge_length - 2*border, edge_length - 2*border);
   if(flipped_)
     tmp = tmp.Mirror();
   switch(r_ % 4){

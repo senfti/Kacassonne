@@ -20,12 +20,13 @@ class Card{
     //enum class SIDE {CITY, ROAD, GRASSLAND};
 
     static std::string CARD_FOLDER;
-    static std::vector<wxImage> CARD_IMAGES;
+    static std::vector<std::pair<std::string, wxImage>> CARD_IMAGES;
     static std::vector<std::array<Card::Side, 4>> CARD_SIDES;
     static int CARD_IMAGES_SIZE;
     static int cardSize(double scale) { return int(CARD_IMAGES_SIZE*scale/2)*2; }
 
     static bool initCardImages();
+    static std::map<std::string, std::map<std::string, int>> loadCardCounts();
 
   private:
     int image_nr_ = 11;

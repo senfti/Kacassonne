@@ -26,6 +26,10 @@ class GameDialog : public GameDialog_B{
     std::vector<bool> ack_;
     wxTimer timer_;
     unsigned long card_number_ = 101;
+    bool allow_mirror_ = true;
+
+    std::map<std::string, int> card_count_;
+    std::string balance_name_;
 
     void recv();
 

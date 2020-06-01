@@ -22,8 +22,8 @@ class MyApp : public wxApp{
     virtual bool OnInit();
     virtual int OnExit();
 
-    std::pair<int, Message> lobbyStuff();
-    bool initGame(int card_number, const Message& reconnect_reply);
+    std::tuple<int, std::map<std::string, int>, bool, Message> lobbyStuff();
+    bool initGame(int card_number, const std::map<std::string, int>& card_count, bool allow_mirror, const Message& reconnect_reply);
     bool reset(bool to_lobby);
 };
 

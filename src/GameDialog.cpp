@@ -7,6 +7,7 @@
 #include "GameDialog.h"
 #include <wx/valnum.h>
 #include <random>
+#include <Card.h>
 
 GameDialog::GameDialog(Connection *connection)
   : GameDialog_B(nullptr), connection_(connection), timer_(this)
@@ -16,9 +17,15 @@ GameDialog::GameDialog(Connection *connection)
   val.SetMax(9999);
   numcard_textctrl_->SetValidator(val);
   SetTitle(connection->player_name_);
-  if(!connection_->iAmHost()){
+  if(connection_->iAmHost()){
+    balance_name_ = "default";
+    card_count_ = Card::loadCardCounts()[balance_name_];
+  }
+  else{
     start_button_->Disable();
     numcard_textctrl_->Disable();
+    settings_button_->Disable();
+    mirror_checkbox_->Disable();
   }
   Connect(timer_.GetId(), wxEVT_TIMER, wxTimerEventHandler(GameDialog::OnTimer), NULL, this);
   timer_.Start(200);
@@ -74,7 +81,18 @@ void GameDialog::start( wxCommandEvent& event ) {
     if(connection_->players_[i].id_ == connection_->player_id_)
       ack_[i] = true;
   }
-  connection_->send("game_start", Message());
+
+  Message msg;
+  try{
+    msg["card_number"] =  std::atoi((const char *)(numcard_textctrl_->GetValue()));
+  }
+  catch(std::exception& e){
+    msg["card_number"] = card_number_;
+  }
+  msg["allow_mirror"] = allow_mirror_;
+  msg["balance_name"] = balance_name_;
+  msg["card_count"] = card_count_;
+  connection_->send("game_start", msg);
   card_number_ = std::atoi((const char*)(numcard_textctrl_->GetValue()));
 }
 
@@ -120,9 +138,16 @@ void GameDialog::OnTimer(wxTimerEvent& event){
           }
           if(m.find("card_number") != m.end())
             numcard_textctrl_->SetValue(std::to_string(m["card_number"].get<int>()));
+          if(m.find("allow_mirror") != m.end())
+            mirror_checkbox_->SetValue(m["allow_mirror"]);
+          if(m.find("balance_name") != m.end())
+            settings_button_->SetLabel(m["balance_name"].get<std::string>());
         }
         if(t == "game_start"){
           m["players"].get_to(connection_->players_);
+          m["card_number"].get_to(card_number_);
+          m["allow_mirror"].get_to(allow_mirror_);
+          m["card_count"].get_to(card_count_);
           connection_->game_status_ = int(GameStatus::STARTED);
           connection_->send("game_start_ack", Message());
           if(!connection_->iAmHost()){
@@ -145,6 +170,7 @@ void GameDialog::OnTimer(wxTimerEvent& event){
   }
 
   if(connection_->iAmHost()){
+    allow_mirror_ = mirror_checkbox_->GetValue();
     if(connection_->game_status_ == int(GameStatus::OPEN)){
       Message msg;
       try{
@@ -153,6 +179,8 @@ void GameDialog::OnTimer(wxTimerEvent& event){
       catch(std::exception& e){
         msg["card_number"] = card_number_;
       }
+      msg["allow_mirror"] = allow_mirror_;
+      msg["balance_name"] = balance_name_;
       connection_->send("game_lobby", msg);
     }
     else{
