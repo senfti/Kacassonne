@@ -18,8 +18,8 @@ SettingsWindow::SettingsWindow(wxWindow* parent)
   int def_setting = 0;
   for(auto& setting : all_card_counts_){
     for(const auto ci : Card::CARD_IMAGES){
-      if(setting.second.find(ci.first) == setting.second.end())
-        setting.second.insert({ci.first, 0});
+      if(setting.second.find(ci.name_) == setting.second.end())
+        setting.second.insert({ci.name_, 0});
     }
     setting_choice_->Append(setting.first);
     if(setting.first == "default"){
@@ -30,19 +30,22 @@ SettingsWindow::SettingsWindow(wxWindow* parent)
   setting_choice_->SetSelection(def_setting);
   save_button_->Disable();
 
-  for(const auto ci : Card::CARD_IMAGES){
+  std::vector<Card::CardImage> sorted_images = Card::CARD_IMAGES;
+  std::sort(sorted_images.begin(), sorted_images.end());
+
+  for(const auto ci : sorted_images){
     wxBoxSizer* s1 = new wxBoxSizer(wxVERTICAL);
-    wxStaticBitmap* bmp = new wxStaticBitmap(this, wxID_ANY, wxBitmap(ci.second.Scale(80, 80)));
+    wxStaticBitmap* bmp = new wxStaticBitmap(this, wxID_ANY, wxBitmap(ci.image_.Scale(80, 80)));
     s1->Add(bmp, 0, wxALL, 0);
 
-    wxIntegerValidator<int> val(&current_count_[ci.first]);
+    wxIntegerValidator<int> val(&current_count_[ci.name_]);
     val.SetMin(0);
     val.SetMax(99);
-    count_textctrls_.insert({ci.first, new wxTextCtrl(this, wxID_ANY, std::to_string(current_count_[ci.first]), wxDefaultPosition, wxSize(80, -1))});
-    count_textctrls_[ci.first]->SetValidator(val);
-    count_textctrls_[ci.first]->Disable();
+    count_textctrls_.insert({ci.name_, new wxTextCtrl(this, wxID_ANY, std::to_string(current_count_[ci.name_]), wxDefaultPosition, wxSize(80, -1))});
+    count_textctrls_[ci.name_]->SetValidator(val);
+    count_textctrls_[ci.name_]->Disable();
 
-    s1->Add(count_textctrls_[ci.first], 0, wxALL, 0);
+    s1->Add(count_textctrls_[ci.name_], 0, wxALL, 0);
 
     image_sizer_->Add(s1, 0, wxALL, 5);
   }

@@ -221,7 +221,7 @@ bool Game::validPosition(){
 
   std::array<Card::Side, 4> curr_sides;
   for(int i=0; i<4; i++){
-    curr_sides[i] = getSide(Card::CARD_SIDES[current_card_->imageNr()], current_card_->r(), current_card_->flipped(), i);
+    curr_sides[i] = getSide(Card::CARD_IMAGES[current_card_->imageNr()].sides_, current_card_->r(), current_card_->flipped(), i);
   }
   static std::array<wxPoint, 4> offsets = {wxPoint(0, -1), wxPoint(-1, 0), wxPoint(0, 1), wxPoint(1, 0)};
   bool has_neighbor = false;
@@ -231,7 +231,7 @@ bool Game::validPosition(){
 
     for(int i=0; i<4; i++){
       if(current_card_->pt() + offsets[i] == card.pt()){
-        if(curr_sides[i] != getSide(Card::CARD_SIDES[card.imageNr()], card.r(), card.flipped(), i + 2))
+        if(curr_sides[i] != getSide(Card::CARD_IMAGES[card.imageNr()].sides_, card.r(), card.flipped(), i + 2))
           return false;
         has_neighbor = true;
       }

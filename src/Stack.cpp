@@ -17,7 +17,7 @@ Stack::Stack(unsigned card_number, const std::map<std::string, int>& card_count)
 
   std::vector<Card> deck, used_cards;
   for(unsigned c=0; c<Card::CARD_IMAGES.size(); c++){
-    int cnt = (card_count.find(Card::CARD_IMAGES[c].first) != card_count.end() ? card_count.at(Card::CARD_IMAGES[c].first) : 0);
+    int cnt = (card_count.find(Card::CARD_IMAGES[c].name_) != card_count.end() ? card_count.at(Card::CARD_IMAGES[c].name_) : 0);
     for(int i=0; i<cnt; i++)
       deck.push_back(Card(c));
   }

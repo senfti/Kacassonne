@@ -9,8 +9,7 @@
 
 
 std::string Card::CARD_FOLDER = "./";
-std::vector<std::pair<std::string, wxImage>> Card::CARD_IMAGES;
-std::vector<std::array<Card::Side, 4>> Card::CARD_SIDES;
+std::vector<Card::CardImage> Card::CARD_IMAGES;
 int Card::CARD_IMAGES_SIZE = 48;
 
 
@@ -38,16 +37,14 @@ bool Card::initCardImages(){
       std::ifstream ifs(CARD_FOLDER + "card_data.json");
       nlohmann::json card_data = nlohmann::json::parse(ifs);
       for(auto it : card_data.items()){
-        CARD_IMAGES.push_back(std::make_pair(it.key(), wxImage(CARD_FOLDER + it.key())));
         std::array<Card::Side, 4> sides;
         sides[0] = it.value()["sides"]["top"].get<Card::Side>();
         sides[1] = it.value()["sides"]["left"].get<Card::Side>();
         sides[2] = it.value()["sides"]["bottom"].get<Card::Side>();
         sides[3] = it.value()["sides"]["right"].get<Card::Side>();
-        CARD_SIDES.push_back(sides);
+        CARD_IMAGES.push_back(CardImage(it.key(), sides, it.value()["idx"]));
         if(it.value()["special"].get<std::string>() == "start"){
           std::swap(CARD_IMAGES.back(), CARD_IMAGES.front());
-          std::swap(CARD_SIDES.back(), CARD_SIDES.front());
         }
       }
     }
@@ -87,7 +84,7 @@ std::map<std::string, std::map<std::string, int>> Card::loadCardCounts(){
 void Card::paint(wxAutoBufferedPaintDC& dc, const wxPoint& pos, double scale, State state, bool valid) const {
   int edge_length = cardSize(scale);
   int border = std::min(std::max(1, edge_length/48), 2);
-  wxImage tmp = Card::CARD_IMAGES[image_nr_].second.Scale(edge_length - 2*border, edge_length - 2*border);
+  wxImage tmp = Card::CARD_IMAGES[image_nr_].image_.Scale(edge_length - 2*border, edge_length - 2*border);
   if(flipped_)
     tmp = tmp.Mirror();
   switch(r_ % 4){

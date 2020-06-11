@@ -12,16 +12,29 @@
 #include <array>
 #include "nlohmann/json.hpp"
 
+
 class Card{
   public:
     enum class Side {CITY, ROAD, MEADOW};
+    class CardImage{
+      public:
+        std::string name_;
+        wxImage image_;
+        std::array<Card::Side, 4> sides_;
+        int idx_;
+
+        CardImage(const std::string& name, const std::array<Card::Side, 4>& sides, int idx)
+            : name_(name), image_(CARD_FOLDER + name), sides_(sides), idx_(idx){
+        }
+        friend bool operator<(const CardImage &c1, const CardImage &c2) { return c1.idx_ < c2.idx_; }
+    };
+
+
     friend void from_json(const nlohmann::json& j, Side& s) { s = (j.get<std::string>() == "city" ? Side::CITY : (j.get<std::string>() == "road" ? Side::ROAD : Side::MEADOW)); }
     static constexpr int OUTSIDE = -1000000;
-    //enum class SIDE {CITY, ROAD, GRASSLAND};
 
     static std::string CARD_FOLDER;
-    static std::vector<std::pair<std::string, wxImage>> CARD_IMAGES;
-    static std::vector<std::array<Card::Side, 4>> CARD_SIDES;
+    static std::vector<CardImage> CARD_IMAGES;
     static int CARD_IMAGES_SIZE;
     static int cardSize(double scale) { return int(CARD_IMAGES_SIZE*scale/2)*2; }
 
