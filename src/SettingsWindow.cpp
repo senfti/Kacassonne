@@ -9,11 +9,16 @@
 #include "SettingsWindow.h"
 
 
-SettingsWindow::SettingsWindow(wxWindow* parent)
+SettingsWindow::SettingsWindow(wxWindow* parent, const std::map<std::string, int>* current_card_count )
     : SettingsWindow_B(parent)
 {
   all_card_counts_ = Card::loadCardCounts();
-  all_card_counts_.insert({"custom", all_card_counts_["default"]});
+  if(current_card_count != nullptr){
+    all_card_counts_.insert({"current", *current_card_count});
+    all_card_counts_.insert({"custom", all_card_counts_["current"]});
+  }
+  else
+    all_card_counts_.insert({"custom", all_card_counts_["default"]});
   Card::initCardImages();
   int def_setting = 0;
   for(auto& setting : all_card_counts_){
@@ -22,7 +27,7 @@ SettingsWindow::SettingsWindow(wxWindow* parent)
         setting.second.insert({ci.name_, 0});
     }
     setting_choice_->Append(setting.first);
-    if(setting.first == "default"){
+    if((current_card_count == nullptr && setting.first == "default") || (current_card_count != nullptr && setting.first == "current")){
       def_setting = int(setting_choice_->GetStrings().size()) - 1;
       current_count_ = setting.second;
     }
@@ -74,7 +79,10 @@ void SettingsWindow::save( wxCommandEvent& event ){
       f << c.first << " " << c.second << std::endl;
     }
     f.close();
+    wxMessageBox("Saved");
   }
+  else
+    wxMessageBox("Saving Failed");
 }
 
 void SettingsWindow::ok( wxCommandEvent& event ){

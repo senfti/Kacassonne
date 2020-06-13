@@ -35,11 +35,15 @@ class MainFrame : public MainFrame_B{
     virtual void newGame( wxCommandEvent& event );
     virtual void help( wxCommandEvent& event );
     virtual void showIds( wxCommandEvent& event );
+    virtual void close( wxCloseEvent& event ) { takeScreenshot(""); Destroy(); }
+    virtual void screenshot( wxCommandEvent& event ) { takeScreenshot(""); }
+    virtual void viewSettings( wxCommandEvent& event );
 
     void OnTimer(wxTimerEvent& event);
 
   public:
     MainFrame(MyApp* app);
+    ~MainFrame();
 
     void setGame(Game* game, bool restart=false);
     void setCurrentPlayer(int player);
@@ -47,6 +51,8 @@ class MainFrame : public MainFrame_B{
     virtual void next();
 
     void disable();
+
+    void takeScreenshot(const std::string& prefix);
 };
 
 #endif //CARCASONNE_MAINFRAME_H

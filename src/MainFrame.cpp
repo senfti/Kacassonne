@@ -2,15 +2,20 @@
 // Created by ts on 24.03.20.
 //
 
+#include <filesystem>
 #include <MainFrame.h>
 #include <IdsDialog.h>
 #include <PointEntryDialog.h>
 #include <PointHistoryWindow.h>
+#include <SettingsWindow.h>
 
 #include "main.h"
 
 
 MainFrame::MainFrame(MyApp* app) : MainFrame_B(nullptr), app_(app), timer_(this){
+}
+
+MainFrame::~MainFrame(){
 }
 
 void MainFrame::setGame(Game *game, bool restart){
@@ -48,6 +53,7 @@ void MainFrame::setCurrentPlayer(int player){
 }
 
 void MainFrame::quit(wxCommandEvent &event){
+  takeScreenshot("");
   Destroy();
 }
 
@@ -84,11 +90,13 @@ void MainFrame::shuffle( wxCommandEvent& event ){
 
 void MainFrame::restart( wxCommandEvent& event ){
   if(game_->connection_->iAmHost()){
+    takeScreenshot("");
     app_->reset(false);
   }
 }
 
 void MainFrame::newGame( wxCommandEvent& event ){
+  takeScreenshot("");
   app_->reset(true);
 }
 
@@ -100,6 +108,11 @@ void MainFrame::help( wxCommandEvent& event ){
 void MainFrame::showIds( wxCommandEvent& event ){
   IdsDialog d(this, game_->connection_);
   d.ShowModal();
+}
+
+void MainFrame::viewSettings( wxCommandEvent& event ){
+  SettingsWindow wnd(this, &game_->card_count_);
+  wnd.ShowModal();
 }
 
 void MainFrame::OnTimer(wxTimerEvent &event){
@@ -162,4 +175,24 @@ void MainFrame::OnTimer(wxTimerEvent &event){
 
 void MainFrame::disable(){
   timer_.Stop();
+}
+
+void MainFrame::takeScreenshot(const std::string& prefix){
+  if(!std::filesystem::exists("screenshots")){
+    std::filesystem::create_directory("screenshots");
+  }
+  wxWindowDC wnd(this);
+  wxSize wndsize = this->GetClientSize();
+  wxBitmap scr(wndsize.x+6, wndsize.y+6, -1);
+  wxMemoryDC memdc(scr);
+  memdc.SetBackground(*wxBLACK_BRUSH);
+  memdc.Clear();
+  memdc.Blit(3, 3, wndsize.x, wndsize.y, &wnd, 0, 0);
+  memdc.SelectObject(wxNullBitmap);
+  wxImage img = scr.ConvertToImage();
+
+  auto now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+  std::string s(30, '\0');
+  std::strftime(&s[0], s.size(), "%Y-%m-%d %H:%M:%S", std::localtime(&now));
+  img.SaveFile("screenshots/" + prefix + s + ".png", wxBITMAP_TYPE_PNG);
 }

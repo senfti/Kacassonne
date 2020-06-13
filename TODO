@@ -1,11 +1,12 @@
-basegame mode (standard cards + no flip)
-generell jsons für verschiedene balances
-autoscreenshot am ende
 PointGroup as Panel (not Sizer)
 
  - card info in json
  - kartenanzahl syncen
  - Punkte-Log fenster
+ - basegame mode (standard cards + no flip)
+ - generell jsons für verschiedene balances
+ - autoscreenshot am ende
+
 
 more robust game start
 Licenses alle dazutun

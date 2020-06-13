@@ -41,6 +41,7 @@ class MainFrame_B : public wxFrame
 		wxMenuBar* m_menubar1;
 		wxMenu* m_menu1;
 		wxMenuItem* restart_menu_item_;
+		wxMenu* m_menu3;
 		wxMenu* help_menu_;
 		TablePanel* table_panel_;
 		wxButton* next_button_;
@@ -54,15 +55,18 @@ class MainFrame_B : public wxFrame
 		wxStaticBitmap* preview_bitmap_;
 
 		// Virtual event handlers, overide them in your derived class
+		virtual void close( wxCloseEvent& event ) { event.Skip(); }
 		virtual void keyDown( wxKeyEvent& event ) { event.Skip(); }
 		virtual void restart( wxCommandEvent& event ) { event.Skip(); }
 		virtual void newGame( wxCommandEvent& event ) { event.Skip(); }
 		virtual void quit( wxCommandEvent& event ) { event.Skip(); }
-		virtual void help( wxCommandEvent& event ) { event.Skip(); }
-		virtual void showIds( wxCommandEvent& event ) { event.Skip(); }
 		virtual void next( wxCommandEvent& event ) { event.Skip(); }
 		virtual void back( wxCommandEvent& event ) { event.Skip(); }
 		virtual void shuffle( wxCommandEvent& event ) { event.Skip(); }
+		virtual void screenshot( wxCommandEvent& event ) { event.Skip(); }
+		virtual void viewSettings( wxCommandEvent& event ) { event.Skip(); }
+		virtual void help( wxCommandEvent& event ) { event.Skip(); }
+		virtual void showIds( wxCommandEvent& event ) { event.Skip(); }
 
 
 	public:

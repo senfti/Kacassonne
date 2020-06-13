@@ -30,6 +30,29 @@ MainFrame_B::MainFrame_B( wxWindow* parent, wxWindowID id, const wxString& title
 
 	m_menubar1->Append( m_menu1, wxT("File") );
 
+	m_menu3 = new wxMenu();
+	wxMenuItem* m_menuItem6;
+	m_menuItem6 = new wxMenuItem( m_menu3, wxID_ANY, wxString( wxT("Next") ) , wxEmptyString, wxITEM_NORMAL );
+	m_menu3->Append( m_menuItem6 );
+
+	wxMenuItem* m_menuItem7;
+	m_menuItem7 = new wxMenuItem( m_menu3, wxID_ANY, wxString( wxT("Back") ) , wxEmptyString, wxITEM_NORMAL );
+	m_menu3->Append( m_menuItem7 );
+
+	wxMenuItem* m_menuItem8;
+	m_menuItem8 = new wxMenuItem( m_menu3, wxID_ANY, wxString( wxT("Shuffle") ) , wxEmptyString, wxITEM_NORMAL );
+	m_menu3->Append( m_menuItem8 );
+
+	wxMenuItem* m_menuItem9;
+	m_menuItem9 = new wxMenuItem( m_menu3, wxID_ANY, wxString( wxT("Screenshot") ) , wxEmptyString, wxITEM_NORMAL );
+	m_menu3->Append( m_menuItem9 );
+
+	wxMenuItem* m_menuItem10;
+	m_menuItem10 = new wxMenuItem( m_menu3, wxID_ANY, wxString( wxT("View Settings") ) , wxEmptyString, wxITEM_NORMAL );
+	m_menu3->Append( m_menuItem10 );
+
+	m_menubar1->Append( m_menu3, wxT("Edit") );
+
 	help_menu_ = new wxMenu();
 	wxMenuItem* m_menuItem5;
 	m_menuItem5 = new wxMenuItem( help_menu_, wxID_ANY, wxString( wxT("Help") ) , wxEmptyString, wxITEM_NORMAL );
@@ -73,24 +96,28 @@ MainFrame_B::MainFrame_B( wxWindow* parent, wxWindowID id, const wxString& title
 
 	m_staticText2 = new wxStaticText( this, wxID_ANY, wxT("Name"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText2->Wrap( -1 );
-	m_staticText2->SetMinSize( wxSize( 65,-1 ) );
+	m_staticText2->SetFont( wxFont( 10, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
+	m_staticText2->SetMinSize( wxSize( 50,-1 ) );
 
 	bSizer5->Add( m_staticText2, 0, wxBOTTOM|wxLEFT|wxTOP, 5 );
 
-	m_staticText21 = new wxStaticText( this, wxID_ANY, wxT("Stones"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText21 = new wxStaticText( this, wxID_ANY, wxT("Stones"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
 	m_staticText21->Wrap( -1 );
-	m_staticText21->SetMinSize( wxSize( 40,-1 ) );
+	m_staticText21->SetFont( wxFont( 10, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
+	m_staticText21->SetMinSize( wxSize( 55,-1 ) );
 
 	bSizer5->Add( m_staticText21, 0, wxBOTTOM|wxTOP, 5 );
 
 	m_staticText3 = new wxStaticText( this, wxID_ANY, wxT("Points"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText3->Wrap( -1 );
+	m_staticText3->SetFont( wxFont( 10, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 	m_staticText3->SetMinSize( wxSize( 50,-1 ) );
 
 	bSizer5->Add( m_staticText3, 0, wxBOTTOM|wxTOP, 5 );
 
 	m_staticText5 = new wxStaticText( this, wxID_ANY, wxT("Old"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText5->Wrap( -1 );
+	m_staticText5->SetFont( wxFont( 10, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
 	m_staticText5->SetMinSize( wxSize( 30,-1 ) );
 
 	bSizer5->Add( m_staticText5, 0, wxBOTTOM|wxTOP, 5 );
@@ -120,10 +147,16 @@ MainFrame_B::MainFrame_B( wxWindow* parent, wxWindowID id, const wxString& title
 	this->Centre( wxBOTH );
 
 	// Connect Events
+	this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( MainFrame_B::close ) );
 	this->Connect( wxEVT_KEY_DOWN, wxKeyEventHandler( MainFrame_B::keyDown ) );
 	m_menu1->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame_B::restart ), this, restart_menu_item_->GetId());
 	m_menu1->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame_B::newGame ), this, new_game_menu_item_->GetId());
 	m_menu1->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame_B::quit ), this, quit_menu_item_->GetId());
+	m_menu3->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame_B::next ), this, m_menuItem6->GetId());
+	m_menu3->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame_B::back ), this, m_menuItem7->GetId());
+	m_menu3->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame_B::shuffle ), this, m_menuItem8->GetId());
+	m_menu3->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame_B::screenshot ), this, m_menuItem9->GetId());
+	m_menu3->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame_B::viewSettings ), this, m_menuItem10->GetId());
 	help_menu_->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame_B::help ), this, m_menuItem5->GetId());
 	help_menu_->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame_B::showIds ), this, m_menuItem51->GetId());
 	next_button_->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame_B::next ), NULL, this );
@@ -134,6 +167,7 @@ MainFrame_B::MainFrame_B( wxWindow* parent, wxWindowID id, const wxString& title
 MainFrame_B::~MainFrame_B()
 {
 	// Disconnect Events
+	this->Disconnect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( MainFrame_B::close ) );
 	this->Disconnect( wxEVT_KEY_DOWN, wxKeyEventHandler( MainFrame_B::keyDown ) );
 	next_button_->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame_B::next ), NULL, this );
 	back_button_->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame_B::back ), NULL, this );

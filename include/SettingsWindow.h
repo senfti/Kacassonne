@@ -10,7 +10,7 @@
 
 class SettingsWindow : public SettingsWindow_B{
   public:
-    SettingsWindow(wxWindow* parent);
+    SettingsWindow(wxWindow* parent, const std::map<std::string, int>* current_card_count = nullptr);
 
     std::map<std::string, std::map<std::string, int>> all_card_counts_;
     std::map<std::string, int> current_count_;
