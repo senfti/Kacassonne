@@ -181,18 +181,17 @@ void MainFrame::takeScreenshot(const std::string& prefix){
   if(!std::filesystem::exists("screenshots")){
     std::filesystem::create_directory("screenshots");
   }
-  wxWindowDC wnd(this);
-  wxSize wndsize = this->GetClientSize();
-  wxBitmap scr(wndsize.x+6, wndsize.y+6, -1);
-  wxMemoryDC memdc(scr);
-  memdc.SetBackground(*wxBLACK_BRUSH);
-  memdc.Clear();
-  memdc.Blit(3, 3, wndsize.x, wndsize.y, &wnd, 0, 0);
-  memdc.SelectObject(wxNullBitmap);
-  wxImage img = scr.ConvertToImage();
-
+  wxScreenDC screen_dc;
+  wxSize size = GetClientSize();
+  wxPoint pos = ClientToScreen(wxPoint(0, 0));
+  wxBitmap screenshot(size.GetWidth(), size.GetHeight(), -1);
+  wxMemoryDC mem_dc;
+  mem_dc.SelectObject(screenshot);
+  mem_dc.Blit(0, 0, size.GetWidth(), size.GetHeight(), &screen_dc, pos.x, pos.y);
+  mem_dc.SelectObject(wxNullBitmap);
   auto now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
   std::string s(30, '\0');
-  std::strftime(&s[0], s.size(), "%Y-%m-%d %H:%M:%S", std::localtime(&now));
-  img.SaveFile("screenshots/" + prefix + s + ".png", wxBITMAP_TYPE_PNG);
+  std::strftime(&s[0], s.size(), "%Y-%m-%d %H-%M-%S", std::localtime(&now));
+  s = std::string(s.c_str());
+  screenshot.SaveFile("screenshots/" + prefix + s + ".png", wxBITMAP_TYPE_PNG);
 }

@@ -11,3 +11,4 @@ Makefile
 Kacassonne
 *.tar.gz
 venv/
+thirdparty/

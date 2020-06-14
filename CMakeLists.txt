@@ -8,7 +8,7 @@ add_compile_definitions(VERSION="1.8.0")
 IF (WIN32)
 	add_definitions(-DWIN32_LEAN_AND_MEAN)
 
-	set(wxWidgets_ROOT_DIR D:/Programmieren/wxWidgets-3.0.4/)
+	set(wxWidgets_ROOT_DIR D:/Programmieren/wxWidgets-3.0.4)
 	set(wxWidgets_LIB_DIR D:/Programmieren/wxWidgets-3.0.4/lib/vc_lib)
 	set(wxWidgets_CONFIGURATION mswu)
 
