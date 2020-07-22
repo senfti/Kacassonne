@@ -58,7 +58,7 @@ PointHistoryWindow::~PointHistoryWindow()
 
 void PointHistoryWindow::setPoints(int player, int points){
   if(last_points_[player] != points){
-    pts_grid_->SetCellValue(point_count_[player], player, std::to_string(points));
+    pts_grid_->SetCellValue(point_count_[player], player, std::to_string(points) + " (" + std::to_string(++pt_number_) + ")");
     point_count_[player]++;
     last_points_[player] = points;
   }

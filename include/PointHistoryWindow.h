@@ -26,6 +26,7 @@ class PointHistoryWindow : public wxFrame
     wxGrid* pts_grid_;
     std::vector<int> point_count_;
     std::vector<int> last_points_;
+    int pt_number_ = 0;
 
   public:
 
