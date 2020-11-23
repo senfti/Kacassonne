@@ -5,7 +5,7 @@
 #include "PointGroup.h"
 #include "MainFrame.h"
 
-PointGroup::PointGroup(const wxString& name, const wxColor& color, wxWindow* parent)
+PointGroup::PointGroup(const wxString& name, const wxColor& color, bool highlight, wxWindow* parent)
     : wxBoxSizer(wxHORIZONTAL){
   active_panel_ = new wxPanel(parent, wxID_ANY, wxDefaultPosition, wxSize(16,16));
   active_panel_->SetBackgroundColour(parent->GetBackgroundColour());
@@ -13,6 +13,11 @@ PointGroup::PointGroup(const wxString& name, const wxColor& color, wxWindow* par
 
   name_field_ = new wxStaticText( parent, wxID_ANY, name, wxDefaultPosition, wxSize(80, -1), 0 );
   name_field_->SetForegroundColour(wxColor(color));
+  if(highlight){
+    wxFont font = name_field_->GetFont();
+    font.SetWeight( wxFONTWEIGHT_BOLD );
+    name_field_->SetFont( font );
+  }
   name_field_->Wrap( -1 );
   Add( name_field_, 0, wxALL, 5 );
 

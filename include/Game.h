@@ -26,6 +26,7 @@ class Game{
     bool running_ = true;
     mutable std::mutex data_lock_;
     std::list<Flare> flares_;
+    std::vector<Flare> count_marks_;
     wxPoint2DDouble last_mouse_pos_ = wxPoint2DDouble(0, 0);
     bool update_old_pts_ = false;
 
@@ -54,6 +55,10 @@ class Game{
     bool shuffle();
     void flare(const wxPoint2DDouble& pos, bool any_player=false);
     void setPoints(int player, int points, bool add, bool send);
+    void addMark(double x, double y);
+    void removeMark();
+    void setMarks(const std::vector<Flare>& marks = std::vector<Flare>());
+    void sendMarkMsg();
 
     int getPreviewCard();
     bool validPosition();

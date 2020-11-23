@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version 3.9.0 Mar 24 2020)
+// C++ code generated with wxFormBuilder (version 3.9.0 Nov 14 2020)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO *NOT* EDIT THIS FILE!
@@ -33,7 +33,7 @@ class HelpDialog_B : public wxDialog
 
 	public:
 
-		HelpDialog_B( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Help"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_DIALOG_STYLE );
+		HelpDialog_B( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Help"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE );
 		~HelpDialog_B();
 
 };

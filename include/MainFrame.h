@@ -26,6 +26,7 @@ class MainFrame : public MainFrame_B{
 
     int preview_image_ = -1;
     PointHistoryWindow* pt_history_wnd_;
+    int pt_history_wnd_id_ = -1;
 
     virtual void quit( wxCommandEvent& event );
     virtual void next( wxCommandEvent& event );
@@ -38,6 +39,10 @@ class MainFrame : public MainFrame_B{
     virtual void close( wxCloseEvent& event ) { takeScreenshot(""); Destroy(); }
     virtual void screenshot( wxCommandEvent& event ) { takeScreenshot(""); }
     virtual void viewSettings( wxCommandEvent& event );
+    virtual void togglePointHistory( wxCommandEvent& event ) {
+      if(FindWindowById(pt_history_wnd_id_))
+        pt_history_wnd_->Show(!pt_history_wnd_->IsShown());
+    }
 
     void OnTimer(wxTimerEvent& event);
 

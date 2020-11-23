@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version 3.9.0 Mar 24 2020)
+// C++ code generated with wxFormBuilder (version 3.9.0 Nov 14 2020)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO *NOT* EDIT THIS FILE!
@@ -33,7 +33,7 @@ class PointHistoryWindow : public wxFrame
 
 	public:
 
-		PointHistoryWindow( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Point History"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+		PointHistoryWindow( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Point History"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxCAPTION|wxSTAY_ON_TOP|wxTAB_TRAVERSAL );
 
 		~PointHistoryWindow();
 

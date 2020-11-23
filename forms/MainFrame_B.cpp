@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version 3.9.0 Mar 24 2020)
+// C++ code generated with wxFormBuilder (version 3.9.0 Nov 14 2020)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO *NOT* EDIT THIS FILE!
@@ -50,6 +50,10 @@ MainFrame_B::MainFrame_B( wxWindow* parent, wxWindowID id, const wxString& title
 	wxMenuItem* m_menuItem10;
 	m_menuItem10 = new wxMenuItem( m_menu3, wxID_ANY, wxString( wxT("View Settings") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu3->Append( m_menuItem10 );
+
+	wxMenuItem* m_menuItem11;
+	m_menuItem11 = new wxMenuItem( m_menu3, wxID_ANY, wxString( wxT("Toggle Point History") ) , wxEmptyString, wxITEM_NORMAL );
+	m_menu3->Append( m_menuItem11 );
 
 	m_menubar1->Append( m_menu3, wxT("Edit") );
 
@@ -157,6 +161,7 @@ MainFrame_B::MainFrame_B( wxWindow* parent, wxWindowID id, const wxString& title
 	m_menu3->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame_B::shuffle ), this, m_menuItem8->GetId());
 	m_menu3->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame_B::screenshot ), this, m_menuItem9->GetId());
 	m_menu3->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame_B::viewSettings ), this, m_menuItem10->GetId());
+	m_menu3->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame_B::togglePointHistory ), this, m_menuItem11->GetId());
 	help_menu_->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame_B::help ), this, m_menuItem5->GetId());
 	help_menu_->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame_B::showIds ), this, m_menuItem51->GetId());
 	next_button_->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame_B::next ), NULL, this );

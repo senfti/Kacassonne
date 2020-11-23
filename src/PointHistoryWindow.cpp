@@ -5,7 +5,7 @@
 #include "PointHistoryWindow.h"
 
 PointHistoryWindow::PointHistoryWindow( wxWindow* parent, const std::vector<Player>& players, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style )
-    : wxFrame( parent, id, title, pos, wxSize(80*players.size()+40, 640), style ), point_count_(players.size(), 0), last_points_(players.size(), 0)
+    : wxFrame( parent, id, title, pos, wxSize(80*players.size()+40, 640), style), point_count_(players.size(), 0), last_points_(players.size(), 0)
 {
   this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 

@@ -95,6 +95,11 @@ void TablePanel::paint(wxPaintEvent &event){
         dc.DrawLine(pos.x - l, pos.y + l, pos.x + l, pos.y - l);
       }
     }
+    for(size_t i=0; i<game_->count_marks_.size(); i++){
+      dc.SetFont(wxFont(16, wxFONTFAMILY_DEFAULT, wxFontStyle::wxFONTSTYLE_NORMAL, wxFontWeight::wxFONTWEIGHT_BOLD));
+      wxPoint pos = toTable(game_->count_marks_[i].x_, game_->count_marks_[i].y_) - wxPoint(12, 12);
+      dc.DrawText(std::to_string(i+1), pos);
+    }
   }
   int cards_left = game_->getLeftCards();
   int player_count = game_->getPlayerCount();
@@ -140,7 +145,11 @@ void TablePanel::lDown(wxMouseEvent &event){
 
 void TablePanel::lUp(wxMouseEvent &event){
   wxPoint2DDouble pos = toGame(event.GetPosition());
-  if(game_->layCard() || game_->moveStone(pos.m_x, pos.m_y))
+  if(count_mode_){
+    game_->addMark(pos.m_x, pos.m_y);
+    Refresh();
+  }
+  else if(game_->layCard() || game_->moveStone(pos.m_x, pos.m_y))
     Refresh();
 }
 
@@ -166,10 +175,12 @@ void TablePanel::wheel(wxMouseEvent &event){
 }
 
 void TablePanel::rDown(wxMouseEvent &event){
-  down_time_ = getTime();
-  flipped_ = false;
-  if(!game_->cardInHand())
-    game_->flare(wxPoint2DDouble(toGame(event.GetPosition())));
+  if(!count_mode_){
+    down_time_ = getTime();
+    flipped_ = false;
+    if(!game_->cardInHand())
+      game_->flare(wxPoint2DDouble(toGame(event.GetPosition())));
+  }
 }
 
 void TablePanel::rDDown( wxMouseEvent& event ){
@@ -177,10 +188,16 @@ void TablePanel::rDDown( wxMouseEvent& event ){
 }
 
 void TablePanel::rUp(wxMouseEvent &event){
-  down_time_ = 9999999999;
-  if(!flipped_)
-    if(game_->rotateCard())
-      Refresh();
+  if(count_mode_){
+    game_->removeMark();
+    Refresh();
+  }
+  else{
+    down_time_ = 9999999999;
+    if(!flipped_)
+      if(game_->rotateCard())
+        Refresh();
+  }
 }
 
 void TablePanel::keyDown( wxKeyEvent& event ){
@@ -208,7 +225,24 @@ void TablePanel::keyDown( wxKeyEvent& event ){
     if(game_->moveStone(pos.m_x, pos.m_y, true))
       Refresh();
   }
-
+  else if(event.GetKeyCode() == 'R'){
+    if(game_->rotateCard())
+      Refresh();
+  }
+  else if(event.GetKeyCode() == 'M'){
+    if(game_->flipCard()){
+      flipped_ = true;
+      down_time_ = 9999999999;
+      Refresh();
+    }
+  }
+  else if(event.GetKeyCode() == 'C'){
+    if(count_mode_){
+      game_->setMarks();
+      Refresh();
+    }
+    count_mode_ = !count_mode_;
+  }
 }
 
 void TablePanel::keyUp( wxKeyEvent& event ){

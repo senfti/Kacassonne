@@ -18,6 +18,7 @@ class TablePanel : public wxPanel{
     wxPoint last_position_ = wxPoint(Card::OUTSIDE, Card::OUTSIDE);
     double down_time_ = 9999999999;
     bool flipped_ = false;
+    bool count_mode_ = false;
 
     Game* game_;
 

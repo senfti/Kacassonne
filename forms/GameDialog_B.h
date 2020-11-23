@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version 3.9.0 Mar 24 2020)
+// C++ code generated with wxFormBuilder (version 3.9.0 Nov 14 2020)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO *NOT* EDIT THIS FILE!
@@ -46,7 +46,7 @@ class GameDialog_B : public wxDialog
 		wxButton* quit_button_;
 		wxButton* start_button_;
 
-		// Virtual event handlers, overide them in your derived class
+		// Virtual event handlers, override them in your derived class
 		virtual void changeSettings( wxCommandEvent& event ) { event.Skip(); }
 		virtual void changeColor( wxCommandEvent& event ) { event.Skip(); }
 		virtual void quit( wxCommandEvent& event ) { event.Skip(); }

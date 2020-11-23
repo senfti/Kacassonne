@@ -32,7 +32,7 @@ class PointHistoryWindow : public wxFrame
 
     PointHistoryWindow( wxWindow* parent, const std::vector<Player>& players,
       wxWindowID id = wxID_ANY, const wxString& title = wxT("Point History"), const wxPoint& pos = wxDefaultPosition,
-      const wxSize& size = wxDefaultSize, long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+      const wxSize& size = wxDefaultSize, long style = wxCAPTION|wxSTAY_ON_TOP|wxTAB_TRAVERSAL);
 
     void setPoints(int player, int points);
 

@@ -45,6 +45,7 @@ class LobbyDialog : public LobbyDialog_B{
 
     virtual void create( wxCommandEvent& event );
     virtual void reconnect( wxCommandEvent& event );
+    virtual void load( wxCommandEvent& event );
     virtual void join( wxCommandEvent& event );
     void OnTimer(wxTimerEvent& event);
 

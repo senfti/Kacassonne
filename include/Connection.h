@@ -60,12 +60,16 @@ class Connection{
     void subscribeToGame();
     void subscribeToLobby();
 
+    int64_t addStuffToMsg(Message& msg);
+
     int64_t send(const std::string& topic, Message msg);
     bool fromMe(const Message& msg) const { return msg["player_id"].get<int64_t>() == player_id_; }
     bool forMe(const Message& msg) const;
     bool iAmHost() const { return host_ == player_id_; }
     bool fromHost(const Message& msg) const { return msg["host"].get<int64_t>() == msg["player_id"].get<int64_t>(); }
     std::pair<std::string, Message> recv();
+
+    bool updateData(const Message& msg);
 };
 
 #endif //CARCASONNE_CONNECTION_H

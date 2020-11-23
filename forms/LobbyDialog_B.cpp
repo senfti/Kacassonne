@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version 3.9.0 Mar 24 2020)
+// C++ code generated with wxFormBuilder (version 3.9.0 Nov 14 2020)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO *NOT* EDIT THIS FILE!
@@ -25,14 +25,38 @@ LobbyDialog_B::LobbyDialog_B( wxWindow* parent, wxWindowID id, const wxString& t
 
 	bSizer41->Add( 0, 0, 1, wxEXPAND, 5 );
 
-	reconnect_button_ = new wxButton( this, wxID_ANY, wxT("Reconnect"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer41->Add( reconnect_button_, 0, wxALL, 5 );
-
 
 	window_sizer_->Add( bSizer41, 1, wxEXPAND, 5 );
 
 	m_staticline2 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 	window_sizer_->Add( m_staticline2, 0, wxEXPAND | wxALL, 5 );
+
+	wxBoxSizer* bSizer5;
+	bSizer5 = new wxBoxSizer( wxVERTICAL );
+
+	reconnect_button_ = new wxButton( this, wxID_ANY, wxT("Reconnect"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer5->Add( reconnect_button_, 0, wxALL, 5 );
+
+
+	window_sizer_->Add( bSizer5, 1, wxEXPAND, 5 );
+
+	m_staticline3 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
+	window_sizer_->Add( m_staticline3, 0, wxEXPAND | wxALL, 5 );
+
+	wxBoxSizer* bSizer6;
+	bSizer6 = new wxBoxSizer( wxHORIZONTAL );
+
+	load_file_picker_ = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("*.*"), wxDefaultPosition, wxDefaultSize, wxFLP_DEFAULT_STYLE );
+	bSizer6->Add( load_file_picker_, 1, wxALL|wxEXPAND, 5 );
+
+	load_button_ = new wxButton( this, wxID_ANY, wxT("Load"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer6->Add( load_button_, 0, wxALL, 5 );
+
+
+	window_sizer_->Add( bSizer6, 1, wxEXPAND, 5 );
+
+	m_staticline4 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
+	window_sizer_->Add( m_staticline4, 0, wxEXPAND | wxALL, 5 );
 
 	wxBoxSizer* bSizer4;
 	bSizer4 = new wxBoxSizer( wxHORIZONTAL );
@@ -73,6 +97,7 @@ LobbyDialog_B::LobbyDialog_B( wxWindow* parent, wxWindowID id, const wxString& t
 
 	// Connect Events
 	reconnect_button_->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LobbyDialog_B::reconnect ), NULL, this );
+	load_button_->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LobbyDialog_B::load ), NULL, this );
 	create_button_->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LobbyDialog_B::create ), NULL, this );
 }
 
@@ -80,6 +105,7 @@ LobbyDialog_B::~LobbyDialog_B()
 {
 	// Disconnect Events
 	reconnect_button_->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LobbyDialog_B::reconnect ), NULL, this );
+	load_button_->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LobbyDialog_B::load ), NULL, this );
 	create_button_->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LobbyDialog_B::create ), NULL, this );
 
 }

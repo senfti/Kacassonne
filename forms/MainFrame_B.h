@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version 3.9.0 Mar 24 2020)
+// C++ code generated with wxFormBuilder (version 3.9.0 Nov 14 2020)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO *NOT* EDIT THIS FILE!
@@ -54,7 +54,7 @@ class MainFrame_B : public wxFrame
 		wxBoxSizer* info_sizer_;
 		wxStaticBitmap* preview_bitmap_;
 
-		// Virtual event handlers, overide them in your derived class
+		// Virtual event handlers, override them in your derived class
 		virtual void close( wxCloseEvent& event ) { event.Skip(); }
 		virtual void keyDown( wxKeyEvent& event ) { event.Skip(); }
 		virtual void restart( wxCommandEvent& event ) { event.Skip(); }
@@ -65,6 +65,7 @@ class MainFrame_B : public wxFrame
 		virtual void shuffle( wxCommandEvent& event ) { event.Skip(); }
 		virtual void screenshot( wxCommandEvent& event ) { event.Skip(); }
 		virtual void viewSettings( wxCommandEvent& event ) { event.Skip(); }
+		virtual void togglePointHistory( wxCommandEvent& event ) { event.Skip(); }
 		virtual void help( wxCommandEvent& event ) { event.Skip(); }
 		virtual void showIds( wxCommandEvent& event ) { event.Skip(); }
 

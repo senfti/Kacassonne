@@ -26,6 +26,7 @@ void MainFrame::setGame(Game *game, bool restart){
       restart_menu_item_->Enable(false);
     table_panel_->setGame(game);
     pt_history_wnd_ = new PointHistoryWindow(this, game->players_);
+    pt_history_wnd_id_ = pt_history_wnd_->GetId();
     pt_history_wnd_->Show();
   }
   std::lock_guard<std::mutex> lock(game_->data_lock_);
@@ -34,8 +35,9 @@ void MainFrame::setGame(Game *game, bool restart){
       pg->setPoints(0);
   }
   else{
+    int i=0;
     for(const auto &p : game_->players_){
-      players_guis_.push_back(new PointGroup(p.name_, p.color_, this));
+      players_guis_.push_back(new PointGroup(p.name_, p.color_, game_->connection_->player_number_ == i++, this));
       info_sizer_->Add(players_guis_.back());
     }
     if(!players_guis_.empty())
@@ -147,7 +149,8 @@ void MainFrame::OnTimer(wxTimerEvent &event){
     players_guis_[i]->setStones(game_->players_[i].getRemainingStones());
     if(game_->update_old_pts_)
       players_guis_[i]->setOldPoints(game_->players_[i].points_);
-    pt_history_wnd_->setPoints(i, game_->players_[i].points_);
+    if(FindWindowById(pt_history_wnd_id_))
+      pt_history_wnd_->setPoints(i, game_->players_[i].points_);
   }
   game_->update_old_pts_ = false;
 

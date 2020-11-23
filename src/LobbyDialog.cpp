@@ -84,6 +84,21 @@ void LobbyDialog::reconnect( wxCommandEvent& event ){
   during_reconnect_ = false;
 }
 
+void LobbyDialog::load( wxCommandEvent& event ){
+  if(!load_file_picker_->GetPath().empty()){
+    try{
+      std::ifstream t(load_file_picker_->GetPath());
+      std::string msg((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
+      reconnect_reply_ = Message::fromJsonString(msg);
+      running_ = false;
+      receiver_->join();
+      EndModal(0);
+    }
+    catch(std::exception &){ ;
+    }
+  }
+}
+
 void LobbyDialog::join( wxCommandEvent& event ){
   for(const auto& game : games_){
     if(game.isButtonID(event.GetId())){

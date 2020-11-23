@@ -3,6 +3,7 @@
 //
 
 #include <Game.h>
+#include <filesystem>
 
 #include "Game.h"
 
@@ -10,6 +11,9 @@
 Game::Game(Connection* connection, int card_number, const std::map<std::string, int>& card_count, bool allow_mirror)
   : stack_(card_number, card_count), connection_(connection), card_count_(card_count), allow_mirror_(allow_mirror)
 {
+  if(!std::filesystem::exists("save_games")){
+    std::filesystem::create_directory("save_games");
+  }
   if(stack_.getLeftCards() < 1)
     return;
   {
@@ -137,10 +141,16 @@ bool Game::next(){
     std::lock_guard<std::mutex> lock(data_lock_);
     if(current_player_ == connection_->player_number_ && !current_card_ && stack_.getLeftCards() > 0){
       current_player_ = (current_player_ + 1) % int(players_.size());
-      connection_->send("next", getAsMessage());
+      Message msg = getAsMessage();
+      connection_->send("next", msg);
       current_card_ = stack_.next();
-      if(current_player_ == 0)
+      if(current_player_ == 0){
         update_old_pts_ = true;
+        std::ofstream save_file("save_games/" + std::to_string(connection_->game_id_) + ".json");
+        msg["game_status"] = int(GameStatus::STARTED);
+        connection_->addStuffToMsg(msg);
+        save_file << msg.toJsonString();
+      }
       return true;
     }
   }
@@ -195,6 +205,31 @@ void Game::setPoints(int player, int points, bool add, bool send){
       connection_->send("update", msg);
     }
   }
+}
+
+void Game::addMark(double x, double y){
+  std::lock_guard<std::mutex> lock(data_lock_);
+  count_marks_.emplace_back(Flare(x, y, connection_->player_number_));
+  sendMarkMsg();
+  return;
+}
+
+void Game::removeMark(){
+  std::lock_guard<std::mutex> lock(data_lock_);
+  count_marks_.pop_back();
+  sendMarkMsg();
+}
+
+void Game::setMarks(const std::vector<Flare>& marks){
+  std::lock_guard<std::mutex> lock(data_lock_);
+  count_marks_ = marks;
+  sendMarkMsg();
+}
+
+void Game::sendMarkMsg(){
+  Message msg;
+  msg["count_marks"] = count_marks_;
+  connection_->send("count_marks", msg);
 }
 
 int Game::getPreviewCard() {
@@ -312,7 +347,14 @@ void Game::recv(){
       }
       else if(t == "reconnect_request"){
         std::lock_guard<std::mutex> lock(data_lock_);
-        connection_->send("reconnect_reply", getAsMessage());
+        Message msg = getAsMessage();
+        msg["reconnect_player"] = {{"player_id", m["player_id"].get<int64_t>()}, {"player_name", m["player_name"].get<std::string>()}, {"player_number", m["player_number"].get<int64_t>()}};
+        connection_->send("reconnect_reply", msg);
+      }
+      else if(t == "count_marks"){
+        std::lock_guard<std::mutex> lock(data_lock_);
+        m.at("count_marks").get_to(count_marks_);
+        update_table_ = true;
       }
     }
     catch(std::exception& e){

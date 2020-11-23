@@ -136,8 +136,10 @@ bool MyApp::initGame(int card_number, const std::map<std::string, int>& card_cou
   wxMilliSleep(1500);
 
   try{
-    if(reconnect_reply.find("game_status") != reconnect_reply.end())
+    if(reconnect_reply.find("game_status") != reconnect_reply.end()){
+      connection_->updateData(reconnect_reply);
       game_ = new Game(connection_, reconnect_reply);
+    }
     else
       game_ = new Game(connection_, card_number, card_count, allow_mirror);
     if(game_->stack_.getLeftCards() < 1){

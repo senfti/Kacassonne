@@ -1,5 +1,15 @@
-PointGroup as Panel (not Sizer)
 
+more robust game start
+PointGroup as Panel (not Sizer)
+Licenses alle dazutun
+
+1.8.1:
+ - Pointhistory geht in Hintergrund wenn wer was tuat
+ - Speichern Button / automatisch
+ - mehr keyboard "shortcuts"
+ - Zählmodus (Wie Pieces setzen (mit wegtun), nur halt Count raufzählen)
+
+earlier:
  - card info in json
  - kartenanzahl syncen
  - Punkte-Log fenster
@@ -7,6 +17,3 @@ PointGroup as Panel (not Sizer)
  - generell jsons für verschiedene balances
  - autoscreenshot am ende
 
-
-more robust game start
-Licenses alle dazutun
