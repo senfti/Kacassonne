@@ -34,10 +34,9 @@ class PointHistoryWindow : public wxFrame
       wxWindowID id = wxID_ANY, const wxString& title = wxT("Point History"), const wxPoint& pos = wxDefaultPosition,
       const wxSize& size = wxDefaultSize, long style = wxCAPTION|wxSTAY_ON_TOP|wxTAB_TRAVERSAL);
 
-    void setPoints(int player, int points);
-
     ~PointHistoryWindow();
 
+    void setPoints(int player, int points);
 };
 
 

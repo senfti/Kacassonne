@@ -17,15 +17,18 @@ Player::Player(int number, const wxString& name)
       color_ = wxColor(rand() % 256, rand() % 256, rand() % 256);
     }
     for(int i = 0; i < 7; i++){
-      stones_.push_back(Stone(color_, number));
+      stones_.push_back(Stone(color_, number, Stone::Type::STANDARD));
+    }
+    for(int i = 0; i < 1; i++){
+      stones_.push_back(Stone(color_, number, Stone::Type::HORSE));
     }
   }
 }
 
-int Player::getRemainingStones() const{
+int Player::getRemainingStones(Stone::Type type) const{
   int layed_stones = 0;
   for(const auto& s : stones_){
-    if(s.isLayed())
+    if(s.isLayed() || (type != Stone::Type::ANY && s.type_ != type))
       layed_stones++;
   }
   return int(stones_.size()) - layed_stones;

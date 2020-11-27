@@ -90,8 +90,8 @@ bool Game::layCard(bool force){
   return false;
 }
 
-bool Game::doMoveStone(double x, double y, int player_number, bool send, int restrictions){
-  last_move_stone_ = {0.0, x, y, player_number, false};
+bool Game::doMoveStone(double x, double y, int player_number, Stone::Type type, bool send, int restrictions){
+  last_move_stone_ = {0.0, x, y, player_number, type, false};
   bool one_there = false;
   for(auto &p : players_){
     for(auto &s : p.stones_){
@@ -101,8 +101,8 @@ bool Game::doMoveStone(double x, double y, int player_number, bool send, int res
           s.x_ = Card::OUTSIDE;
           s.y_ = Card::OUTSIDE;
           if(send){
-            sendUpdate("moveStone", x, y, player_number, false);
-            last_move_stone_ = {getTime(), x, y, player_number, false};
+            sendUpdate("moveStone", x, y, player_number, false, int(type));
+            last_move_stone_ = {getTime(), x, y, player_number, type, false};
           }
           return true;
         }
@@ -111,12 +111,12 @@ bool Game::doMoveStone(double x, double y, int player_number, bool send, int res
   }
   if(restrictions >= 0 && !one_there){
     for(auto &s : players_[player_number].stones_){
-      if(s.x_ == Card::OUTSIDE){
+      if(!s.isLayed() && s.type_ == type){
         s.x_ = x;
         s.y_ = y;
         if(send){
-          sendUpdate("moveStone", x, y, player_number, true);
-          last_move_stone_ = {getTime(), x, y, player_number, true};
+          sendUpdate("moveStone", x, y, player_number, true, int(type));
+          last_move_stone_ = {getTime(), x, y, player_number, type, true};
         }
         return true;
       }
@@ -125,12 +125,12 @@ bool Game::doMoveStone(double x, double y, int player_number, bool send, int res
   return false;
 }
 
-bool Game::moveStone(double x, double y, bool any_player){
+bool Game::moveStone(double x, double y, Stone::Type type, bool any_player){
   bool no_stones;
   {
     std::lock_guard<std::mutex> lock(data_lock_);
     if (any_player || !(current_player_ == connection_->player_number_ && current_card_)) {
-      no_stones = !doMoveStone(x, y, connection_->player_number_);
+      no_stones = !doMoveStone(x, y, connection_->player_number_, type);
     }
   }
   return !no_stones;
@@ -275,13 +275,14 @@ bool Game::validPosition(){
   return has_neighbor;
 }
 
-bool Game::sendUpdate(const std::string& type, double x, double y, int idx, bool flag1){
+bool Game::sendUpdate(const std::string& type, double x, double y, int idx, bool flag1, int val1){
   Message msg;
   msg["type"] = type;
   msg["x"] = x;
   msg["y"] = y;
   msg["idx"] = idx;
   msg["flag1"] = flag1;
+  msg["val1"] = val1;
   connection_->send("update", msg);
   return true;
 }
@@ -330,7 +331,7 @@ void Game::recv(){
           }
         }
         if(m["type"] == "moveStone" && m["idx"].get<int>() < int(players_.size()))
-          doMoveStone(m["x"], m["y"], m["idx"], false, m["flag1"].get<bool>() ? 1 : -1);
+          doMoveStone(m["x"], m["y"], m["idx"], m["val1"], false, m["flag1"].get<bool>() ? 1 : -1);
         else if(m["type"] == "flare" && m["idx"].get<int>() < int(players_.size())){
           flares_.push_back(Flare(m["x"], m["y"], m["idx"]));
         }
@@ -339,7 +340,7 @@ void Game::recv(){
       else if(t == "next"){
         updateFromMessage(m);
         if(getTime() - std::get<0>(last_move_stone_) < 100.0){
-          doMoveStone(std::get<1>(last_move_stone_), std::get<2>(last_move_stone_), std::get<3>(last_move_stone_), true, std::get<4>(last_move_stone_) ? 1 : -1);
+          doMoveStone(std::get<1>(last_move_stone_), std::get<2>(last_move_stone_), std::get<3>(last_move_stone_), std::get<4>(last_move_stone_), true, std::get<5>(last_move_stone_) ? 1 : -1);
         }
         if(current_player_ == 0)
           update_old_pts_ = true;

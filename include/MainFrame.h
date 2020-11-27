@@ -39,10 +39,6 @@ class MainFrame : public MainFrame_B{
     virtual void close( wxCloseEvent& event ) { takeScreenshot(""); Destroy(); }
     virtual void screenshot( wxCommandEvent& event ) { takeScreenshot(""); }
     virtual void viewSettings( wxCommandEvent& event );
-    virtual void togglePointHistory( wxCommandEvent& event ) {
-      if(FindWindowById(pt_history_wnd_id_))
-        pt_history_wnd_->Show(!pt_history_wnd_->IsShown());
-    }
 
     void OnTimer(wxTimerEvent& event);
 
@@ -58,6 +54,10 @@ class MainFrame : public MainFrame_B{
     void disable();
 
     void takeScreenshot(const std::string& prefix);
+    virtual void togglePointHistory( wxCommandEvent& event ) {
+      if(FindWindowById(pt_history_wnd_id_))
+        pt_history_wnd_->Show(!pt_history_wnd_->IsShown());
+    }
 };
 
 #endif //CARCASONNE_MAINFRAME_H

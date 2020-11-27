@@ -27,7 +27,7 @@ void MainFrame::setGame(Game *game, bool restart){
     table_panel_->setGame(game);
     pt_history_wnd_ = new PointHistoryWindow(this, game->players_);
     pt_history_wnd_id_ = pt_history_wnd_->GetId();
-    pt_history_wnd_->Show();
+//    pt_history_wnd_->Show();
   }
   std::lock_guard<std::mutex> lock(game_->data_lock_);
   if(restart){

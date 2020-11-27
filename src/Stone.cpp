@@ -20,6 +20,9 @@ bool Stone::initStoneImages(){
     if(std::filesystem::exists(stone_folder + "stone.png")){
       STONE_IMAGES.push_back(wxImage(stone_folder + "stone.png"));
     }
+    if(std::filesystem::exists(stone_folder + "horse.png")){
+      STONE_IMAGES.push_back(wxImage(stone_folder + "horse.png"));
+    }
   }
   return STONE_IMAGES.size();
 }
@@ -27,7 +30,7 @@ bool Stone::initStoneImages(){
 
 void Stone::paint(wxAutoBufferedPaintDC& dc, const wxPoint& pos, double scale) const{
   int size = SIZE*Card::cardSize(scale);
-  wxImage tmp = STONE_IMAGES[0].Scale(2*size, 2*size);
+  wxImage tmp = STONE_IMAGES[int(type_)].Scale(2*size, 2*size);
   for(int x=0; x<tmp.GetWidth(); x++){
     for(int y=0; y<tmp.GetHeight(); y++){
       wxImage::HSVValue hsv = wxImage::RGBtoHSV(wxImage::RGBValue(tmp.GetRed(x,y), tmp.GetGreen(x,y), tmp.GetBlue(x,y)));

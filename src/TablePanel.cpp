@@ -149,7 +149,7 @@ void TablePanel::lUp(wxMouseEvent &event){
     game_->addMark(pos.m_x, pos.m_y);
     Refresh();
   }
-  else if(game_->layCard() || game_->moveStone(pos.m_x, pos.m_y))
+  else if(game_->layCard() || game_->moveStone(pos.m_x, pos.m_y, event.ShiftDown() ? Stone::Type::HORSE : Stone::Type::STANDARD))
     Refresh();
 }
 
@@ -222,7 +222,12 @@ void TablePanel::keyDown( wxKeyEvent& event ){
     game_->flare(wxPoint2DDouble(toGame(event.GetPosition())), true);
   else if(event.GetKeyCode() == 'P'){
     wxPoint2DDouble pos = toGame(event.GetPosition());
-    if(game_->moveStone(pos.m_x, pos.m_y, true))
+    if(game_->moveStone(pos.m_x, pos.m_y, Stone::Type::STANDARD, true))
+      Refresh();
+  }
+  else if(event.GetKeyCode() == 'H'){
+    wxPoint2DDouble pos = toGame(event.GetPosition());
+    if(game_->moveStone(pos.m_x, pos.m_y, Stone::Type::HORSE, true))
       Refresh();
   }
   else if(event.GetKeyCode() == 'R'){
@@ -242,6 +247,13 @@ void TablePanel::keyDown( wxKeyEvent& event ){
       Refresh();
     }
     count_mode_ = !count_mode_;
+  }
+  else if(event.GetKeyCode() == 'W'){
+    MainFrame* parent = dynamic_cast<MainFrame*>(GetParent());
+    if(parent){
+      wxCommandEvent evt;
+      parent->togglePointHistory(evt);
+    }
   }
 }
 

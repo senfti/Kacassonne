@@ -33,7 +33,7 @@ class Game{
     std::map<std::string, int> card_count_;
     bool allow_mirror_;
 
-    std::tuple<double, double, double, int, bool> last_move_stone_ = {0.0, 0.0, 0.0, 0, false};
+    std::tuple<double, double, double, int, Stone::Type, bool> last_move_stone_ = {0.0, 0.0, 0.0, 0, Stone::Type::STANDARD, false};
 
     std::mutex msg_queue_mutex_;
 
@@ -48,8 +48,8 @@ class Game{
     bool rotateCard();
     bool flipCard();
     bool layCard(bool force = false);
-    bool doMoveStone(double x, double y, int player_number, bool send = true, int restrictions = 0);
-    bool moveStone(double x, double y, bool any_player=false);
+    bool doMoveStone(double x, double y, int player_number, Stone::Type type=Stone::Type::STANDARD, bool send = true, int restrictions = 0);
+    bool moveStone(double x, double y, Stone::Type type, bool any_player=false);
     bool next();
     bool revert();
     bool shuffle();
@@ -70,7 +70,7 @@ class Game{
       std::lock_guard<std::mutex> lock(data_lock_);
       return current_player_ == connection_->player_number_;
     }
-    bool sendUpdate(const std::string& type, double x=0.0, double y=0.0, int idx=-123, bool flag1 = false);
+    bool sendUpdate(const std::string& type, double x=0.0, double y=0.0, int idx=-123, bool flag1 = false, int val1 = 0);
     int getLeftCards() const {
       std::lock_guard<std::mutex> lock(data_lock_);
       return stack_.getLeftCards();
