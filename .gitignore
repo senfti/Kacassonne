@@ -1,5 +1,6 @@
 .idea/
 cmake-build-debug
+docker_build
 /.project
 data_orig/
 .vs/

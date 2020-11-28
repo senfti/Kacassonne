@@ -87,7 +87,7 @@ void LobbyDialog::reconnect( wxCommandEvent& event ){
 void LobbyDialog::load( wxCommandEvent& event ){
   if(!load_file_picker_->GetPath().empty()){
     try{
-      std::ifstream t(load_file_picker_->GetPath());
+      std::ifstream t(load_file_picker_->GetPath().ToStdString());
       std::string msg((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
       reconnect_reply_ = Message::fromJsonString(msg);
       running_ = false;
