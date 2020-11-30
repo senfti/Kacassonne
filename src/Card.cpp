@@ -99,7 +99,7 @@ void Card::paint(wxAutoBufferedPaintDC& dc, const wxPoint& pos, double scale, St
   }
   dc.DrawBitmap(wxBitmap(tmp), pos + wxPoint(border, border));
   if(!valid){
-    wxPen invalid_pen(wxColor(0xFF, 0x00, 0x00, 0), 3*scale, wxPENSTYLE_SOLID);
+    wxPen invalid_pen(wxColor(0xFF, 0x00, 0x00), 3*scale, wxPENSTYLE_SOLID);
     dc.SetPen(invalid_pen);
     dc.DrawLine(pos, pos + wxPoint(edge_length, edge_length));
   }

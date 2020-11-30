@@ -24,10 +24,12 @@ SSSWW_2.jpg 3
 TSSWW_2.jpg 0
 TWFSS_2.jpg 0
 TWFWS_1.jpg 0
+WFSWS_1.jpg 0
 WFWWF_9.jpg 9
 WFWWW_4.jpg 4
 WSFWF_2.jpg 0
 WSFWW_1.jpg 3
+WSSWS_1.jpg 0
 WSWFW_3.jpg 4
 WSWWF_3.jpg 0
 WSWWW_2.jpg 0

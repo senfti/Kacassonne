@@ -14,7 +14,7 @@ KFFWF_2.jpg 3
 KWFWF_1.jpg 1
 KWWWF_1.jpg 1
 SFSFS_2.jpg 2
-SFSWS_1.jpg 1
+SFSWS_1.jpg 2
 SSFSF_1.jpg 1
 SSFWS_1.jpg 1
 SSSFF_3.jpg 3
@@ -26,12 +26,10 @@ SWSWS_1.jpg 1
 TSSWW_2.jpg 2
 TWFSS_2.jpg 2
 TWFWS_1.jpg 2
-WFSWS_1.jpg 1
 WFWWF_9.jpg 9
 WFWWW_4.jpg 4
 WSFWF_2.jpg 4
 WSFWW_1.jpg 1
-WSSWS_1.jpg 1
 WSWFW_3.jpg 3
 WSWWF_3.jpg 3
 WSWWW_2.jpg 2
