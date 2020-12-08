@@ -1,7 +1,12 @@
-Ubuntu Dependencies Install:
-sudo apt-get update
-sudo apt-get install libwxgtk3.0-gtk3-0v5 wx-common libzmq5
+# Compile Instructions
+## Ubuntu
+`sudo apt-get update && sudo apt-get install libwxgtk3.0-gtk3-0v5 wx-common libzmq5`
+## macOS
+`brew install zeromq pkgconfig wxmac`
+`wget https://raw.githubusercontent.com/zeromq/cppzmq/master/zmq.hpp -O /usr/local/include/zmq.hpp`
+In the project folder run `cmake --configure . && cmake --build .` to get the `Kacassonne` executable.
 
+# Licence
 MIT License 
 
 Copyright (c) 2020 Thomas Senfter (except nlohmann::json)
