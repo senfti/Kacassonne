@@ -7,6 +7,7 @@
 # Compile .Instructions
 ## Ubuntu
 `sudo apt-get update && sudo apt-get install libzmq3-dev libwxgtk3.0-gtk3-dev libwxbase3.0-dev make`
+In the project folder run `mkdir build && cd build && cmake .. && make Kacassonne` to get the `Kacassonne` executable.
 Ubuntu 18.04 package repository default compiler and cmake are too old (g++8 or newer, cmake 3.12 or newer). 
 See https://github.com/senfti/Kacassonne/blob/master/docker/Dockerfile for instructions.
 ## macOS
