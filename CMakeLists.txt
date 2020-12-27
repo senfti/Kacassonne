@@ -37,8 +37,12 @@ add_executable(Kacassonne WIN32 src/main.cpp include/main.h forms/HostDialog_B.h
 	include/SettingsWindow.h src/SettingsWindow.cpp forms/SettingsWindow_B.cpp)
 
 IF (WIN32)
-    target_sources(Kacassonne PRIVATE dpiaware.manifest)
+	target_sources(Kacassonne PRIVATE dpiaware.manifest)
 	target_link_libraries(Kacassonne D:/Programmieren/zmq/libzmq-v141-mt-4_3_2.lib ${wxWidgets_LIBRARIES} )
+ELSEIF(APPLE)
+	target_link_libraries(Kacassonne ${wxWidgets_LIBRARIES} ${ZeroMQ_LIBRARY})
+	add_custom_target(create_tar ALL COMMAND ${CMAKE_COMMAND} -E tar "cfvz" "Kacassonne_macOS.tar.gz" data/ ReadMe.txt Kacassonne)
+	add_dependencies(create_tar Kacassonne)
 ELSE()
 	target_link_libraries(Kacassonne ${wxWidgets_LIBRARIES} ${ZeroMQ_LIBRARY} stdc++fs)
 	add_custom_target(create_tar ALL COMMAND ${CMAKE_COMMAND} -E tar "cfvz" "Kacassonne_Linux.tar.gz" data/ ReadMe.txt Kacassonne)
