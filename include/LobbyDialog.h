@@ -18,6 +18,7 @@ class LobbyDialog : public LobbyDialog_B{
       int64_t id_;
       int64_t host_;
       std::vector<PlayerCon> players_;
+      double last_msg_time_ = 0.0;
       wxButton* button_ = nullptr;
 
       GameToJoin(const std::string& name, int64_t id, int64_t host, const std::vector<PlayerCon>& players, wxWindow* parent)

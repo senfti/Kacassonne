@@ -119,23 +119,34 @@ void LobbyDialog::join( wxCommandEvent& event ){
 void LobbyDialog::OnTimer(wxTimerEvent &event){
   std::lock_guard<std::mutex> lock(message_lock_);
   for(const auto& [t, m] : pending_messages_){
-    if(m["game_status"].get<int>() == int(GameStatus::OPEN)){
+    double create_time = (m.find("create_time") != m.end() ? m["create_time"].get<double>() : getTime());
+    std::string vp = m.find("version_prefix") != m.end() ? m["version_prefix"].get<std::string>() : "";
+    if(m["game_status"].get<int>() == int(GameStatus::OPEN) && getTime() - create_time < 3600.00){
       int64_t game_id = m["game_id"].get<int64_t>();
-      if(std::find_if(games_.begin(), games_.end(), [game_id] (const GameToJoin& game) { return game.id_ == game_id; }) == games_.end()){
+      auto game = std::find_if(games_.begin(), games_.end(), [game_id] (const GameToJoin& game) { return game.id_ == game_id; });
+      if(game == games_.end()){
         games_.emplace_back(m["game_name"], m["game_id"], m["host"], m["players"], this);
         games_.back().button_->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(LobbyDialog::join), NULL, this);
-        games_sizer_->Add(games_.back().button_, 0, wxALL|wxEXPAND, 5);
+        games_sizer_->Insert(0, games_.back().button_, 0, wxALL|wxEXPAND, 5);
+        if(vp == std::string(VERSION).substr(0, vp.size()))
+          games_.back().button_->Enable();
+        else{       // disable if version is wrong
+          games_.back().button_->SetLabel(games_.back().button_->GetLabel() + ": Wrong Version!");
+          games_.back().button_->Enable(false);
+        }
         window_sizer_->Layout();
         this->Fit();
         this->Layout();
       }
-    }
-    else{
-      int64_t game_id = m["game_id"].get<int64_t>();
-      auto game = std::find_if(games_.begin(), games_.end(), [game_id] (const GameToJoin& game) { return game.id_ == game_id; });
-      if(game != games_.end()){
-        game->button_->Disable();
+      else{
+        game->last_msg_time_ = getTime();
       }
+    }
+  }
+  pending_messages_.clear();
+  for(auto& game : games_){
+    if(getTime() - game.last_msg_time_ > 10.0 && game.button_->IsEnabled()){
+      game.button_->Disable();
     }
   }
 }

@@ -82,6 +82,9 @@ std::map<std::string, std::map<std::string, int>> Card::loadCardCounts(){
 }
 
 void Card::paint(wxAutoBufferedPaintDC& dc, const wxPoint& pos, double scale, State state, bool valid) const {
+  if(image_nr_ >= int(Card::CARD_IMAGES.size())){
+    return;
+  }
   int edge_length = cardSize(scale);
   int border = std::min(std::max(1, edge_length/48), 2);
   wxImage tmp = Card::CARD_IMAGES[image_nr_].image_.Scale(edge_length - 2*border, edge_length - 2*border);

@@ -22,6 +22,7 @@ class GameDialog : public GameDialog_B{
     std::mutex message_lock_;
     std::list<std::pair<std::string, Message>> pending_messages_;
     bool color_changed_ = false;
+    double create_time_;
 
     std::vector<bool> ack_;
     wxTimer timer_;

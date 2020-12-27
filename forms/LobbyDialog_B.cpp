@@ -26,7 +26,7 @@ LobbyDialog_B::LobbyDialog_B( wxWindow* parent, wxWindowID id, const wxString& t
 	bSizer41->Add( 0, 0, 1, wxEXPAND, 5 );
 
 
-	window_sizer_->Add( bSizer41, 1, wxEXPAND, 5 );
+	window_sizer_->Add( bSizer41, 0, wxEXPAND, 5 );
 
 	m_staticline2 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 	window_sizer_->Add( m_staticline2, 0, wxEXPAND | wxALL, 5 );
@@ -38,7 +38,7 @@ LobbyDialog_B::LobbyDialog_B( wxWindow* parent, wxWindowID id, const wxString& t
 	bSizer5->Add( reconnect_button_, 0, wxALL, 5 );
 
 
-	window_sizer_->Add( bSizer5, 1, wxEXPAND, 5 );
+	window_sizer_->Add( bSizer5, 0, wxEXPAND, 5 );
 
 	m_staticline3 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 	window_sizer_->Add( m_staticline3, 0, wxEXPAND | wxALL, 5 );
@@ -53,7 +53,7 @@ LobbyDialog_B::LobbyDialog_B( wxWindow* parent, wxWindowID id, const wxString& t
 	bSizer6->Add( load_button_, 0, wxALL, 5 );
 
 
-	window_sizer_->Add( bSizer6, 1, wxEXPAND, 5 );
+	window_sizer_->Add( bSizer6, 0, wxEXPAND, 5 );
 
 	m_staticline4 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 	window_sizer_->Add( m_staticline4, 0, wxEXPAND | wxALL, 5 );
@@ -86,7 +86,10 @@ LobbyDialog_B::LobbyDialog_B( wxWindow* parent, wxWindowID id, const wxString& t
 	games_sizer_ = new wxBoxSizer( wxVERTICAL );
 
 
-	window_sizer_->Add( games_sizer_, 1, wxEXPAND, 5 );
+	games_sizer_->Add( 0, 20, 0, wxEXPAND, 5 );
+
+
+	window_sizer_->Add( games_sizer_, 0, wxEXPAND, 5 );
 
 
 	this->SetSizer( window_sizer_ );

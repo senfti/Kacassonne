@@ -1,7 +1,12 @@
-
 more robust game start
 PointGroup as Panel (not Sizer)
 Licenses alle dazutun
+
+1.10.1:
+ - kein Spiegeln nach reconnect
+ - spiele nicht mehr anzeigen, wenn zu alt
+ - bugfix bei counting
+
 
 1.8.1:
  - Pointhistory geht in Hintergrund wenn wer was tuat

@@ -11,7 +11,7 @@
 #include <SettingsWindow.h>
 
 GameDialog::GameDialog(Connection *connection)
-  : GameDialog_B(nullptr), connection_(connection), timer_(this)
+  : GameDialog_B(nullptr), connection_(connection), create_time_(getTime()), timer_(this)
 {
   wxIntegerValidator<unsigned long> val(&card_number_);
   val.SetMin(1);
@@ -189,6 +189,8 @@ void GameDialog::OnTimer(wxTimerEvent& event){
       }
       msg["allow_mirror"] = allow_mirror_;
       msg["balance_name"] = balance_name_;
+      msg["create_time"] = create_time_;
+      msg["version_prefix"] = std::string(VERSION).substr(0, std::string(VERSION).rfind('.') + 1);
       connection_->send("game_lobby", msg);
     }
     else{

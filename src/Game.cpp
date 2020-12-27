@@ -216,8 +216,10 @@ void Game::addMark(double x, double y){
 
 void Game::removeMark(){
   std::lock_guard<std::mutex> lock(data_lock_);
-  count_marks_.pop_back();
-  sendMarkMsg();
+  if(!count_marks_.empty()){
+    count_marks_.pop_back();
+    sendMarkMsg();
+  }
 }
 
 void Game::setMarks(const std::vector<Flare>& marks){
@@ -293,6 +295,7 @@ Message Game::getAsMessage() const{
   msg["played_cards"] = played_cards_;
   msg["game_players"] = players_;
   msg["current_player"] = current_player_;
+  msg["allow_mirror"] = allow_mirror_;
   return msg;
 }
 
@@ -303,6 +306,8 @@ void Game::updateFromMessage(const Message& msg){
     msg.at("played_cards").get_to(played_cards_);
     msg.at("game_players").get_to(players_);
     msg.at("current_player").get_to(current_player_);
+    if(msg.find("allow_mirror") != msg.end())
+      msg.at("allow_mirror").get_to(allow_mirror_);
     current_card_ = stack_.next();
   }
   moveCard(last_mouse_pos_.m_x, last_mouse_pos_.m_y);
