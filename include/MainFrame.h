@@ -14,6 +14,7 @@
 #include <mutex>
 #include "HelpDialog_B.h"
 #include "PointHistoryWindow.h"
+#include "StatisticsWindow.h"
 
 class MyApp;
 
@@ -39,6 +40,10 @@ class MainFrame : public MainFrame_B{
     virtual void close( wxCloseEvent& event ) { takeScreenshot(""); Destroy(); }
     virtual void screenshot( wxCommandEvent& event ) { takeScreenshot(""); }
     virtual void viewSettings( wxCommandEvent& event );
+    virtual void showStatistics( wxCommandEvent& event ) {
+      auto wnd = new StatisticsWindow(this, game_->getCardStatistics(), game_->getPointsPerRound());
+      wnd->Show();
+    }
 
     void OnTimer(wxTimerEvent& event);
 

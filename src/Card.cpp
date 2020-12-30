@@ -12,13 +12,29 @@ std::string Card::CARD_FOLDER = "./";
 std::vector<Card::CardImage> Card::CARD_IMAGES;
 int Card::CARD_IMAGES_SIZE = 48;
 
-
-std::array<Card::Side, 4> sidesFromString(const std::string& s){
-  std::array<Card::Side, 4> sides;
-  for(int i=1; i<5; i++){
-    sides[i-1] = (s[i] == 'F' ? Card::Side::MEADOW : (s[i] == 'S' ? Card::Side::CITY : Card::Side::ROAD));
+Card::CardImage::CardImage(const std::string &name, const nlohmann::json& card_data)
+  : name_(name), image_(CARD_FOLDER + name)
+{
+  const static std::map<std::string, size_t> connection_name_map = {{"top", 0}, {"left", 1}, {"bottom", 2}, {"right", 3}};
+  sides_[0] = card_data["sides"]["top"].get<Card::Side>();
+  sides_[1] = card_data["sides"]["left"].get<Card::Side>();
+  sides_[2] = card_data["sides"]["bottom"].get<Card::Side>();
+  sides_[3] = card_data["sides"]["right"].get<Card::Side>();
+  special_ = card_data["special"].get<Card::Special>();
+  for(auto const& [k, v] : connection_name_map){
+    for(auto& to : card_data["connections"][k].items())
+      connections_[v].push_back(connection_name_map.at(to.value().get<std::string>()));
   }
-  return sides;
+  if(special_ == Special::NONE){
+    if(std::count(sides_.begin(), sides_.end(), Side::ROAD) >= 3 &&
+            std::count_if(connections_.begin(), connections_.end(), [](const auto& x){return x.size() > 0; }) == 0) // this is the check for the double curve, which is the only card with >3 roads and not being a crossroad
+      special_ = Special::CROSSROAD;
+    else if((sides_[0] == Side::CITY && !connections_[0].empty()) ||
+            (sides_[1] == Side::CITY && !connections_[1].empty()) ||
+            (sides_[2] == Side::CITY && !connections_[2].empty()))
+      special_ = Special::MULTI_CITY;
+  }
+  idx_ = card_data["idx"];
 }
 
 
@@ -36,24 +52,19 @@ bool Card::initCardImages(){
       wxInitAllImageHandlers();
       std::ifstream ifs(CARD_FOLDER + "card_data.json");
       nlohmann::json card_data = nlohmann::json::parse(ifs);
-      for(auto it : card_data.items()){
-        std::array<Card::Side, 4> sides;
-        sides[0] = it.value()["sides"]["top"].get<Card::Side>();
-        sides[1] = it.value()["sides"]["left"].get<Card::Side>();
-        sides[2] = it.value()["sides"]["bottom"].get<Card::Side>();
-        sides[3] = it.value()["sides"]["right"].get<Card::Side>();
-        CARD_IMAGES.push_back(CardImage(it.key(), sides, it.value()["idx"]));
-        if(it.value()["special"].get<std::string>() == "start"){
+      for(const auto& it : card_data.items()){
+        CARD_IMAGES.push_back(CardImage(it.key(), it.value()));
+        if(CARD_IMAGES.back().special_ == Special::START){
           std::swap(CARD_IMAGES.back(), CARD_IMAGES.front());
         }
       }
     }
     catch(std::exception &e){
       std::cout << "Failed to load card images and data!" << std::endl;
-      return 0;
+      return false;
     }
   }
-  return CARD_IMAGES.size();
+  return !CARD_IMAGES.empty();
 }
 
 std::map<std::string, std::map<std::string, int>> Card::loadCardCounts(){

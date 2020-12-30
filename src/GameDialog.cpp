@@ -167,6 +167,7 @@ void GameDialog::OnTimer(wxTimerEvent& event){
         }
         if(t == "game_quit" && connection_->fromHost(m)){
           running_ = false;
+          pending_messages_.clear();
           lock.unlock();
           wxMessageBox("Host quit!");
           receiver_->join();

@@ -73,7 +73,7 @@ int64_t Connection::addStuffToMsg(Message& msg){
 int64_t Connection::send(const std::string& topic, Message msg){
   int64_t id = addStuffToMsg(msg);
   msg["topic"] = topic;
-  std::cout << "send: " << sub_topic_ << " " << msg << std::endl;
+//  std::cout << "send: " << sub_topic_ << " " << msg << std::endl;
   log_file << "send: " << sub_topic_ << " " << msg << std::endl;
   std::lock_guard<std::mutex> lock(send_lock_);
   msg.toSocket(pub_, sub_topic_);
@@ -99,7 +99,7 @@ std::pair<std::string, Message> Connection::recv(){
       return std::pair<std::string, Message>("", Message(std::string()));
     }
   }
-  std::cout << "recv: " << sub_topic_ << " " << m << std::endl;
+//  std::cout << "recv: " << sub_topic_ << " " << m << std::endl;
   log_file << "recv: " << sub_topic_ << " " << m << std::endl;
   return std::make_pair(t, m);
 }

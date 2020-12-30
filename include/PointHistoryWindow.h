@@ -23,6 +23,7 @@ class PointHistoryWindow : public wxFrame
   private:
 
   protected:
+    wxButton* hide_button_;
     wxGrid* pts_grid_;
     std::vector<int> point_count_;
     std::vector<int> last_points_;
@@ -37,6 +38,9 @@ class PointHistoryWindow : public wxFrame
     ~PointHistoryWindow();
 
     void setPoints(int player, int points);
+    virtual void hide( wxCommandEvent& event ){
+      Show(false);
+    }
 };
 
 

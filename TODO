@@ -2,6 +2,14 @@ more robust game start
 PointGroup as Panel (not Sizer)
 Licenses alle dazutun
 
+1.10.2:
+ - Flare wï¿½hrend counting
+ - Own name in Lobby
+ - figuren nur auf karten legbar
+ - Unicode nicht abschmieren (non-ASCII blockiert)
+ - Statistics End Window: Point Graph und Anzahl Teile mit Weg/Stadt/Kloster/Feld + Seiten mit Weg/Stadt/Feld
+
+
 1.10.1:
  - kein Spiegeln nach reconnect
  - spiele nicht mehr anzeigen, wenn zu alt
@@ -12,13 +20,13 @@ Licenses alle dazutun
  - Pointhistory geht in Hintergrund wenn wer was tuat
  - Speichern Button / automatisch
  - mehr keyboard "shortcuts"
- - Zählmodus (Wie Pieces setzen (mit wegtun), nur halt Count raufzählen)
+ - Zï¿½hlmodus (Wie Pieces setzen (mit wegtun), nur halt Count raufzï¿½hlen)
 
 earlier:
  - card info in json
  - kartenanzahl syncen
  - Punkte-Log fenster
  - basegame mode (standard cards + no flip)
- - generell jsons für verschiedene balances
+ - generell jsons fï¿½r verschiedene balances
  - autoscreenshot am ende
 

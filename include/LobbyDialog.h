@@ -36,6 +36,7 @@ class LobbyDialog : public LobbyDialog_B{
     std::list<GameToJoin> games_;
     bool during_reconnect_ = false;
     Message reconnect_reply_ = Message();
+    wxString tmp_game_name_;
 
     std::mutex message_lock_;
     std::list<std::pair<std::string, Message>> pending_messages_;

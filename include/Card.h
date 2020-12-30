@@ -16,21 +16,24 @@
 class Card{
   public:
     enum class Side {CITY, ROAD, MEADOW};
+    enum class Special {NONE, START, MONASTERY, EMBLEM, MULTI_CITY, CROSSROAD};
     class CardImage{
       public:
         std::string name_;
         wxImage image_;
         std::array<Card::Side, 4> sides_;
+        std::array<std::vector<size_t>, 4> connections_;
+        Special special_;
         int idx_;
 
-        CardImage(const std::string& name, const std::array<Card::Side, 4>& sides, int idx)
-            : name_(name), image_(CARD_FOLDER + name), sides_(sides), idx_(idx){
-        }
+        CardImage(const std::string &name, const nlohmann::json& card_data);
         friend bool operator<(const CardImage &c1, const CardImage &c2) { return c1.idx_ < c2.idx_; }
     };
 
 
     friend void from_json(const nlohmann::json& j, Side& s) { s = (j.get<std::string>() == "city" ? Side::CITY : (j.get<std::string>() == "road" ? Side::ROAD : Side::MEADOW)); }
+    friend void from_json(const nlohmann::json& j, Special& s) { s = (j.get<std::string>() == "start" ? Special::START : (j.get<std::string>() == "monastery" ? Special::MONASTERY :
+                                                                         (j.get<std::string>() == "emblem" ? Special::EMBLEM : Special::NONE))); }
     static constexpr int OUTSIDE = -1000000;
 
     static std::string CARD_FOLDER;

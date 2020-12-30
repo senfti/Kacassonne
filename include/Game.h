@@ -29,13 +29,12 @@ class Game{
     std::vector<Flare> count_marks_;
     wxPoint2DDouble last_mouse_pos_ = wxPoint2DDouble(0, 0);
     bool update_old_pts_ = false;
+    std::vector<std::vector<int>> points_per_round_;
 
     std::map<std::string, int> card_count_;
     bool allow_mirror_;
 
     std::tuple<double, double, double, int, Stone::Type, bool> last_move_stone_ = {0.0, 0.0, 0.0, 0, Stone::Type::STANDARD, false};
-
-    std::mutex msg_queue_mutex_;
 
     Game(Connection* connection = nullptr, int card_number = 101, const std::map<std::string, int>& card_count = {}, bool allow_mirror_ = true);
     Game(Connection* connection, const Message& reconnect_reply);
@@ -61,7 +60,8 @@ class Game{
     void sendMarkMsg();
 
     int getPreviewCard();
-    bool validPosition();
+    bool validPosition() const;
+    bool pointNearLayedCard(double x, double y) const;
     bool cardInHand() const {
       std::lock_guard<std::mutex> lock(data_lock_);
       return current_player_ == connection_->player_number_ && current_card_;
@@ -92,6 +92,10 @@ class Game{
     void updateFromMessage(const Message& msg);
 
     void recv();
+
+    std::tuple<std::vector<wxString>, std::vector<wxString>, std::vector<std::vector<int>>> getCardStatistics() const;
+    void appendPointsPerRound();
+    std::vector<std::tuple<wxString, wxColor, std::vector<int>>> getPointsPerRound() const;
 };
 
 #endif //CARCASONNE_GAME_H

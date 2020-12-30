@@ -96,8 +96,8 @@ void TablePanel::paint(wxPaintEvent &event){
       }
     }
     for(size_t i=0; i<game_->count_marks_.size(); i++){
-      dc.SetFont(wxFont(16, wxFONTFAMILY_DEFAULT, wxFontStyle::wxFONTSTYLE_NORMAL, wxFontWeight::wxFONTWEIGHT_BOLD));
-      wxPoint pos = toTable(game_->count_marks_[i].x_, game_->count_marks_[i].y_) - wxPoint(12, 12);
+      dc.SetFont(wxFont(int(16 * scale_), wxFONTFAMILY_DEFAULT, wxFontStyle::wxFONTSTYLE_NORMAL, wxFontWeight::wxFONTWEIGHT_BOLD));
+      wxPoint pos = toTable(game_->count_marks_[i].x_, game_->count_marks_[i].y_) - wxPoint(int(12 * scale_), int(12 * scale_));
       dc.DrawText(std::to_string(i+1), pos);
     }
   }
@@ -175,12 +175,10 @@ void TablePanel::wheel(wxMouseEvent &event){
 }
 
 void TablePanel::rDown(wxMouseEvent &event){
-  if(!count_mode_){
-    down_time_ = getTime();
-    flipped_ = false;
-    if(!game_->cardInHand())
-      game_->flare(wxPoint2DDouble(toGame(event.GetPosition())));
-  }
+  down_time_ = getTime();
+  flipped_ = false;
+  if(!game_->cardInHand())
+    game_->flare(wxPoint2DDouble(toGame(event.GetPosition())));
 }
 
 void TablePanel::rDDown( wxMouseEvent& event ){
@@ -188,16 +186,10 @@ void TablePanel::rDDown( wxMouseEvent& event ){
 }
 
 void TablePanel::rUp(wxMouseEvent &event){
-  if(count_mode_){
-    game_->removeMark();
-    Refresh();
-  }
-  else{
-    down_time_ = 9999999999;
-    if(!flipped_)
-      if(game_->rotateCard())
-        Refresh();
-  }
+  down_time_ = 9999999999;
+  if(!flipped_)
+    if(game_->rotateCard())
+      Refresh();
 }
 
 void TablePanel::keyDown( wxKeyEvent& event ){
@@ -254,6 +246,10 @@ void TablePanel::keyDown( wxKeyEvent& event ){
       wxCommandEvent evt;
       parent->togglePointHistory(evt);
     }
+  }
+  else if(count_mode_ && event.GetKeyCode() == 'X'){
+    game_->removeMark();
+    Refresh();
   }
 }
 

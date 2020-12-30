@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version 3.9.0 Mar 24 2020)
+// C++ code generated with wxFormBuilder (version 3.9.0 Nov 14 2020)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO *NOT* EDIT THIS FILE!
@@ -44,6 +44,8 @@ ConnectDialog_B::ConnectDialog_B( wxWindow* parent, wxWindowID id, const wxStrin
 	gSizer1->Add( m_staticText5, 0, wxALL, 5 );
 
 	name_textctrl_ = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	name_textctrl_->SetValidator( wxTextValidator( wxFILTER_ASCII, &name_ ) );
+
 	gSizer1->Add( name_textctrl_, 0, wxALL|wxEXPAND, 5 );
 
 	ok_button_ = new wxButton( this, wxID_ANY, wxT("Connect"), wxDefaultPosition, wxDefaultSize, 0 );

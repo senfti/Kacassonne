@@ -3,7 +3,7 @@ project(Kacassonne)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_compile_definitions(VERSION="1.10.1")
+add_compile_definitions(VERSION="1.10.2")
 
 IF (WIN32)
 	add_definitions(-DWIN32_LEAN_AND_MEAN)
@@ -26,15 +26,30 @@ EndIF()
 find_package(wxWidgets COMPONENTS core base adv REQUIRED)
 include( "${wxWidgets_USE_FILE}")
 
-add_executable(Kacassonne WIN32 src/main.cpp include/main.h forms/HostDialog_B.h forms/HostDialog_B.cpp forms/MainFrame_B.h
-  forms/LobbyDialog_B.h forms/LobbyDialog_B.cpp src/GameDialog.cpp forms/GameDialog_B.cpp
-  forms/MainFrame_B.cpp include/MainFrame.h src/MainFrame.cpp include/TablePanel.h src/TablePanel.cpp
-  include/PointGroup.h src/PointGroup.cpp include/Card.h src/Card.cpp include/Stack.h src/Stack.cpp
-  include/Game.h src/Game.cpp include/Stone.h src/Stone.cpp include/Player.h src/Player.cpp include/HostDialog.h forms/HelpDialog_B.cpp
-  src/HostDialog.cpp src/Message.cpp src/Connection.cpp forms/ConnectDialog_B.h forms/ConnectDialog_B.cpp src/LobbyDialog.cpp include/Flare.h
-  include/ReconnectDialog.h src/ReconnectDialog.cpp forms/ReconnectDialog_B.cpp include/IdsDialog.h forms/IdsDialog_B.cpp
-	forms/PointEntryDialog_B.cpp include/PointEntryDialog.h src/PointEntryDialog.cpp include/PointHistoryWindow.h src/PointHistoryWindow.cpp
-	include/SettingsWindow.h src/SettingsWindow.cpp forms/SettingsWindow_B.cpp)
+add_executable(Kacassonne WIN32
+	src/main.cpp include/main.h
+	include/Connection.h src/Connection.cpp
+	include/Message.h src/Message.cpp
+	include/Card.h src/Card.cpp
+	include/Stack.h src/Stack.cpp
+	include/Stone.h src/Stone.cpp
+	include/Flare.h
+	include/Player.h src/Player.cpp
+	include/Game.h src/Game.cpp
+	include/PointGroup.h src/PointGroup.cpp
+	include/TablePanel.h src/TablePanel.cpp
+	forms/MainFrame_B.h forms/MainFrame_B.cpp include/MainFrame.h src/MainFrame.cpp
+	forms/ConnectDialog_B.h forms/ConnectDialog_B.cpp include/ConnectDialog.h
+  forms/LobbyDialog_B.h forms/LobbyDialog_B.cpp include/LobbyDialog.h src/LobbyDialog.cpp
+	forms/ReconnectDialog_B.h forms/ReconnectDialog_B.cpp include/ReconnectDialog.h src/ReconnectDialog.cpp
+	forms/GameDialog_B.h forms/GameDialog_B.cpp include/GameDialog.h src/GameDialog.cpp
+	forms/SettingsWindow_B.h forms/SettingsWindow_B.cpp include/SettingsWindow.h src/SettingsWindow.cpp
+	forms/IdsDialog_B.h forms/IdsDialog_B.cpp include/IdsDialog.h
+	forms/HelpDialog_B.h forms/HelpDialog_B.cpp
+	forms/PointEntryDialog_B.h forms/PointEntryDialog_B.cpp include/PointEntryDialog.h src/PointEntryDialog.cpp
+	include/PointHistoryWindow.h src/PointHistoryWindow.cpp
+	forms/StatisticsWindow_B.h forms/StatisticsWindow_B.cpp include/StatisticsWindow.h src/StatisticsWindow.cpp
+	)
 
 IF (WIN32)
 	target_sources(Kacassonne PRIVATE dpiaware.manifest)

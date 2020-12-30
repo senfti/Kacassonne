@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version 3.9.0 Mar 24 2020)
+// C++ code generated with wxFormBuilder (version 3.9.0 Nov 14 2020)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO *NOT* EDIT THIS FILE!
@@ -16,6 +16,7 @@
 #include <wx/colour.h>
 #include <wx/settings.h>
 #include <wx/textctrl.h>
+#include <wx/valtext.h>
 #include <wx/button.h>
 #include <wx/bitmap.h>
 #include <wx/image.h>
@@ -44,11 +45,12 @@ class ConnectDialog_B : public wxDialog
 		wxTextCtrl* name_textctrl_;
 		wxButton* ok_button_;
 
-		// Virtual event handlers, overide them in your derived class
+		// Virtual event handlers, override them in your derived class
 		virtual void connect( wxCommandEvent& event ) { event.Skip(); }
 
 
 	public:
+		wxString name_;
 
 		ConnectDialog_B( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Connect to Server"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE );
 		~ConnectDialog_B();

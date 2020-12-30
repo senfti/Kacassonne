@@ -23,6 +23,7 @@
 #include <wx/icon.h>
 #include <wx/filepicker.h>
 #include <wx/textctrl.h>
+#include <wx/valtext.h>
 #include <wx/dialog.h>
 
 ///////////////////////////////////////////////////////////////////////////
@@ -57,6 +58,7 @@ class LobbyDialog_B : public wxDialog
 
 
 	public:
+		wxString tmp_game_name_;
 
 		LobbyDialog_B( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Lobby"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE );
 		~LobbyDialog_B();

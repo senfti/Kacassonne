@@ -12,6 +12,11 @@ PointHistoryWindow::PointHistoryWindow( wxWindow* parent, const std::vector<Play
   wxBoxSizer* bSizer2;
   bSizer2 = new wxBoxSizer( wxVERTICAL );
 
+  hide_button_ = new wxButton( this, wxID_ANY, wxT("Hide"), wxDefaultPosition, wxDefaultSize, 0 );
+  hide_button_->SetMinSize( wxSize( 80,24 ) );
+
+  bSizer2->Add( hide_button_, 0, wxALIGN_CENTER|wxALL, 5 );
+
   pts_grid_ = new wxGrid( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
 
   // Grid
@@ -49,10 +54,13 @@ PointHistoryWindow::PointHistoryWindow( wxWindow* parent, const std::vector<Play
   this->Layout();
 
   this->Centre( wxBOTH );
+
+  hide_button_->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( PointHistoryWindow::hide ), NULL, this );
 }
 
 PointHistoryWindow::~PointHistoryWindow()
 {
+  hide_button_->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( PointHistoryWindow::hide ), NULL, this );
 }
 
 

@@ -55,6 +55,10 @@ MainFrame_B::MainFrame_B( wxWindow* parent, wxWindowID id, const wxString& title
 	m_menuItem11 = new wxMenuItem( m_menu3, wxID_ANY, wxString( wxT("Toggle Point History") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu3->Append( m_menuItem11 );
 
+	wxMenuItem* m_menuItem12;
+	m_menuItem12 = new wxMenuItem( m_menu3, wxID_ANY, wxString( wxT("Show Statistics") ) , wxEmptyString, wxITEM_NORMAL );
+	m_menu3->Append( m_menuItem12 );
+
 	m_menubar1->Append( m_menu3, wxT("Edit") );
 
 	help_menu_ = new wxMenu();
@@ -162,6 +166,7 @@ MainFrame_B::MainFrame_B( wxWindow* parent, wxWindowID id, const wxString& title
 	m_menu3->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame_B::screenshot ), this, m_menuItem9->GetId());
 	m_menu3->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame_B::viewSettings ), this, m_menuItem10->GetId());
 	m_menu3->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame_B::togglePointHistory ), this, m_menuItem11->GetId());
+	m_menu3->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame_B::showStatistics ), this, m_menuItem12->GetId());
 	help_menu_->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame_B::help ), this, m_menuItem5->GetId());
 	help_menu_->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFrame_B::showIds ), this, m_menuItem51->GetId());
 	next_button_->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrame_B::next ), NULL, this );

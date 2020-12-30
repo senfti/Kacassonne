@@ -85,6 +85,8 @@ bool Game::layCard(bool force){
     current_card_ = nullptr;
     played_cards_.push_back(stack_.get());
     sendUpdate("layCard", played_cards_.back().x(), played_cards_.back().y());
+    if(stack_.getLeftCards() == 0)
+      appendPointsPerRound();
     return true;
   }
   return false;
@@ -109,7 +111,7 @@ bool Game::doMoveStone(double x, double y, int player_number, Stone::Type type, 
       }
     }
   }
-  if(restrictions >= 0 && !one_there){
+  if(restrictions >= 0 && !one_there && pointNearLayedCard(x, y)){
     for(auto &s : players_[player_number].stones_){
       if(!s.isLayed() && s.type_ == type){
         s.x_ = x;
@@ -146,6 +148,7 @@ bool Game::next(){
       current_card_ = stack_.next();
       if(current_player_ == 0){
         update_old_pts_ = true;
+        appendPointsPerRound();
         std::ofstream save_file("save_games/" + std::to_string(connection_->game_id_) + ".json");
         msg["game_status"] = int(GameStatus::STARTED);
         connection_->addStuffToMsg(msg);
@@ -252,7 +255,7 @@ Card::Side getSide(const std::array<Card::Side, 4>& sides, int r, bool flipped, 
   return sides[tmp];
 }
 
-bool Game::validPosition(){
+bool Game::validPosition() const {
   if(played_cards_.empty())
     return true;
 
@@ -275,6 +278,14 @@ bool Game::validPosition(){
     }
   }
   return has_neighbor;
+}
+
+bool Game::pointNearLayedCard(double x, double y) const{
+  for(const auto& c : played_cards_){
+    if(std::abs(c.x() + 0.5 - x) < 0.8 && std::abs(c.y() + 0.5 - y) < 0.8)
+      return true;
+  }
+  return false;
 }
 
 bool Game::sendUpdate(const std::string& type, double x, double y, int idx, bool flag1, int val1){
@@ -333,6 +344,8 @@ void Game::recv(){
           else if(m["type"] == "layCard"){
             current_card_ = nullptr;
             played_cards_.push_back(stack_.get());
+            if(stack_.getLeftCards() == 0)
+              appendPointsPerRound();
           }
         }
         if(m["type"] == "moveStone" && m["idx"].get<int>() < int(players_.size()))
@@ -347,8 +360,11 @@ void Game::recv(){
         if(getTime() - std::get<0>(last_move_stone_) < 100.0){
           doMoveStone(std::get<1>(last_move_stone_), std::get<2>(last_move_stone_), std::get<3>(last_move_stone_), std::get<4>(last_move_stone_), true, std::get<5>(last_move_stone_) ? 1 : -1);
         }
-        if(current_player_ == 0)
+        if(current_player_ == 0){
           update_old_pts_ = true;
+          if(!played_cards_.empty())
+            appendPointsPerRound();
+        }
         update_table_ = true;
       }
       else if(t == "reconnect_request"){
@@ -367,4 +383,53 @@ void Game::recv(){
       std::cout << e.what() << std::endl;
     }
   }
+}
+
+
+std::tuple<std::vector<wxString>, std::vector<wxString>, std::vector<std::vector<int>>> Game::getCardStatistics() const {
+  std::lock_guard<std::mutex> lock(data_lock_);
+  std::vector<wxString> column_labels = {"City", "Road", "Meadow", "Monastery", "Multi-City", "Crossroad"};
+  std::vector<wxString> row_labels;
+  std::vector<std::vector<int>> content;
+  for(size_t pi = 0; pi < players_.size(); pi++){
+    row_labels.push_back(players_[pi].name_);
+    content.emplace_back(std::vector<int>(column_labels.size(), 0));
+  }
+  size_t i = 0;
+  for(const auto& c : played_cards_){
+    size_t pi = i % players_.size();
+    if(c.imageNr() >= int(Card::CARD_IMAGES.size()))
+      continue;
+    const Card::CardImage& cimg = Card::CARD_IMAGES[c.imageNr()];
+    content[pi][0] += std::count(cimg.sides_.begin(), cimg.sides_.end(), Card::Side::CITY);
+    content[pi][1] += std::count(cimg.sides_.begin(), cimg.sides_.end(), Card::Side::ROAD);
+    content[pi][2] += std::count(cimg.sides_.begin(), cimg.sides_.end(), Card::Side::MEADOW);
+    content[pi][3] += cimg.special_ == Card::Special::MONASTERY;
+    content[pi][4] += cimg.special_ == Card::Special::EMBLEM || cimg.special_ == Card::Special::MULTI_CITY;
+    content[pi][5] += cimg.special_ == Card::Special::CROSSROAD;
+    i++;
+  }
+  return std::make_tuple(column_labels, row_labels, content);
+}
+
+
+void Game::appendPointsPerRound(){
+  std::vector<int> curr_pts;
+  for(const auto& p : players_)
+    curr_pts.push_back(p.points_);
+  points_per_round_.push_back(curr_pts);
+}
+
+
+std::vector<std::tuple<wxString, wxColor, std::vector<int>>> Game::getPointsPerRound() const{
+  std::lock_guard<std::mutex> lock(data_lock_);
+  std::vector<std::tuple<wxString, wxColor, std::vector<int>>> ppr;
+  for(size_t pi = 0; pi < players_.size(); pi++){
+    ppr.push_back(std::make_tuple(players_[pi].name_, players_[pi].color_, std::vector<int>()));
+    for(const auto& r : points_per_round_)
+      std::get<2>(ppr[pi]).push_back(r[pi]);
+    std::get<2>(ppr[pi]).push_back(players_[pi].points_);
+    std::get<2>(ppr[pi]).push_back(players_[pi].points_);
+  }
+  return ppr;
 }

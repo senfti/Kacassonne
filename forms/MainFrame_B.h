@@ -66,6 +66,7 @@ class MainFrame_B : public wxFrame
 		virtual void screenshot( wxCommandEvent& event ) { event.Skip(); }
 		virtual void viewSettings( wxCommandEvent& event ) { event.Skip(); }
 		virtual void togglePointHistory( wxCommandEvent& event ) { event.Skip(); }
+		virtual void showStatistics( wxCommandEvent& event ) { event.Skip(); }
 		virtual void help( wxCommandEvent& event ) { event.Skip(); }
 		virtual void showIds( wxCommandEvent& event ) { event.Skip(); }
 

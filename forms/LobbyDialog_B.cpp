@@ -70,6 +70,8 @@ LobbyDialog_B::LobbyDialog_B( wxWindow* parent, wxWindowID id, const wxString& t
 	game_name_textctrl_ = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	game_name_textctrl_->SetMinSize( wxSize( 102,32 ) );
 
+	game_name_textctrl_->SetValidator( wxTextValidator( wxFILTER_ASCII, &tmp_game_name_ ) );
+
 	bSizer4->Add( game_name_textctrl_, 0, wxALL, 5 );
 
 	create_button_ = new wxButton( this, wxID_ANY, wxT("Create"), wxDefaultPosition, wxDefaultSize, 0 );
