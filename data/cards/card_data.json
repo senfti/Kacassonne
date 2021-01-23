@@ -1,4 +1,5 @@
-{"FFFSS_2.jpg": {"idx": 150, "special": "none", "sides": {"top": "city", "left": "city", "bottom": "meadow", "right": "meadow"}, "connections": {"top": [], "left": [], "bottom": [], "right": []}},
+{"ASSSS_1.jpg": {"idx": 184, "special": "none", "sides": {"top": "city", "left": "city", "bottom": "city", "right": "city"}, "connections": {"top": ["left", "right"], "left": ["top", "right"], "bottom": [], "right": ["top", "left"]}},
+ "FFFSS_2.jpg": {"idx": 150, "special": "none", "sides": {"top": "city", "left": "city", "bottom": "meadow", "right": "meadow"}, "connections": {"top": [], "left": [], "bottom": [], "right": []}},
  "FFSFS_3.jpg": {"idx": 140, "special": "none", "sides": {"top": "meadow", "left": "city", "bottom": "meadow", "right": "city"}, "connections": {"top": [], "left": [], "bottom": [], "right": []}},
  "FFSSS_2.jpg": {"idx": 170, "special": "none", "sides": {"top": "city", "left": "city", "bottom": "meadow", "right": "city"}, "connections": {"top": [], "left": [], "bottom": [], "right": []}},
  "FSFFF_5.jpg": {"idx": 120, "special": "none", "sides": {"top": "city", "left": "meadow", "bottom": "meadow", "right": "meadow"}, "connections": {"top": [], "left": [], "bottom": [], "right": []}},

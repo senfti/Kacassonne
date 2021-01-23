@@ -5,6 +5,7 @@
 #include <wx/grid.h>
 #include <wx/dcbuffer.h>
 #include "StatisticsWindow.h"
+#include <algorithm>
 
 
 StatisticsWindow::StatisticsWindow(wxWindow* parent,
@@ -12,6 +13,7 @@ StatisticsWindow::StatisticsWindow(wxWindow* parent,
                                    const std::vector<std::tuple<wxString, wxColor, std::vector<int>>>& pts)
     : StatisticsWindow_B(parent), pts_(pts)
 {
+  SetWindowStyleFlag(GetWindowStyle() | wxSTAY_ON_TOP);
   graph_panel_->SetBackgroundStyle(wxBG_STYLE_PAINT);
   const auto& [col_labels, row_labels, data] = stats;
   stats_grid_->AppendRows(row_labels.size());
