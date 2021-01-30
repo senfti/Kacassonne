@@ -81,7 +81,7 @@ void GameDialog::quit( wxCommandEvent& event ) {
 }
 
 void GameDialog::start( wxCommandEvent& event ) {
-  std::mt19937 eng(time(0));
+  std::mt19937 eng(getID() % std::numeric_limits<unsigned>::max());
   std::shuffle(connection_->players_.begin(), connection_->players_.end(), eng);
   connection_->game_status_ = int(GameStatus::STARTED);
   ack_.resize(connection_->players_.size(), false);

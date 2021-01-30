@@ -38,7 +38,7 @@ void LobbyDialog::recv(){
 }
 
 void LobbyDialog::create( wxCommandEvent& event ){
-  connection_->game_name_ = tmp_game_name_;
+  connection_->game_name_ = game_name_textctrl_->GetValue();
   connection_->game_id_ = getID();
   connection_->host_ = connection_->player_id_;
   connection_->players_ = {PlayerCon(connection_->player_id_, connection_->player_name_, 0)};

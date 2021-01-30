@@ -19,8 +19,9 @@ StatisticsWindow::StatisticsWindow(wxWindow* parent,
   stats_grid_->AppendRows(row_labels.size());
   for(size_t i=0; i<row_labels.size(); i++){
     stats_grid_->SetRowLabelValue(i, row_labels[i]);
-    for(size_t j=0; j<std::min(data[i].size(), size_t(stats_grid_->GetNumberCols())); j++){
-      stats_grid_->SetCellValue(i, j, std::to_string(data[i][j]));
+    stats_grid_->SetCellBackgroundColour(i, 0, std::get<1>(pts_[i]));
+    for(size_t j=0; j<std::min(data[i].size(), data[i].size()); j++){
+      stats_grid_->SetCellValue(i, j+1, std::to_string(data[i][j]));
     }
   }
   stats_grid_->AutoSize();

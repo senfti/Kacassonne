@@ -11,6 +11,12 @@
 Game::Game(Connection* connection, int card_number, const std::map<std::string, int>& card_count, bool allow_mirror)
   : stack_(card_number, card_count), connection_(connection), card_count_(card_count), allow_mirror_(allow_mirror)
 {
+  if(connection_->iAmHost()){
+    while(!statisticsFair(calcCardStatistics(stack_.getAllCards(), connection_->players_.size()))){
+      stack_ = Stack(card_number, card_count);
+    }
+  }
+
   if(!std::filesystem::exists("save_games")){
     std::filesystem::create_directory("save_games");
   }
@@ -386,18 +392,14 @@ void Game::recv(){
 }
 
 
-std::tuple<std::vector<wxString>, std::vector<wxString>, std::vector<std::vector<int>>> Game::getCardStatistics() const {
-  std::lock_guard<std::mutex> lock(data_lock_);
-  std::vector<wxString> column_labels = {"City", "Road", "Meadow", "Monastery", "Multi-City", "Crossroad"};
-  std::vector<wxString> row_labels;
+std::vector<std::vector<int>> Game::calcCardStatistics(const std::list<Card>& cards, size_t num_players) const {
   std::vector<std::vector<int>> content;
-  for(size_t pi = 0; pi < players_.size(); pi++){
-    row_labels.push_back(players_[pi].name_);
-    content.emplace_back(std::vector<int>(column_labels.size(), 0));
+  for(size_t pi = 0; pi < num_players; pi++){
+    content.emplace_back(std::vector<int>(6, 0));
   }
   size_t i = 0;
-  for(const auto& c : played_cards_){
-    size_t pi = i % players_.size();
+  for(const auto& c : cards){
+    size_t pi = i % num_players;
     if(c.imageNr() >= int(Card::CARD_IMAGES.size()))
       continue;
     const Card::CardImage& cimg = Card::CARD_IMAGES[c.imageNr()];
@@ -409,7 +411,40 @@ std::tuple<std::vector<wxString>, std::vector<wxString>, std::vector<std::vector
     content[pi][5] += cimg.special_ == Card::Special::CROSSROAD;
     i++;
   }
+
+  return content;
+}
+
+
+std::tuple<std::vector<wxString>, std::vector<wxString>, std::vector<std::vector<int>>> Game::getCardStatistics(const std::list<Card>& cards) const {
+  std::lock_guard<std::mutex> lock(data_lock_);
+  std::vector<wxString> column_labels = {"City", "Road", "Meadow", "Monastery", "Multi-City", "Crossroad"};
+  std::vector<wxString> row_labels;
+  for(size_t pi = 0; pi < players_.size(); pi++){
+    row_labels.push_back(players_[pi].name_);
+  }
+  std::vector<std::vector<int>> content = calcCardStatistics(cards, players_.size());
+
   return std::make_tuple(column_labels, row_labels, content);
+}
+
+
+bool Game::statisticsFair(const std::vector<std::vector<int>>& stats) const {
+  std::vector<double> sum(stats.front().size(), 0.0);
+  for(const auto& ps : stats){
+    for(size_t i=0; i<sum.size(); i++){
+      sum[i] += ps[i];
+    }
+  }
+  for(const auto& ps : stats){
+    for(size_t i=0; i<sum.size(); i++){
+      double mean = sum[i] / stats.size();
+      if(std::abs(ps[i] - mean) > (2 + std::max(0.1, 0.015*stats.size())*mean)){
+        return false;
+      }
+    }
+  }
+  return true;
 }
 
 

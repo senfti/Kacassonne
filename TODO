@@ -1,7 +1,16 @@
-aktualisieren Button in statistik fenster
 more robust game start
 PointGroup as Panel (not Sizer)
 Licenses alle dazutun
+aktualisieren Button in statistik fenster
+
+
+1.12.0:
+ - statistik fenster name in farbe
+ - shuffle gibt zufällige karte und mischt die anderen nicht
+ - fixed reihenfolge vielleicht nicht zufall?
+ - kartenaufteilung ungefähr fair
+ - fixed spielenamen leerer string
+
 
 1.10.2:
  - Flare w�hrend counting

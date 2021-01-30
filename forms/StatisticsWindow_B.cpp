@@ -17,7 +17,7 @@ StatisticsWindow_B::StatisticsWindow_B( wxWindow* parent, wxWindowID id, const w
 
 	graph_panel_ = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_NONE|wxFULL_REPAINT_ON_RESIZE|wxTAB_TRAVERSAL );
 	graph_panel_->SetForegroundColour( wxColour( 0, 0, 0 ) );
-	graph_panel_->SetBackgroundColour( wxColour( 255, 255, 255 ) );
+	graph_panel_->SetBackgroundColour( wxColour( 245, 238, 228 ) );
 	graph_panel_->SetMinSize( wxSize( 640,640 ) );
 
 	sizer_->Add( graph_panel_, 0, wxEXPAND | wxALL, 5 );
@@ -25,7 +25,7 @@ StatisticsWindow_B::StatisticsWindow_B( wxWindow* parent, wxWindowID id, const w
 	stats_grid_ = new wxGrid( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
 
 	// Grid
-	stats_grid_->CreateGrid( 0, 6 );
+	stats_grid_->CreateGrid( 0, 7 );
 	stats_grid_->EnableEditing( false );
 	stats_grid_->EnableGridLines( true );
 	stats_grid_->EnableDragGridSize( false );
@@ -35,14 +35,16 @@ StatisticsWindow_B::StatisticsWindow_B( wxWindow* parent, wxWindowID id, const w
 	stats_grid_->AutoSizeColumns();
 	stats_grid_->EnableDragColMove( false );
 	stats_grid_->EnableDragColSize( false );
-	stats_grid_->SetColLabelValue( 0, wxT("City") );
-	stats_grid_->SetColLabelValue( 1, wxT("Road") );
-	stats_grid_->SetColLabelValue( 2, wxT("Meadow") );
-	stats_grid_->SetColLabelValue( 3, wxT("Monestary") );
-	stats_grid_->SetColLabelValue( 4, wxT("Multi-City") );
-	stats_grid_->SetColLabelValue( 5, wxT("Crossroad") );
-	stats_grid_->SetColLabelValue( 6, wxT("City") );
-	stats_grid_->SetColLabelValue( 7, wxEmptyString );
+	stats_grid_->SetColLabelValue( 0, wxT(" ") );
+	stats_grid_->SetColLabelValue( 1, wxT("City") );
+	stats_grid_->SetColLabelValue( 2, wxT("Road") );
+	stats_grid_->SetColLabelValue( 3, wxT("Meadow") );
+	stats_grid_->SetColLabelValue( 4, wxT("Monestary") );
+	stats_grid_->SetColLabelValue( 5, wxT("Multi-City") );
+	stats_grid_->SetColLabelValue( 6, wxT("Crossroad") );
+	stats_grid_->SetColLabelValue( 7, wxT("City") );
+	stats_grid_->SetColLabelValue( 8, wxEmptyString );
+	stats_grid_->SetColLabelValue( 9, wxEmptyString );
 	stats_grid_->SetColLabelAlignment( wxALIGN_CENTER, wxALIGN_CENTER );
 
 	// Rows

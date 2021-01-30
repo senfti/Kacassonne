@@ -23,6 +23,7 @@ class Stack{
     void push(const Card& card);
     void shuffle();
     int getLeftCards() const { return cards_.size(); }
+    const std::list<Card>& getAllCards() const { return cards_; }
 
     friend void to_json(nlohmann::json& j, const Stack& s) {
       j = nlohmann::json{{"cards", s.cards_}};

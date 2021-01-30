@@ -5,6 +5,7 @@
 #include <Stack.h>
 #include <algorithm>
 #include <random>
+#include "Message.h"
 
 Stack::Stack(unsigned card_number, const std::map<std::string, int>& card_count){
   if(!Card::initCardImages())
@@ -25,7 +26,7 @@ Stack::Stack(unsigned card_number, const std::map<std::string, int>& card_count)
   if(deck.size() < 1)
     return;
 
-  std::mt19937 eng(time(0));
+  std::mt19937 eng(getID() % std::numeric_limits<unsigned>::max());
   while(used_cards.size() < card_number) {
     if(card_number - used_cards.size() >= deck.size())
       used_cards.insert(used_cards.end(), deck.begin(), deck.end());
@@ -44,12 +45,8 @@ Stack::Stack(unsigned card_number, const std::map<std::string, int>& card_count)
 }
 
 void Stack::shuffle(){
-  std::vector<Card> tmp;
-  for(const auto& c : cards_)
-      tmp.push_back(c);
-  std::mt19937 eng(time(0));
-  std::shuffle(tmp.begin(), tmp.end(), eng);
-  cards_ = std::list<Card>(tmp.begin(), tmp.end());
+  std::mt19937 eng(getID() % std::numeric_limits<unsigned>::max());
+  cards_.front() = Card(std::uniform_int_distribution<int>(0, Card::CARD_IMAGES.size())(eng));
 }
 
 Card* Stack::next() {

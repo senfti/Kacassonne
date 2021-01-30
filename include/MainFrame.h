@@ -41,7 +41,7 @@ class MainFrame : public MainFrame_B{
     virtual void screenshot( wxCommandEvent& event ) { takeScreenshot(""); }
     virtual void viewSettings( wxCommandEvent& event );
     virtual void showStatistics( wxCommandEvent& event ) {
-      auto wnd = new StatisticsWindow(this, game_->getCardStatistics(), game_->getPointsPerRound());
+      auto wnd = new StatisticsWindow(this, game_->getCardStatistics(game_->played_cards_), game_->getPointsPerRound());
       wnd->Show();
     }
 

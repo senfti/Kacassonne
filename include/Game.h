@@ -93,7 +93,9 @@ class Game{
 
     void recv();
 
-    std::tuple<std::vector<wxString>, std::vector<wxString>, std::vector<std::vector<int>>> getCardStatistics() const;
+    std::vector<std::vector<int>> calcCardStatistics(const std::list<Card>& cards, size_t num_players) const;
+    std::tuple<std::vector<wxString>, std::vector<wxString>, std::vector<std::vector<int>>> getCardStatistics(const std::list<Card>& cards) const;
+    bool statisticsFair(const std::vector<std::vector<int>>& stats) const;
     void appendPointsPerRound();
     std::vector<std::tuple<wxString, wxColor, std::vector<int>>> getPointsPerRound() const;
 };
