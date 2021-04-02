@@ -148,6 +148,8 @@ bool Game::next(){
   {
     std::lock_guard<std::mutex> lock(data_lock_);
     if(current_player_ == connection_->player_number_ && !current_card_ && stack_.getLeftCards() > 0){
+      if(move_start_time_ > 0)
+        players_[current_player_].move_time_ += getTime() - move_start_time_;
       current_player_ = (current_player_ + 1) % int(players_.size());
       Message msg = getAsMessage();
       connection_->send("next", msg);
@@ -371,6 +373,8 @@ void Game::recv(){
           if(!played_cards_.empty())
             appendPointsPerRound();
         }
+        if(current_player_ == connection_->player_number_)
+          move_start_time_ = getTime();
         update_table_ = true;
       }
       else if(t == "reconnect_request"){
@@ -418,12 +422,15 @@ std::vector<std::vector<int>> Game::calcCardStatistics(const std::list<Card>& ca
 
 std::tuple<std::vector<wxString>, std::vector<wxString>, std::vector<std::vector<int>>> Game::getCardStatistics(const std::list<Card>& cards) const {
   std::lock_guard<std::mutex> lock(data_lock_);
-  std::vector<wxString> column_labels = {"City", "Road", "Meadow", "Monastery", "Multi-City", "Crossroad"};
+  std::vector<wxString> column_labels = {"City", "Road", "Meadow", "Monastery", "Multi-City", "Time"};
   std::vector<wxString> row_labels;
   for(size_t pi = 0; pi < players_.size(); pi++){
     row_labels.push_back(players_[pi].name_);
   }
   std::vector<std::vector<int>> content = calcCardStatistics(cards, players_.size());
+  for(size_t pi = 0; pi < players_.size(); pi++){
+    content[pi][5] = players_[pi].move_time_;
+  }
 
   return std::make_tuple(column_labels, row_labels, content);
 }

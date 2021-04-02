@@ -30,6 +30,7 @@ class Game{
     wxPoint2DDouble last_mouse_pos_ = wxPoint2DDouble(0, 0);
     bool update_old_pts_ = false;
     std::vector<std::vector<int>> points_per_round_;
+    double move_start_time_ = -1.0;
 
     std::map<std::string, int> card_count_;
     bool allow_mirror_;

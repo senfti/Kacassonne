@@ -41,10 +41,9 @@ StatisticsWindow_B::StatisticsWindow_B( wxWindow* parent, wxWindowID id, const w
 	stats_grid_->SetColLabelValue( 3, wxT("Meadow") );
 	stats_grid_->SetColLabelValue( 4, wxT("Monestary") );
 	stats_grid_->SetColLabelValue( 5, wxT("Multi-City") );
-	stats_grid_->SetColLabelValue( 6, wxT("Crossroad") );
-	stats_grid_->SetColLabelValue( 7, wxT("City") );
+	stats_grid_->SetColLabelValue( 6, wxT("Time") );
+	stats_grid_->SetColLabelValue( 7, wxEmptyString );
 	stats_grid_->SetColLabelValue( 8, wxEmptyString );
-	stats_grid_->SetColLabelValue( 9, wxEmptyString );
 	stats_grid_->SetColLabelAlignment( wxALIGN_CENTER, wxALIGN_CENTER );
 
 	// Rows
